@@ -67,8 +67,7 @@ const isValid = (expression) => {
       operatorFlag = false
       numberFlag = true
       numberSize++
-    }
-    if (expression[i] === '.') {
+    } else if (expression[i] === '.') {
       if (!numberFlag || decimalFlag) {
         return { infixNotation: expression, error: 'ISVALID_REAL_FLOAT', errorIndex: i }
       } else {
@@ -79,7 +78,7 @@ const isValid = (expression) => {
   }
 
   // Stack with open and not yet closed brackets at the
-  // end of expression parsing means invalid expression
+  // end of expression parsing means invalid expression.
 
   if (stack.length > 0) {
     return { error: 'ISVALID_REAL_BRACKETS' }
@@ -87,7 +86,13 @@ const isValid = (expression) => {
 
   // Check that the size of the numbers, the amont of
   // operators and brackets match the size of the initial
-  // string expression.
+  // string expression along with few potential missed cases.
+
+  if (expression[expression.length - 1] === '.') {
+    return { infixNotation: expression, error: 'ISVALID_REAL_FLOAT', errorIndex: expression.length - 1 }
+  } else if (expression[expression.length - 1].match(/[\-+*%\/^]/)) {
+    return { infixNotation: expression, error: 'ISVALID_REAL_OPERATOR', errorIndex: expression.length - 1 }
+  }
 
   if (operatorCount + bracketCount + numberSize === expression.length) {
     return { infixNotation: expression, error: null }
