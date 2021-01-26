@@ -17,5 +17,5 @@ Client.on('line', async (input) => {
   if (input.match(/^[0-9+\-\.\/*%^()]+$/)) {
     console.log(`  ${realComputation(input)}`)
   }
-  await interface.write('> ')
+  await Client.write('> ')
 })
