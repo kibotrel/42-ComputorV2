@@ -46,8 +46,10 @@ const isValid = (expression) => {
 
     if (expression[i].match(/[+\-*\/%^]/)) {
       powerFlag = false
-      if (operatorFlag || expression[i].match(/[*\/%^]/) && (i === 0 || operatorFlag || !numberFlag || (decimalFlag && !expression[i - 1].match(/\d/)))) {
+      if (operatorFlag || expression[i].match(/[*\/%^]/) && (i === 0 || operatorFlag || !numberFlag)) {
         return { infixNotation: expression, error: 'ISVALID_REAL_OPERATOR', errorIndex: i }
+      } else if (expression[i].match(/[*\/%^]/) && (decimalFlag && !expression[i - 1].match(/\d/))) {
+        return { infixNotation: expression, error: 'ISVALID_REAL_FLOAT', errorIndex: i - 1 }
       } else {
         numberFlag = false
         decimalFlag = false
