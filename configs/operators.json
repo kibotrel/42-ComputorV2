@@ -1,0 +1,38 @@
+[
+  {
+    "name": "ADD",
+    "symbol": "+",
+    "associativity": "l",
+    "precedence": 0
+  },
+  {
+    "name": "SUB",
+    "symbol": "-",
+    "associativity": "r",
+    "precedence": 0
+  },
+  {
+    "name": "DIV",
+    "symbol": "/",
+    "associativity": "l",
+    "precedence": 1
+  },
+  {
+    "name": "MUL",
+    "symbol": "*",
+    "associativity": "l",
+    "precedence": 1
+  },
+  {
+    "name": "MOD",
+    "symbol": "%",
+    "associativity": "l",
+    "precedence": 1
+  },
+  {
+    "name": "POW",
+    "symbol": "^",
+    "associativity": "r",
+    "precedence": 2
+  }
+]
