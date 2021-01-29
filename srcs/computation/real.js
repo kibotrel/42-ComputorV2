@@ -1,114 +1,162 @@
 const operators = require('@configs/operators.json')
 
-const isValid = (expression) => {
+const setFlags = ({ power, number, operator, decimal, sign, numberStart }) => {
+  return { power, number, operator, decimal, sign, numberStart: numberStart === undefined ? -1 : numberStart }
+}
 
-  // Check, if present in the expression, if the appearance
-  // order of brackets is correct, track the amount and
-  // look if operator and numbers are in the right place.
+const leftBracketCheck = async ({ string, i, numberStart }, infixStack, bracketStack) => {
+  try {
+    if (numberStart !== -1) {
+      infixStack.push(string.substring(numberStart, i))
+    }
 
-  const stack = []
-  let bracketCount = 0
-  let operatorCount = 0
-  let numberSize = 0
-  let powerFlag = false
-  let numberFlag = false
-  let operatorFlag = false
-  let decimalFlag = false
-
-  for (let i = 0; i < expression.length; i++) {
-
-    // Bracket checks
-
-    if (expression[i] === '(') {
-      if (i !== 0) {
-        if (expression[i - 1].match(/\d/)) {
-          expression = `${expression.slice(0, i)}*${expression.slice(i)}`
-          operatorCount++
-          i++
-        } else if (expression[i - 1] === '.') {
-          return { infixNotation: expression, error: 'ISVALID_REAL_LBRACKET', errorIndex: i }
-        }
-      }
-      stack.push(1)
-      bracketCount++
-      numberFlag = false
-      decimalFlag = false
-      operatorFlag = false
-    } else if (expression[i] === ')') {
-      if (stack.pop() === undefined || operatorFlag || (i !== 0 && decimalFlag && expression[i - 1] === '.')) {
-        return { infixNotation: expression, error: 'ISVALID_REAL_RBRACKET', errorIndex: i }
-      } else {
-        bracketCount++
+    if (i !== 0) {
+      if (string[i - 1].match(/\d/)) {
+        infixStack.push('*')
+      } else if (string[i - 1] === '.') {
+        throw { data: string, error: 'ILLEGAL_LEFT_BRACKET', errorIndex: i }
       }
     }
 
-    // Operator checks
+    infixStack.push('(')
+    bracketStack.push(1)
 
-    if (expression[i].match(/[+\-*\/%^]/)) {
-      powerFlag = false
-      if (operatorFlag || expression[i].match(/[*\/%^]/) && (i === 0 || operatorFlag || !numberFlag)) {
-        return { infixNotation: expression, error: 'ISVALID_REAL_OPERATOR', errorIndex: i }
-      } else if (expression[i].match(/[*\/%^]/) && (decimalFlag && !expression[i - 1].match(/\d/))) {
-        return { infixNotation: expression, error: 'ISVALID_REAL_FLOAT', errorIndex: i - 1 }
-      } else {
-        numberFlag = false
-        decimalFlag = false
-      }
-
-      if (expression[i] === '^') {
-        powerFlag = true
-      }
-
-      operatorCount++
-      operatorFlag = true
-    }
-
-    // Number checks
-
-    if (expression[i].match(/\d/)) {
-      operatorFlag = false
-      numberFlag = true
-      numberSize++
-    } else if (expression[i] === '.') {
-      if (!numberFlag || decimalFlag) {
-        return { infixNotation: expression, error: 'ISVALID_REAL_FLOAT', errorIndex: i }
-      } else {
-        decimalFlag = true
-        numberSize++
-      }
-    }
-  }
-
-  // Stack with open and not yet closed brackets at the
-  // end of expression parsing means invalid expression.
-
-  if (stack.length > 0) {
-    return { error: 'ISVALID_REAL_BRACKETS' }
-  }
-
-  // Check that the size of the numbers, the amont of
-  // operators and brackets match the size of the initial
-  // string expression along with few potential missed cases.
-
-  if (expression[expression.length - 1] === '.') {
-    return { infixNotation: expression, error: 'ISVALID_REAL_FLOAT', errorIndex: expression.length - 1 }
-  } else if (expression[expression.length - 1].match(/[\-+*%\/^]/)) {
-    return { infixNotation: expression, error: 'ISVALID_REAL_OPERATOR', errorIndex: expression.length - 1 }
-  }
-
-  if (operatorCount + bracketCount + numberSize === expression.length) {
-    return { infixNotation: expression, error: null }
-  } else {
-    return { error: 'ISVALID_REAL_EXPRSIZE'}
+    return setFlags({})
+  } catch (error) {
+    return Promise.reject(error)
   }
 }
 
-module.exports = (expression) => {
-  const { infixNotation, error } = isValid(expression)
+const rightBracketCheck = async ({ string, i, flags }, infixStack, bracketStack) => {
+  try {
+    const lastElement = bracketStack.pop()
 
-  if (error) {
-    return `Error: Expression is not well formated. (${error})`
-  } else {
-    return infixNotation // computeReal(suffixNotation(infixNotation))
+    if (lastElement === undefined || flags.operator || (i !== 0 && flags.decimal && string[i - 1] === '.')) {
+      throw { data: string, error: 'ILLEGAL_RIGHT_BRACKET', errorIndex: i }
+    } else if (flags.numberStart !== -1) {
+      infixStack.push(string.substring(flags.numberStart, i))
+    }
+
+    infixStack.push(')')
+
+    return setFlags({})
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+const operatorCheck = async ({ string, i, flags }, infixStack) => {
+  try {
+    if (flags.operator || string[i].match(/[*\/%^]/) && (i === 0 || flags.number)) {
+      throw { data: string, error: 'ILLEGAL_OPERATOR', errorIndex: i }
+    } else if (string[i].match(/[*\/%^]/) && flags.decimal && !string[i - 1].match(/\d/)) {
+      throw { data: string, error: 'ILLEGAL_FLOAT', errorIndex: i - 1 }
+    } 
+    
+    flags.power = false
+
+    if (string[i] === '^') {
+      flags.power = true
+    }
+
+    if (flags.numberStart !== -1) {
+      infixStack.push(string.substring(flags.numberStart, i))
+    }
+
+    if (string[i].match(/[+\-]/) && (i === 0 || string[i - 1] === '(')) {
+      flags.sign = true
+      flags.numberStart = i
+    } else {
+      infixStack.push(string[i])
+    }
+
+    return setFlags({ power: flags.power, operator: true, sign: flags.sign, numberStart: flags.numberStart })
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+const variableCheck = ({ string, i, flags }) => {
+  if (!flags.number && !flags.sign) {
+    flags.numberStart = i
+  }
+
+  return setFlags({ number: true, numberStart: flags.numberStart})
+}
+
+const decimalCheck = async ({ string, i, flags }) => {
+  try {
+    if (!flags.number || flags.decimal) {
+      throw { data: string, error: 'ILLEGAL_FLOAT', errorIndex: i }
+    } else {
+      return setFlags({ number: true, decimal: true, numberStart: flags.numberStart })
+    }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+const lastCharacterCheck = async ({ string, flags }, infixStack, bracketStack) => {
+  try {
+    if (bracketStack.length > 0) {
+      throw { data: string, code: 'ILLEGAL_BRACKETS', errorIndex : string.length - 1 }
+    }
+
+    if (string[string.length - 1].match(/\d/) && flags.numberStart !== -1) {
+      infixStack.push(string.substring(flags.numberStart, string.length))
+    }
+
+    if (string[string.length - 1] === '.') {
+      throw { data: string, code: 'ILLEGAL_FLOAT', errorIndex: string.length - 1 }
+    } else if (string[string.length - 1].match(/[\-+*%\/^]/)) {
+      throw { data: string, code: 'ILLEGAL_OPERATOR', errorIndex: string.length - 1 }
+    }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+const isValid = async (string) => {
+  const bracketStack = []
+  const infixStack = []
+
+  let flags = setFlags({ numberStart: -1 })
+
+  try {
+    for (let i = 0; i < string.length; i++) {
+      if (string[i] === '(') {
+        flags = await leftBracketCheck({ string, i, numberStart: flags.numberStart }, infixStack, bracketStack)
+      } else if (string[i] === ')') {
+        flags = await rightBracketCheck({ string, i, flags }, infixStack, bracketStack)
+      } else if (string[i].match(/[+\-*\/%^]/)) {
+        flags = await operatorCheck({ string, i, flags }, infixStack)
+      } else if (string[i].match(/\d/)) {
+        flags = variableCheck({ string, i, flags })
+      } else if (string[i] === '.') {
+        flags = await decimalCheck({ string, i, flags })
+      }
+    }
+
+    await lastCharacterCheck({ string, flags }, infixStack, bracketStack)
+
+    return infixStack
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+const suffixNotation = (expression) => {
+  console.log(expression)
+}
+
+module.exports = async (expression) => {
+  try {
+    const infixNotation = await isValid(expression)
+
+    suffixNotation(infixNotation)
+
+    return undefined
+  } catch (error) {
+    return Promise.reject(error)
   }
 }
