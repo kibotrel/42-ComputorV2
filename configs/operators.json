@@ -3,36 +3,36 @@
     "name": "ADD",
     "symbol": "+",
     "associativity": "l",
-    "precedence": 0
+    "precedence": 1
   },
   {
     "name": "SUB",
     "symbol": "-",
-    "associativity": "r",
-    "precedence": 0
+    "associativity": "l",
+    "precedence": 1
   },
   {
     "name": "DIV",
     "symbol": "/",
     "associativity": "l",
-    "precedence": 1
+    "precedence": 2
   },
   {
     "name": "MUL",
     "symbol": "*",
     "associativity": "l",
-    "precedence": 1
+    "precedence": 2
   },
   {
     "name": "MOD",
     "symbol": "%",
     "associativity": "l",
-    "precedence": 1
+    "precedence": 2
   },
   {
     "name": "POW",
     "symbol": "^",
     "associativity": "r",
-    "precedence": 2
+    "precedence": 3
   }
 ]
