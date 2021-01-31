@@ -1,4 +1,4 @@
-const operators = require('@configs/operators.json')
+const Operators = require('@configs/operators.json')
 
 const setFlags = ({ power, number, operator, decimal, sign, numberStart }) => {
   return { power, number, operator, decimal, sign, numberStart: numberStart === undefined ? -1 : numberStart }
@@ -11,10 +11,10 @@ const leftBracketCheck = async ({ string, i, numberStart }, infixStack, bracketS
     }
 
     if (i !== 0) {
-      if (string[i - 1].match(/\d/)) {
+      if (string[i - 1].match(/[\d)]/)) {
         infixStack.push('*')
       } else if (string[i - 1] === '.') {
-        throw { data: string, error: 'ILLEGAL_LEFT_BRACKET', errorIndex: i }
+        throw { data: string, code: 'ILLEGAL_LEFT_BRACKET', index: i }
       }
     }
 
@@ -23,6 +23,7 @@ const leftBracketCheck = async ({ string, i, numberStart }, infixStack, bracketS
 
     return setFlags({})
   } catch (error) {
+    console.log("left")
     return Promise.reject(error)
   }
 }
@@ -32,7 +33,7 @@ const rightBracketCheck = async ({ string, i, flags }, infixStack, bracketStack)
     const lastElement = bracketStack.pop()
 
     if (lastElement === undefined || flags.operator || (i !== 0 && flags.decimal && string[i - 1] === '.')) {
-      throw { data: string, error: 'ILLEGAL_RIGHT_BRACKET', errorIndex: i }
+      throw { data: string, code: 'ILLEGAL_RIGHT_BRACKET', index: i }
     } else if (flags.numberStart !== -1) {
       infixStack.push(string.substring(flags.numberStart, i))
     }
@@ -41,26 +42,30 @@ const rightBracketCheck = async ({ string, i, flags }, infixStack, bracketStack)
 
     return setFlags({})
   } catch (error) {
+    console.log("right")
     return Promise.reject(error)
   }
 }
 
 const operatorCheck = async ({ string, i, flags }, infixStack) => {
   try {
+    if (flags.numberStart !== -1) {
+      infixStack.push(string.substring(flags.numberStart, i))
+      flags.number = false
+      flags.decimal = false
+      flags.numberStart = -1
+    }
+
     if (flags.operator || string[i].match(/[*\/%^]/) && (i === 0 || flags.number)) {
-      throw { data: string, error: 'ILLEGAL_OPERATOR', errorIndex: i }
+      throw { data: string, code: 'ILLEGAL_OPERATOR', index: i }
     } else if (string[i].match(/[*\/%^]/) && flags.decimal && !string[i - 1].match(/\d/)) {
-      throw { data: string, error: 'ILLEGAL_FLOAT', errorIndex: i - 1 }
+      throw { data: string, code: 'ILLEGAL_FLOAT', index: i - 1 }
     } 
     
     flags.power = false
 
     if (string[i] === '^') {
       flags.power = true
-    }
-
-    if (flags.numberStart !== -1) {
-      infixStack.push(string.substring(flags.numberStart, i))
     }
 
     if (string[i].match(/[+\-]/) && (i === 0 || string[i - 1] === '(')) {
@@ -72,6 +77,7 @@ const operatorCheck = async ({ string, i, flags }, infixStack) => {
 
     return setFlags({ power: flags.power, operator: true, sign: flags.sign, numberStart: flags.numberStart })
   } catch (error) {
+    console.log("operator")
     return Promise.reject(error)
   }
 }
@@ -87,11 +93,12 @@ const variableCheck = ({ string, i, flags }) => {
 const decimalCheck = async ({ string, i, flags }) => {
   try {
     if (!flags.number || flags.decimal) {
-      throw { data: string, error: 'ILLEGAL_FLOAT', errorIndex: i }
+      throw { data: string, code: 'ILLEGAL_FLOAT', index: i }
     } else {
       return setFlags({ number: true, decimal: true, numberStart: flags.numberStart })
     }
   } catch (error) {
+    console.log("decimal")
     return Promise.reject(error)
   }
 }
@@ -99,19 +106,26 @@ const decimalCheck = async ({ string, i, flags }) => {
 const lastCharacterCheck = async ({ string, flags }, infixStack, bracketStack) => {
   try {
     if (bracketStack.length > 0) {
-      throw { data: string, code: 'ILLEGAL_BRACKETS', errorIndex : string.length - 1 }
+      throw { data: string, code: 'ILLEGAL_BRACKETS', index : string.length - 1 }
     }
 
-    if (string[string.length - 1].match(/\d/) && flags.numberStart !== -1) {
-      infixStack.push(string.substring(flags.numberStart, string.length))
+    if (string[string.length - 1].match(/\d/)) {
+      if (string.length > 1 && infixStack[infixStack.length - 1] === ')') {
+        throw { data: string, code: 'ILLEGAL_NUMBER', index: string.length - 1 }
+      }
+
+      if (flags.numberStart !== -1) {
+        infixStack.push(string.substring(flags.numberStart, string.length))
+      }
     }
 
     if (string[string.length - 1] === '.') {
-      throw { data: string, code: 'ILLEGAL_FLOAT', errorIndex: string.length - 1 }
+      throw { data: string, code: 'ILLEGAL_FLOAT', index: string.length - 1 }
     } else if (string[string.length - 1].match(/[\-+*%\/^]/)) {
-      throw { data: string, code: 'ILLEGAL_OPERATOR', errorIndex: string.length - 1 }
+      throw { data: string, code: 'ILLEGAL_OPERATOR', index: string.length - 1 }
     }
   } catch (error) {
+    console.log("last")
     return Promise.reject(error)
   }
 }
@@ -145,17 +159,53 @@ const isValid = async (string) => {
   }
 }
 
-const suffixNotation = (expression) => {
-  console.log(expression)
+const shuntingYardAlgorithm = (infixStack) => {
+  const postfixStack = []
+  const operatorStack = []
+
+  for (const token of infixStack) {
+    if (!token.match(/^[+\-*\/%^()]$/)) {
+      postfixStack.push(token)
+    } else if (token.match(/^[+\-*\/%^]$/)) {
+      if (operatorStack.length) {
+        const lastToken = operatorStack[operatorStack.length - 1]
+
+        if (lastToken.match(/^[+\-*\/%^]$/)) {
+          const o1 = Operators.find(element => element.symbol === token)
+          const o2 = Operators.find(element => element.symbol === lastToken)
+
+          if ((o1.associativity === 'l' && o1.precedence <= o2.precedence) || (o1.associativity === 'r' && o1.precedence < o2.precedence)) {
+            postfixStack.push(operatorStack.pop())
+          }
+        }
+      }
+
+      operatorStack.push(token)
+    } else if (token ===  '(') {
+      operatorStack.push(token)
+    } else if (token === ')') {
+      while (operatorStack[operatorStack.length - 1] !== '(') {
+        postfixStack.push(operatorStack.pop())
+      }
+
+      operatorStack.pop()
+    }
+  }
+
+  while (operatorStack.length > 0) {
+    postfixStack.push(operatorStack.pop())
+  }
+
+  return postfixStack
 }
 
-module.exports = async (expression) => {
+module.exports = async (string) => {
   try {
-    const infixNotation = await isValid(expression)
+    const infixNotation = await isValid(string)
 
-    suffixNotation(infixNotation)
+    const suffixNotation = shuntingYardAlgorithm(infixNotation)
 
-    return undefined
+    return suffixNotation
   } catch (error) {
     return Promise.reject(error)
   }
