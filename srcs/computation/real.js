@@ -199,13 +199,47 @@ const shuntingYardAlgorithm = (infixStack) => {
   return postfixStack
 }
 
+const opperation = ({ o1, operator, o2 }) => {
+  switch (operator) {
+    case '+':
+      return parseFloat(o1) + parseFloat(o2)
+    case '-':
+      return parseFloat(o1) - parseFloat(o2)
+    case '*':
+      return parseFloat(o1) * parseFloat(o2)
+    case '/':
+      return parseFloat(o1) / parseFloat(o2)
+    case '%':
+      return parseFloat(o1) % parseFloat(o2)
+    case '^':
+      return Math.pow(parseFloat(o1), parseFloat(o2))
+  }
+}
+
+const compute = (suffixStack) => {
+  const computeStack = []
+
+  for (const token of suffixStack) {
+    if (!token.match(/^[+\-*\/%^]$/)) {
+      computeStack.push(token)
+    } else {
+      const o2 = computeStack.pop()
+      const o1 = computeStack.pop()
+
+      computeStack.push(opperation({ o1, operator: token, o2 }))
+    }
+  }
+
+  return parseFloat(computeStack.pop())
+}
+
 module.exports = async (string) => {
   try {
     const infixNotation = await isValid(string)
 
     const suffixNotation = shuntingYardAlgorithm(infixNotation)
 
-    return suffixNotation
+    return compute(suffixNotation)
   } catch (error) {
     return Promise.reject(error)
   }
