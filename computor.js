@@ -3,27 +3,23 @@ require('module-alias/register')
 const Reader = require('readline')
 const Client = Reader.createInterface({ input: process.stdin, output: process.stdout })
 
-const realComputation = require('@srcs/computation/real.js')
+const inputHandler = require('@srcs/handlers/input.js')
+const errorHandler = require('@srcs/handlers/error.js')
 
 Client.write('> ')
 
-Client.on('line', async (input) => {
-  input = input.toLowerCase().replace(/ /g, '').substring(1)
-  
-  if (input === 'exit') {
-    process.exit(0)
-  }
 
-  if (input.match(/^[0-9+\-\.\/*%^()]+$/)) {
-    try {
-      const feedback = await realComputation(input)
+// Checks for Infinity to avoid miscalculations for
+// each variable and the current value of the topmost
+// in the stack during expressionValue(inputLine)
 
-      console.log(feedback)
-    } catch (error) {
-      console.log(`Error: ${error.code} at index: ${error.index}`)
-    }
+Client.on('line', async (payload) => {
+  try {
+    const feedback = await inputHandler(payload)
+    console.log(feedback)
+  } catch (error) {
+    errorHandler(error)
   }
 
   Client.write('> ')
-
 })

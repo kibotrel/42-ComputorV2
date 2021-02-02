@@ -1,0 +1,26 @@
+[
+  {
+    "code": "invalidLeftBracket",
+    "message": ""
+  },
+  {
+    "code": "invalidRightBracket",
+    "message": ""
+  },
+  {
+    "code": "invalidBracketEnclosure",
+    "message": ""
+  },
+  {
+    "code": "invalidOperatorPosition",
+    "message": ""
+  },
+  {
+    "code": "misformattedFloat",
+    "message": ""
+  },
+  {
+    "code": "misformattedInteger",
+    "message": ""
+  }
+]
