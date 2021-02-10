@@ -1,31 +1,28 @@
 const parseLine = require('@srcs/parsing/input.js')
 const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
+const evaluate = require('@srcs/maths/basic-operations.js')
 
-const Evaluate = {
-  '+': (a, b) => { return parseFloat(a) + parseFloat(b) },
-  '-': (a, b) => { return parseFloat(a) - parseFloat(b) },
-  '*': (a, b) => { return parseFloat(a) * parseFloat(b) },
-  '/': (a, b) => { return parseFloat(a) / parseFloat(b) },
-  '%': (a, b) => { return parseFloat(a) % parseFloat(b) },
-  '^': (a, b) => { return Math.pow(parseFloat(a), parseFloat(b)) }
-}
-
-const computePostfix = (postfixNotation) => {
+const computePostfix = async (postfixNotation) => {
   const stack = []
+  
+  try {
+    for (const token of postfixNotation) {
+      if (!token.match(/^[+\-*\/%^]$/)) {
+        stack.push(token)
+      } else {
+        const secondOperand = stack.pop()
+        const firstOperand = stack.pop()
 
-  for (const token of postfixNotation) {
-    if (!token.match(/^[+\-*\/%^]$/)) {
-      stack.push(token)
-    } else {
-      const secondOperand = stack.pop()
-      const firstOperand = stack.pop()
-      const result = Evaluate[token](firstOperand, secondOperand)
+        const result = await evaluate({ firstOperand, operator: token, secondOperand })
 
-      stack.push(result)
+        stack.push(result)
+      }
     }
-  }
 
-  return parseFloat(stack.pop())
+    return stack.pop()
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }
 
 module.exports = async (inputLine) => {
@@ -33,7 +30,7 @@ module.exports = async (inputLine) => {
     const infixNotation = await parseLine(inputLine)
     const postfixNotation = infixToPosfix(infixNotation)
 
-    return computePostfix(postfixNotation)
+    return await computePostfix(postfixNotation)
   } catch (error) {
     return Promise.reject(error)
   }

@@ -15,7 +15,8 @@
   "_moduleAliases": {
     "@root": ".",
     "@configs": "configs",
-    "@srcs": "srcs"
+    "@srcs": "srcs",
+    "@classes": "srcs/classes"
   },
 
   "scripts": {

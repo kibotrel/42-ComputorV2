@@ -22,5 +22,25 @@
   {
     "code": "misformattedInteger",
     "message": ""
+  },
+  {
+    "code": "tooBigNumber",
+    "message": ""
+  },
+  {
+    "code": "notNumber",
+    "message": ""
+  },
+  {
+    "code": "invalidOperation",
+    "message": ""
+  },
+  {
+    "code": "impossibleDivision",
+    "message": ""
+  },
+  {
+    "code": "unsuportedOperation",
+    "message": ""
   }
 ]
