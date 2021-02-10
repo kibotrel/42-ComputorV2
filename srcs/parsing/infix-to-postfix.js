@@ -1,5 +1,9 @@
 const Operators = require('@configs/operators.json')
 
+// Implementation of the Shunting Yard Algorithm by Dijkstra
+// to convert infix expression to postfix. More info on
+// https://en.wikipedia.org/wiki/Shunting-yard_algorithm.
+
 module.exports = (infixStack) => {
   const postfixStack = []
   const operatorStack = []
