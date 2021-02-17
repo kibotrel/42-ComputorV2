@@ -35,7 +35,6 @@ module.exports = async (string) => {
         await number({ string, i }, flags)
       } else if (string[i] === '.') {
         await decimal({ string, i }, flags)
-        console.log(flags)
       } else if (string[i].match(/[a-z]/)) {
         await variable({ string, i }, flags, infixStack)
       }

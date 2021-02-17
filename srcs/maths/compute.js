@@ -47,9 +47,9 @@ const computePostfix = async (postfixNotation) => {
 module.exports = async (inputLine) => {
   try {
     const infixNotation = await parseLine(inputLine)
-    console.log(infixNotation)
+    // console.log(infixNotation)
     const postfixNotation = infixToPosfix(infixNotation)
-    console.log(postfixNotation)
+    // console.log(postfixNotation)
     return await computePostfix(postfixNotation)
   } catch (error) {
     return Promise.reject(error)
