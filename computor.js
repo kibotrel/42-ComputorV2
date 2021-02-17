@@ -15,6 +15,7 @@ Client.on('line', async (payload) => {
   try {
     const feedback = await inputHandler(payload)
     console.log(feedback)
+    console.log(feedback.print())
   } catch (error) {
     errorHandler(error)
   }

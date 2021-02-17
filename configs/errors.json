@@ -42,5 +42,13 @@
   {
     "code": "unsuportedOperation",
     "message": ""
+  },
+  {
+    "code": "badOperand",
+    "message": ""
+  },
+  {
+    "code": "illegalImaginary",
+    "message": ""
   }
 ]

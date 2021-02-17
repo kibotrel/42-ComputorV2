@@ -215,7 +215,15 @@ class Numeral {
   }
 
   print() {
-    return `\x1b[33m${this.r}${this.i < 0 ? ` - ${-this.i} * i` : this.i > 0 ? ` + ${this.i} * i` : ''}\x1b[0m`
+    if (!this.r && !this.i) {
+      return '\x1b[33m0\x1b[0m'
+    } else {
+      const real = this.r
+      const separatorSign = this.i < 0 ? '-' : '+'
+      const imaginary = this.i < -1 ? this.i * -1 : this.i > 1 ? this.i : ''
+
+      return `${this.r ? real : ''}${this.r && this.i ? ` ${separatorSign} ` : this.i < 0 ? separatorSign : ''}${this.i ? `${imaginary}i` : ''}`
+    }
   }
 }
 
