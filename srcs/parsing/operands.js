@@ -1,5 +1,3 @@
-const { updateFlags } = require('@srcs/parsing/utils.js')
-
 const number = ({ string, i }, flags) => {
   //console.log({ string: 'integer', flags })
   if (!flags.number && !flags.sign) {

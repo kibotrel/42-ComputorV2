@@ -30,7 +30,7 @@ module.exports = async (string) => {
         await rightBracket({ string, i }, flags, infixStack, bracketStack)
         flags = updateFlags({ numberStart: -1 })
       } else if (string[i].match(/[+\-*\/%^]/)) {
-        flags = await operator({ string, i, flags }, infixStack)
+        await operator({ string, i }, flags, infixStack)
       } else if (string[i].match(/\d/)) {
         await number({ string, i }, flags)
       } else if (string[i] === '.') {

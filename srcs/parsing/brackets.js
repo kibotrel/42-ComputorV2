@@ -1,5 +1,3 @@
-const { updateFlags } = require('@srcs/parsing/utils.js')
-
 // These two functions are meant to certify that if the given
 // infix expression contains brackets, they are appearing in
 // the right order by stacking left brackets and destack on
