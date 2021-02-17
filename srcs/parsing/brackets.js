@@ -32,6 +32,8 @@ const rightBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
 
     if (lastElement === undefined || flags.operator || (i !== 0 && flags.decimal && string[i - 1] === '.')) {
       throw { data: string, code: 'invalidRightBracket', index: i }
+    } else if (!flags.number && !flags.complex && !flags.variable && string[i - 1] !== ')') {
+      throw { data: string, code: 'bracketsNotUsed', index: i }
     } else if (flags.numberStart !== -1) {
       infixStack.push(string.substring(flags.numberStart, i))
     }

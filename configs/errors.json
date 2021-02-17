@@ -50,5 +50,9 @@
   {
     "code": "illegalImaginary",
     "message": ""
+  },
+  {
+    "code": "bracketsNotUsed",
+    "message": ""
   }
 ]
