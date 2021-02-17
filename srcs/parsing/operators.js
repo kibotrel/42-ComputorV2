@@ -11,7 +11,6 @@ const isVariableBeforeOperator = ({string, i}, flags, infixStack) => {
 }
 
 const operatorErrors = async ({ string, i }, flags) => {
-  console.log(flags)
   try {
     if (flags.operator || (string[i].match(/[*\/%^]/) && (i === 0 || flags.number))) {
       throw { data: string, code: 'invalidOperatorPosition', index: i }

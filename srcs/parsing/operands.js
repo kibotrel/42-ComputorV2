@@ -1,17 +1,25 @@
 const number = ({ string, i }, flags) => {
-  //console.log({ string: 'integer', flags })
-  if (!flags.number && !flags.sign) {
-    flags.numberStart = i
-  }
+  try {
+    if (flags.complex) {
+      throw { data: string, code: 'illegalTerm', index: i }
+    }
 
-  flags.number = true
-  flags.operator = false
+    if (!flags.number && !flags.sign) {
+      flags.numberStart = i
+    }
+
+    flags.number = true
+    flags.operator = false
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }
 
 const decimal = async ({ string, i }, flags) => {
-  //console.log({ string: 'decimal', flags })
   try {
-    if (!flags.number || flags.decimal) {
+    if (flags.complex) {
+      throw { data: string, code: 'illegalTerm', index: i }
+    } else if (!flags.number || flags.decimal) {
       throw { data: string, code: 'misformattedFloat', index: i }
     }
 
@@ -23,7 +31,6 @@ const decimal = async ({ string, i }, flags) => {
 
 const variable = async ({ string, i }, flags, infixStack) => {
   try {
-    //console.log({ string: 'variable', flags })
     const current = string[i]
     const previous = i > 0 ? string[i - 1] : ''
     const next = string.length - i > 1 ? string[i + 1] : ''
