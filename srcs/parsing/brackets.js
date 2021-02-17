@@ -5,10 +5,10 @@ const { updateFlags } = require('@srcs/parsing/utils.js')
 // the right order by stacking left brackets and destack on
 // right brackets.
 
-const leftBracket = async ({ string, i, numberStart }, infixStack, bracketStack) => {
+const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {
-    if (numberStart !== -1) {
-      infixStack.push(string.substring(numberStart, i))
+    if (flags.numberStart !== -1) {
+      infixStack.push(string.substring(flags.numberStart, i))
     }
 
     if (i !== 0) {
@@ -21,14 +21,12 @@ const leftBracket = async ({ string, i, numberStart }, infixStack, bracketStack)
 
     infixStack.push('(')
     bracketStack.push(1)
-
-    return updateFlags({})
   } catch (error) {
     return Promise.reject(error)
   }
 }
 
-const rightBracket = async ({ string, i, flags }, infixStack, bracketStack) => {
+const rightBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {
     const lastElement = bracketStack.pop()
 
@@ -37,10 +35,7 @@ const rightBracket = async ({ string, i, flags }, infixStack, bracketStack) => {
     } else if (flags.numberStart !== -1) {
       infixStack.push(string.substring(flags.numberStart, i))
     }
-
     infixStack.push(')')
-
-    return updateFlags({})
   } catch (error) {
     return Promise.reject(error)
   }

@@ -1,30 +1,39 @@
 const Numeral = require('@classes/numeral.js')
 
-const sanitizeOperands = async ({ firstOperand, secondOperand }) => {
-  let a, b
+const sanitizeOperand = async (operand) => {
+  let trueOperand
 
   try {
-    if (firstOperand.constructor.name !== 'Numeral' && firstOperand !== 'i') {
-      a = parseFloat(firstOperand)
+    if (operand.constructor.name === 'String') {
+      if (operand === 'i') {
+        trueOperand = new Numeral({ r: 0, i: 1 })
+      } else {
+        trueOperand = parseFloat(operand)
 
-      if (a === Number.NEGATIVE_INFINITY || a === Number.POSITIVE_INFINITY ) {
-        throw { data: firstOperand, code: 'tooBigNumber' }
-      } else if (Number.isNaN(a)) {
-        throw { data: firstOperand, code: 'notNumber' }
+        if (trueOperand === Number.NEGATIVE_INFINITY || trueOperand === Number.POSITIVE_INFINITY) {
+          throw { data: operand, code: 'tooBigNumber' }
+        } else if (Number.isNaN(trueOperand)) {
+          throw { data: operand, code: 'notNumber' }
+        }
       }
+    } else if (operand.constructor.name === 'Numeral') {
+      trueOperand = operand
     }
 
-    if (secondOperand.constructor.name !== 'Numeral' && secondOperand !== 'i') {
-      b = parseFloat(secondOperand)
+    return trueOperand
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+const checkOperands = async ({ firstOperand, secondOperand }) => {
+  try {
+    const a = await sanitizeOperand(firstOperand)
+    const b = await sanitizeOperand(secondOperand)
 
-      if (b === Number.NEGATIVE_INFINITY || b === Number.POSITIVE_INFINITY ) {
-        throw { data: secondOperand, code: 'tooBigNumber' }
-      } else if (Number.isNaN(b)) {
-        throw { data: secondOperand, code: 'notNumber' }
-      }
-    }
-
-    return { a: a === undefined ? firstOperand : a, b: b === undefined ? secondOperand : b }
+    if (a === undefined || b === undefined ) {
+      throw { data: {firstOperand, secondOperand, a, b }, code: 'badOperand' }
+    } else
+      return { a, b }
   } catch (error) {
     return Promise.reject(error)
   }
@@ -32,7 +41,7 @@ const sanitizeOperands = async ({ firstOperand, secondOperand }) => {
 
 module.exports = async ({ firstOperand, operator, secondOperand }) => {
   try {
-    const { a, b } = await sanitizeOperands({ firstOperand, secondOperand })
+    const { a, b } = await checkOperands({ firstOperand, secondOperand })
 
     switch (operator) {
       case '+': return await Numeral.add(a, b)
