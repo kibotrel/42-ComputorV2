@@ -218,6 +218,11 @@ class Numeral {
     if (!this.r && !this.i) {
       return '\x1b[33m0\x1b[0m'
     } else {
+      // Used the parseFloat(x.toPrecision(15)) to correct small floating point
+      // errors that happen sometimes due to the lack of precision in Javascript
+      // since we don't really need that much decimal digits. more informations on
+      // https://bit.ly/2OT0qLO
+
       const real = parseFloat(this.r.toPrecision(15))
       const separatorSign = this.i < 0 ? '-' : '+'
       const imaginary = this.i < -1 ? -parseFloat(this.i.toPrecision(15)) : this.i > 1 ? parseFloat(this.i.toPrecision(15)) : ''
