@@ -218,9 +218,9 @@ class Numeral {
     if (!this.r && !this.i) {
       return '\x1b[33m0\x1b[0m'
     } else {
-      const real = this.r
+      const real = parseFloat(this.r.toPrecision(15))
       const separatorSign = this.i < 0 ? '-' : '+'
-      const imaginary = this.i < -1 ? this.i * -1 : this.i > 1 ? this.i : ''
+      const imaginary = this.i < -1 ? -parseFloat(this.i.toPrecision(15)) : this.i > 1 ? parseFloat(this.i.toPrecision(15)) : ''
 
       return `${this.r ? real : ''}${this.r && this.i ? ` ${separatorSign} ` : this.i < 0 ? separatorSign : ''}${this.i ? `${imaginary}i` : ''}`
     }
