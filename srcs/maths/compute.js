@@ -33,7 +33,6 @@ const computePostfix = async (postfixNotation) => {
         const firstOperand = stack.pop()
 
         const result = await evaluate({ firstOperand, operator: token, secondOperand })
-
         stack.push(result)
       }
     }
