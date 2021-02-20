@@ -1,4 +1,4 @@
-const { leastCommonFactor } = require('@srcs/maths/basic-functions.js')
+const { leastCommonFactor, greatestCommonDivisor } = require('@srcs/maths/basic-functions.js')
 
 const decimalToIntegerScaling = ({ number, shift }) => {
   // Quick fix for imprecision for some floating point values
@@ -49,7 +49,11 @@ const addFraction = (a , b) => {
   a.n = (commonFactor === a.d ? signA * a.n : signA * (commonFactor / a.d) * a.n)
   b.n = (commonFactor === b.d ? signB * b.n : signB * (commonFactor / b.d) * b.n)
 
-  return { numerator: a.n + b.n, denominator: commonFactor }
+  const commonDivisor = greatestCommonDivisor({ a: a.n + b.n, b: commonFactor })
+  const numerator = (a.n + b.n) / commonDivisor
+  const denominator = commonFactor / commonDivisor
+
+  return { numerator, denominator }
 }
 
 module.exports = { decimalToIntegerScaling, addFraction }
