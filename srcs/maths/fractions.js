@@ -56,4 +56,28 @@ const addFraction = (a , b) => {
   return { numerator, denominator }
 }
 
-module.exports = { decimalToIntegerScaling, addFraction }
+const subFraction = (a , b) => {
+  // Need to know and remove the sign of each fraction to beforehand to simplify
+  // computation and put back the correct one at the end of the process.
+
+  const signA = (a.n >= 0 ? 1 : -1) * (a.d >= 0 ? 1 : -1)
+  const signB = (b.n >= 0 ? 1 : -1) * (b.d >= 0 ? 1 : -1)
+
+  a.n *= (a.n < 0 ? -1 : 1)
+  a.d *= (a.d < 0 ? -1 : 1)
+  b.n *= (b.n < 0 ? -1 : 1)
+  b.d *= (b.d < 0 ? -1 : 1)
+
+  const commonFactor = leastCommonFactor({ a: a.d, b: b.d })
+
+  a.n = (commonFactor === a.d ? signA * a.n : signA * (commonFactor / a.d) * a.n)
+  b.n = (commonFactor === b.d ? signB * b.n : signB * (commonFactor / b.d) * b.n)
+
+  const commonDivisor = greatestCommonDivisor({ a: a.n + b.n, b: commonFactor })
+  const numerator = (a.n - b.n) / commonDivisor
+  const denominator = commonFactor / commonDivisor
+
+  return { numerator, denominator }
+}
+
+module.exports = { decimalToIntegerScaling, addFraction, subFraction }
