@@ -348,9 +348,9 @@ class Numeral {
       // since we don't really need that much decimal digits. more informations on
       // https://bit.ly/2OT0qLO
 
-      const real = parseFloat(this.r.toPrecision(15))
+      const real = parseFloat(this.r.toPrecision(Config.floatPrecision))
       const separatorSign = this.i < 0 ? '-' : '+'
-      const imaginary = this.i < -1 ? -parseFloat(this.i.toPrecision(15)) : this.i > 1 || (this.i > 0 && this.i < 1) ? parseFloat(this.i.toPrecision(15)) : ''
+      const imaginary = this.i < -1 ? -parseFloat(this.i.toPrecision(Config.floatPrecision)) : this.i > 1 || (this.i > 0 && this.i < 1) ? parseFloat(this.i.toPrecision(Config.floatPrecision)) : ''
 
       return `${this.r ? real : ''}${this.r && this.i ? ` ${separatorSign} ` : this.i < 0 ? separatorSign : ''}${this.i ? `${imaginary}i` : ''}`
     }
