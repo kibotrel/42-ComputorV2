@@ -1,5 +1,5 @@
 const { checkNumeral } = require('@srcs/maths/utils.js')
-const { decimalToIntegerScaling, addFraction, multiplyFraction } = require('@srcs/maths/fractions.js')
+const { decimalToIntegerScaling, addFraction, multiplyFraction, divideFraction } = require('@srcs/maths/fractions.js')
 
 // r stands for real, i for imaginary, n for numerator and d for denominator
 
@@ -238,24 +238,90 @@ class Numeral {
       }
 
       if (a.constructor.name === 'Number' && b.constructor.name === 'Number') {
+        const num1 = decimalToIntegerScaling({ number: a })
+        const num2 = decimalToIntegerScaling({ number: b })
+
+        const { n: numerator, d: denominator } = divideFraction(num1, num2)
+
         result = new Numeral({
           r: a / b,
-          i: 0
+          i: 0,
+          nr: numerator,
+          dr: denominator
         })
       } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Numeral') {
+        const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
+        const num1RN = decimalToIntegerScaling({ number: -a.nr, shift: a.dr })
+        const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
+        const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
+        const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
+
+        const tempRN1 = multiplyFraction(num1R, num2R)
+        const tempRN2 = multiplyFraction(num1I, num2I)
+        const tempRN3 = addFraction(tempRN1, tempRN2, '+')
+
+        const tempD1 = multiplyFraction(num2R, num2R)
+        const tempD2 = multiplyFraction(num2I, num2I)
+        const tempD3 = addFraction(tempD1, tempD2, '+')
+
+        const { n: numeratorR, d: denominatorR } = divideFraction(tempRN3, tempD3)
+
+        const tempIN1 = multiplyFraction(num1RN, num2I)
+        const tempIN2 = multiplyFraction(num2R, num1I)
+        const tempIN3 = addFraction(tempIN1, tempIN2, '+')
+
+        const { n: numeratorI, d: denominatorI } = divideFraction(tempIN3, tempD3)
+
         result = new Numeral({
           r: (a.r * b.r + a.i * b.i) / (b.r * b.r + b.i * b.i),
-          i: (-a.r * b.i + b.r * a.i) / (b.r * b.r + b.i * b.i)
+          i: (-a.r * b.i + b.r * a.i) / (b.r * b.r + b.i * b.i),
+          nr: numeratorR,
+          dr: denominatorR,
+          ni: numeratorI,
+          di: denominatorI
+
         })
       } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Number') {
+        const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
+        const num2 = decimalToIntegerScaling({ number: b })
+        const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
+
+        const { n: numeratorR, d: denominatorR } = divideFraction(num1R, num2)
+        const { n: numeratorI, d: denominatorI } = divideFraction(num1I, num2)
+
         result = new Numeral({
           r: a.r / b,
-          i: a.i / b
+          i: a.i / b,
+          nr: numeratorR,
+          dr: denominatorR,
+          ni: numeratorI,
+          di: denominatorI
         })
       } else if (a.constructor.name === 'Number' && b.constructor.name === 'Numeral') {
+        const num1 = decimalToIntegerScaling({ number: a })
+        const num1N = decimalToIntegerScaling({ number: -a })
+        const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
+        const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
+
+        const tempRN = multiplyFraction(num1, num2R)
+
+        const tempD1 = multiplyFraction(num2R, num2R)
+        const tempD2 = multiplyFraction(num2I, num2I)
+        const tempD3 = addFraction(tempD1, tempD2, '+')
+
+        const { n: numeratorR, d: denominatorR } = divideFraction(tempRN, tempD3)
+
+        const tempIN = multiplyFraction(num1N, num2I)
+
+        const { n: numeratorI, d: denominatorI } = divideFraction(tempIN, tempD3)
+
         result = new Numeral({
           r: (a * b.r) / (b.r * b.r + b.i * b.i),
-          i: (-a * b.i) / (b.r * b.r + b.i * b.i)
+          i: (-a * b.i) / (b.r * b.r + b.i * b.i),
+          nr: numeratorR,
+          dr: denominatorR,
+          ni: numeratorI,
+          di: denominatorI
         })
       }
 
@@ -350,7 +416,7 @@ class Numeral {
 
       const real = parseFloat(this.r.toPrecision(Config.floatPrecision))
       const separatorSign = this.i < 0 ? '-' : '+'
-      const imaginary = this.i < -1 ? -parseFloat(this.i.toPrecision(Config.floatPrecision)) : this.i > 1 || (this.i > 0 && this.i < 1) ? parseFloat(this.i.toPrecision(Config.floatPrecision)) : ''
+      const imaginary = this.i < -1 || (this.i < 0 && this.i > -1) ? -parseFloat(this.i.toPrecision(Config.floatPrecision)) : this.i > 1 || (this.i > 0 && this.i < 1) ? parseFloat(this.i.toPrecision(Config.floatPrecision)) : ''
 
       return `${this.r ? real : ''}${this.r && this.i ? ` ${separatorSign} ` : this.i < 0 ? separatorSign : ''}${this.i ? `${imaginary}i` : ''}`
     }

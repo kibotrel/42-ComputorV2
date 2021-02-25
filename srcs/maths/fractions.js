@@ -66,4 +66,8 @@ const addFraction = (a , b, sign) => {
 const multiplyFraction = (a, b) => {
   return simplifyFraction({ numerator: a.n * b.n, denominator: a.d * b.d })
 }
-module.exports = { decimalToIntegerScaling, addFraction, multiplyFraction }
+
+const divideFraction = (a, b) => {
+  return multiplyFraction(a, { n: b.d, d: b.n })
+}
+module.exports = { decimalToIntegerScaling, addFraction, multiplyFraction, divideFraction }
