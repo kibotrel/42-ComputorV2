@@ -6,7 +6,7 @@ const simplifyFraction = ({ numerator, denominator }) => {
   numerator = numerator / commonDivisor
   denominator = denominator / commonDivisor
 
-  return { numerator, denominator }
+  return { n: numerator, d: denominator }
 }
 
 const decimalToIntegerScaling = ({ number, shift }) => {
@@ -63,4 +63,7 @@ const addFraction = (a , b, sign) => {
   return simplifyFraction({ numerator, denominator })
 }
 
-module.exports = { decimalToIntegerScaling, addFraction }
+const multiplyFraction = (a, b) => {
+  return simplifyFraction({ numerator: a.n * b.n, denominator: a.d * b.d })
+}
+module.exports = { decimalToIntegerScaling, addFraction, multiplyFraction }
