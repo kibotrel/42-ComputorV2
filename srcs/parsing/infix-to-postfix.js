@@ -12,7 +12,7 @@ module.exports = (infixStack) => {
     if (!token.match(/^[+\-*\/%^()]$/)) {
       postfixStack.push(token)
     } else if (token.match(/^[+\-*\/%^]$/)) {
-      if (operatorStack.length) {
+      while (operatorStack.length) {
         const lastToken = operatorStack[operatorStack.length - 1]
 
         if (lastToken.match(/^[+\-*\/%^]$/)) {
@@ -21,7 +21,11 @@ module.exports = (infixStack) => {
 
           if ((o1.associativity === 'l' && o1.precedence <= o2.precedence) || (o1.associativity === 'r' && o1.precedence < o2.precedence)) {
             postfixStack.push(operatorStack.pop())
+          } else {
+            break
           }
+        } else {
+          break
         }
       }
       operatorStack.push(token)
