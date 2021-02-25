@@ -10,7 +10,7 @@ const checkLastElement = async (token) => {
     if (token.constructor.name === 'Numeral') {
       return token
     } else if (token.constructor.name === 'String') {
-      if (token.match(/[a-z]/g).length === 1 && token.match(/i/g).length === 1) {
+      if ((token.match(/[a-z]/g) || []).length === 1 && (token.match(/i/g) || []).length === 1) {
         return parseImaginary(token)
       } else {
         return new Numeral({ r: parseFloat(token), i: 0 }) // TODO WHEN VARIABLE WILL BE ADDED
@@ -48,7 +48,7 @@ module.exports = async (inputLine) => {
     const infixNotation = await parseLine(inputLine)
     // console.log(infixNotation)
     const postfixNotation = infixToPosfix(infixNotation)
-    // sconsole.log(postfixNotation)
+    // console.log(postfixNotation)
     return await computePostfix(postfixNotation)
   } catch (error) {
     return Promise.reject(error)

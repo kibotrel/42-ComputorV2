@@ -10,7 +10,7 @@ const sanitizeOperand = async (operand) => {
       if (operand === 'i') {
         trueOperand = new Numeral({ r: 0, i: 1 })
       } else if (operand.match(/[a-z]/g)) {
-        if (operand.match(/[a-z]/g).length === 1 && operand.match(/i/g).length === 1) {
+        if ((operand.match(/[a-z]/g) || []).length === 1 && (operand.match(/i/g) || []).length === 1) {
           trueOperand = parseImaginary(operand)
         }
       } else {
