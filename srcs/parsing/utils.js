@@ -44,6 +44,8 @@ const imaginaryCheck = async ({ string, flags }, infixStack) => {
               if (imaginaryFactor[imaginaryFactor.length - 1].match(/[+\-]/))
                 imaginaryFactor += '1'
               infixStack.push(imaginaryFactor)
+            } else {
+              infixStack.push('1')
             }
             if (infixStack[infixStack.length - 1] !== '*') {
               infixStack.push('*')
@@ -91,35 +93,14 @@ const digitsCheck = async ({ string, flags }, infixStack) => {
   }
 }
 
-const parseImaginary = async (token) => {
-  let number = 0
-  const flags = {
-    digit: false,
-    decimal: false,
-    numberBoundary: false
-  }
-
-  try {
-    for (let i = 0; i < token.length; i++) {
-      if (token[i].match(/\d/)) {
-        if (flags.numberBoundary) {
-          throw { data: token, code: 'badOperand' }
-        } else {
-          flags.digit = true
-        }
-      } else if (token[i] == '.') {
-        if (!flags.digit || flags.decimal || flags.numberBoundary || (token.length - i > 1 && !token[i + 1].match(/\d/))) {
-          throw { data: token, code: 'misformattedFloat' }
-        } else {
-          flags.decimal = true
-        }
-      } else if (token[i] === 'i') {
-         flags.numberBoundary = true
-      }//FINIR CA
-    }
+const parseImaginary = (token) => {
+  if (token[0] === '-' && token[1] === 'i') {
+    return new Numeral({ r: 0, i: -1 })
+  } else if ((token[0] === '+' && token[1] === 'i') || token[0] === 'i') {
+    return new Numeral({ r: 0, i: 1 })
+  } else {
     return new Numeral({ r: 0, i: parseFloat(token) })
-  } catch (error) {
-    return Promise.reject(error)
   }
 }
+
 module.exports = { updateFlags, formatCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }

@@ -9,11 +9,11 @@ const checkLastElement = async (token) => {
   try {
     if (token.constructor.name === 'Numeral') {
       return token
-    } else {
-      if ((token.match(/[a-z]/g) || []).length > 0 && token.indexOf('i') > -1) {
-        return await parseImaginary(token)
-      } else if ((token.match(/[a-z]/g) || []).length === 0) {
-        return new Numeral({ r: parseFloat(token), i: 0 })
+    } else if (token.constructor.name === 'String') {
+      if (token.match(/[a-z]/g).length === 1 && token.match(/i/g).length === 1) {
+        return parseImaginary(token)
+      } else {
+        return new Numeral({ r: parseFloat(token), i: 0 }) // TODO WHEN VARIABLE WILL BE ADDED
       }
     }
   } catch (error) {
@@ -48,7 +48,7 @@ module.exports = async (inputLine) => {
     const infixNotation = await parseLine(inputLine)
     // console.log(infixNotation)
     const postfixNotation = infixToPosfix(infixNotation)
-    // console.log(postfixNotation)
+    // sconsole.log(postfixNotation)
     return await computePostfix(postfixNotation)
   } catch (error) {
     return Promise.reject(error)
