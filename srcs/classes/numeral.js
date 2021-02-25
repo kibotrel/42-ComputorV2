@@ -1,5 +1,5 @@
 const { checkNumeral } = require('@srcs/maths/utils.js')
-const { decimalToIntegerScaling, addFraction, subFraction } = require('@srcs/maths/fractions.js')
+const { decimalToIntegerScaling, addFraction } = require('@srcs/maths/fractions.js')
 
 // r stands for real, i for imaginary, n for numerator and d for denominator
 
@@ -20,7 +20,7 @@ class Numeral {
       if (a.constructor.name === 'Number' && b.constructor.name === 'Number') {
         const num1 = decimalToIntegerScaling({ number: a })
         const num2 = decimalToIntegerScaling({ number: b })
-        const { numerator, denominator } = addFraction(num1, num2)
+        const { numerator, denominator } = addFraction(num1, num2, '+')
 
         result = new Numeral({
           r: a + b,
@@ -31,11 +31,11 @@ class Numeral {
       } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Numeral') {
         const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
         const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const { numerator: numeratorR, denominator: denominatorR } = addFraction(num1R, num2R)
+        const { numerator: numeratorR, denominator: denominatorR } = addFraction(num1R, num2R, '+')
 
         const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
         const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
-        const { numerator: numeratorI, denominator: denominatorI } = addFraction(num1I, num2I)
+        const { numerator: numeratorI, denominator: denominatorI } = addFraction(num1I, num2I, '+')
 
         result = new Numeral({
           r: a.r + b.r,
@@ -48,7 +48,7 @@ class Numeral {
       } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Number') {
         const num1 = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
         const num2 = decimalToIntegerScaling({ number: b })
-        const { numerator, denominator } = addFraction(num1, num2)
+        const { numerator, denominator } = addFraction(num1, num2, '+')
 
         result = new Numeral({
           r: a.r + b,
@@ -61,7 +61,7 @@ class Numeral {
       } else if (a.constructor.name === 'Number' && b.constructor.name === 'Numeral') {
         const num1 = decimalToIntegerScaling({ number: a })
         const num2 = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const { numerator, denominator } = addFraction(num1, num2)
+        const { numerator, denominator } = addFraction(num1, num2, '+')
 
         result = new Numeral({
           r: a + b.r,
@@ -86,7 +86,7 @@ class Numeral {
       if (a.constructor.name === 'Number' && b.constructor.name === 'Number') {
         const num1 = decimalToIntegerScaling({ number: a })
         const num2 = decimalToIntegerScaling({ number: b })
-        const { numerator, denominator } = subFraction(num1, num2)
+        const { numerator, denominator } = addFraction(num1, num2, '-')
 
         result = new Numeral({
           r: a - b,
@@ -97,11 +97,11 @@ class Numeral {
       } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Numeral') {
         const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
         const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const { numerator: numeratorR, denominator: denominatorR } = subFraction(num1R, num2R)
+        const { numerator: numeratorR, denominator: denominatorR } = addFraction(num1R, num2R, '-')
 
         const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
         const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
-        const { numerator: numeratorI, denominator: denominatorI } = subFraction(num1I, num2I)
+        const { numerator: numeratorI, denominator: denominatorI } = addFraction(num1I, num2I, '-')
 
         result = new Numeral({
           r: a.r - b.r,
@@ -114,7 +114,7 @@ class Numeral {
       } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Number') {
         const num1 = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
         const num2 = decimalToIntegerScaling({ number: b })
-        const { numerator, denominator } = subFraction(num1, num2)
+        const { numerator, denominator } = addFraction(num1, num2, '-')
 
         result = new Numeral({
           r: a.r - b,
@@ -127,7 +127,7 @@ class Numeral {
       } else if (a.constructor.name === 'Number' && b.constructor.name === 'Numeral') {
         const num1 = decimalToIntegerScaling({ number: a })
         const num2 = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const { numerator, denominator } = subFraction(num1, num2)
+        const { numerator, denominator } = addFraction(num1, num2, '-')
 
         result = new Numeral({
           r: a - b.r,
