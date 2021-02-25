@@ -14,7 +14,7 @@ const operatorErrors = async ({ string, i }, flags) => {
   try {
     if (flags.operator || (string[i].match(/[*\/%^]/) && (i === 0 || flags.number))) {
       throw { data: string, code: 'invalidOperatorPosition', index: i }
-    } else if (string[i].match(/[+\-*\/%^]/) && flags.decimal && !string[i - 1].match(/\d/)) {
+    } else if (string[i].match(/[+\-*\/%^]/) && flags.decimal && !string[i - 1].match(/\d|i/)) {
       throw { data: string, code: 'misformattedFloat', index: i - 1 }
     }
   } catch (error) {
