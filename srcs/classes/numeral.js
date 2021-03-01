@@ -1,4 +1,4 @@
-const { checkNumeral } = require('@srcs/maths/utils.js')
+const { checkNumeral, toNumeral, numeralFractionalParts } = require('@srcs/maths/utils.js')
 const { decimalToIntegerScaling, addFraction, multiplyFraction, divideFraction } = require('@srcs/maths/fractions.js')
 
 // r stands for real, i for imaginary, n for numerator and d for denominator
@@ -14,67 +14,21 @@ class Numeral {
   }
 
   static async add(a, b) {
-    let result
-
     try {
-      if (a.constructor.name === 'Number' && b.constructor.name === 'Number') {
-        const num1 = decimalToIntegerScaling({ number: a })
-        const num2 = decimalToIntegerScaling({ number: b })
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
 
-        const { n: numerator, d: denominator } = addFraction(num1, num2, '+')
+      const { re: re1, im: im1 } = numeralFractionalParts(A)
+      const { re: re2, im: im2 } = numeralFractionalParts(B)
 
-        result = new Numeral({
-          r: a + b,
-          i: 0,
-          nr: numerator,
-          dr: denominator
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Numeral') {
-        const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
-        const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
-        const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
+      const { n: nr, d: dr } = addFraction(re1, re2, '+')
+      const { n: ni, d: di } = addFraction(im1, im2, '+')
 
-        const { n: numeratorR, d: denominatorR } = addFraction(num1R, num2R, '+')
-        const { n: numeratorI, d: denominatorI } = addFraction(num1I, num2I, '+')
-
-        result = new Numeral({
-          r: a.r + b.r,
-          i: a.i + b.i,
-          nr: numeratorR,
-          dr: denominatorR,
-          ni: numeratorI,
-          di: denominatorI
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Number') {
-        const num1 = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
-        const num2 = decimalToIntegerScaling({ number: b })
-
-        const { n: numerator, d: denominator } = addFraction(num1, num2, '+')
-
-        result = new Numeral({
-          r: a.r + b,
-          i: a.i,
-          nr: numerator,
-          dr: denominator,
-          ni: a.ni,
-          di: a.di
-        })
-      } else if (a.constructor.name === 'Number' && b.constructor.name === 'Numeral') {
-        const num1 = decimalToIntegerScaling({ number: a })
-        const num2 = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-
-        const { n: numerator, d: denominator } = addFraction(num1, num2, '+')
-
-        result = new Numeral({
-          r: a + b.r,
-          i: b.i,
-          nr: numerator,
-          dr: denominator,
-          ni: b.ni,
-          di: b.di
-        })
-      }
+      const result = new Numeral({
+        r: A.r + B.r,
+        i: A.i + B.i,
+        nr, dr, ni, di
+      })
 
       return await checkNumeral(result, '+')
     } catch (error) {
@@ -83,67 +37,21 @@ class Numeral {
   }
 
   static async substract(a, b) {
-    let result
-
     try {
-      if (a.constructor.name === 'Number' && b.constructor.name === 'Number') {
-        const num1 = decimalToIntegerScaling({ number: a })
-        const num2 = decimalToIntegerScaling({ number: b })
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
+      
+      const { re: re1, im: im1 } = numeralFractionalParts(A)
+      const { re: re2, im: im2 } = numeralFractionalParts(B)
 
-        const { n: numerator, d: denominator } = addFraction(num1, num2, '-')
+      const { n: nr, d: dr } = addFraction(re1, re2, '-')
+      const { n: ni, d: di } = addFraction(im1, im2, '-')
 
-        result = new Numeral({
-          r: a - b,
-          i: 0,
-          nr: numerator,
-          dr: denominator
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Numeral') {
-        const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
-        const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
-        const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
-
-        const { n: numeratorR, d: denominatorR } = addFraction(num1R, num2R, '-')
-        const { n: numeratorI, d: denominatorI } = addFraction(num1I, num2I, '-')
-
-        result = new Numeral({
-          r: a.r - b.r,
-          i: a.i - b.i,
-          nr: numeratorR,
-          dr: denominatorR,
-          ni: numeratorI,
-          di: denominatorI
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Number') {
-        const num1 = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
-        const num2 = decimalToIntegerScaling({ number: b })
-
-        const { n: numerator, d: denominator } = addFraction(num1, num2, '-')
-
-        result = new Numeral({
-          r: a.r - b,
-          i: a.i,
-          nr: numerator,
-          dr: denominator,
-          ni: a.ni,
-          di: a.di
-        })
-      } else if (a.constructor.name === 'Number' && b.constructor.name === 'Numeral') {
-        const num1 = decimalToIntegerScaling({ number: a })
-        const num2 = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-
-        const { n: numerator, d: denominator } = addFraction(num1, num2, '-')
-
-        result = new Numeral({
-          r: a - b.r,
-          i: -b.i,
-          nr: numerator,
-          dr: denominator,
-          ni: -b.ni,
-          di: b.di
-        })
-      }
+      const result = new Numeral({
+        r: A.r - B.r,
+        i: B.i - B.i,
+        nr, dr, ni, di
+      })
 
       return await checkNumeral(result, '-')
     } catch (error) {
@@ -152,76 +60,26 @@ class Numeral {
   }
 
   static async multiply(a, b) {
-    let result
-
     try {
-      if (a.constructor.name === 'Number' && b.constructor.name === 'Number') {
-        const num1 = decimalToIntegerScaling({ number: a })
-        const num2 = decimalToIntegerScaling({ number: b })
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
+      
+      const { re: re1, im: im1 } = numeralFractionalParts(A)
+      const { re: re2, im: im2 } = numeralFractionalParts(B)
 
-        const { n: numerator, d: denominator } = multiplyFraction(num1, num2)
+      const tempR1 = multiplyFraction(re1, re2)
+      const tempR2 = multiplyFraction(im1, im2)
+      const { n: nr, d: dr } = addFraction(tempR1, tempR2, '-')
 
-        result = new Numeral({
-          r: a * b,
-          i: 0,
-          nr: numerator,
-          dr: denominator
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Numeral') {
-        const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
-        const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
-        const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
+      const tempI1 = multiplyFraction(re1, im2)
+      const tempI2 = multiplyFraction(im1, re2)
+      const { n: ni, d: di } = addFraction(tempI1, tempI2, '+')
 
-        const tempR1 = multiplyFraction(num1R, num2R)
-        const tempR2 = multiplyFraction(num1I, num2I)
-        const { n: numeratorR, d: denominatorR } = addFraction(tempR1, tempR2, '-')
-
-        const tempI1 = multiplyFraction(num1R, num2I)
-        const tempI2 = multiplyFraction(num1I, num2R)
-        const { n: numeratorI, d: denominatorI } = addFraction(tempI1, tempI2, '+')
-
-        result = new Numeral({
-          r: a.r * b.r - a.i * b.i,
-          i: a.r * b.i + a.i * b.r,
-          nr: numeratorR,
-          dr: denominatorR,
-          ni: numeratorI,
-          di: denominatorI
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Number') {
-        const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
-        const num2 = decimalToIntegerScaling({ number: b })
-        const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
-
-        const { n: numeratorR, d: denominatorR } = multiplyFraction(num1R, num2)
-        const { n: numeratorI, d: denominatorI } = multiplyFraction(num1I, num2)
-
-        result = new Numeral({
-          r: a.r * b,
-          i: a.i * b,
-          nr: numeratorR,
-          dr: denominatorR,
-          ni: numeratorI,
-          di: denominatorI
-        })
-      } else if (a.constructor.name === 'Number' && b.constructor.name === 'Numeral') {
-        const num1 = decimalToIntegerScaling({ number: a })
-        const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
-
-        const { n: numeratorR, d: denominatorR } = multiplyFraction(num1, num2R)
-        const { n: numeratorI, d: denominatorI } = multiplyFraction(num1, num2I)
-
-        result = new Numeral({
-          r: a * b.r,
-          i: a * b.i,
-          nr: numeratorR,
-          dr: denominatorR,
-          ni: numeratorI,
-          di: denominatorI
-        })
-      }
+      const result = new Numeral({
+        r: A.r * B.r - A.i * B.i,
+        i: A.r * B.i + A.i * B.r,
+        nr, dr, ni, di
+      })
 
       return await checkNumeral(result, '*')
     } catch (error) {
@@ -230,100 +88,39 @@ class Numeral {
   }
 
   static async divide(a, b) {
-    let result
-
     try {
-      if ((b.constructor.name === 'Number' && b === 0) || (b.constructor.name === 'Numeral' && b.r === 0 && b.i === 0)) {
-        throw { code: 'impossibleDivision' }
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
+      
+      if (B.r === 0 && B.i === 0) {
+        throw { data: { A, B, operator: '/' }, code: 'impossibleDivision' }
       }
 
-      if (a.constructor.name === 'Number' && b.constructor.name === 'Number') {
-        const num1 = decimalToIntegerScaling({ number: a })
-        const num2 = decimalToIntegerScaling({ number: b })
+      const { re: re1, im: im1 } = numeralFractionalParts(A)
+      const { re: re2, im: im2 } = numeralFractionalParts(B)
+      const re1N = { n: -re1.n, d: re1.d }
 
-        const { n: numerator, d: denominator } = divideFraction(num1, num2)
+      const tempRN1 = multiplyFraction(re1, re2)
+      const tempRN2 = multiplyFraction(im1, im2)
+      const tempRN3 = addFraction(tempRN1, tempRN2, '+')
 
-        result = new Numeral({
-          r: a / b,
-          i: 0,
-          nr: numerator,
-          dr: denominator
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Numeral') {
-        const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
-        const num1RN = decimalToIntegerScaling({ number: -a.nr, shift: a.dr })
-        const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
-        const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
+      const tempD1 = multiplyFraction(re2, re2)
+      const tempD2 = multiplyFraction(im2, im2)
+      const tempD3 = addFraction(tempD1, tempD2, '+')
 
-        const tempRN1 = multiplyFraction(num1R, num2R)
-        const tempRN2 = multiplyFraction(num1I, num2I)
-        const tempRN3 = addFraction(tempRN1, tempRN2, '+')
+      const { n: nr, d: dr } = divideFraction(tempRN3, tempD3)
 
-        const tempD1 = multiplyFraction(num2R, num2R)
-        const tempD2 = multiplyFraction(num2I, num2I)
-        const tempD3 = addFraction(tempD1, tempD2, '+')
+      const tempIN1 = multiplyFraction(re1N, im2)
+      const tempIN2 = multiplyFraction(re2, im1)
+      const tempIN3 = addFraction(tempIN1, tempIN2, '+')
 
-        const { n: numeratorR, d: denominatorR } = divideFraction(tempRN3, tempD3)
+      const { n: ni, d: di } = divideFraction(tempIN3, tempD3)
 
-        const tempIN1 = multiplyFraction(num1RN, num2I)
-        const tempIN2 = multiplyFraction(num2R, num1I)
-        const tempIN3 = addFraction(tempIN1, tempIN2, '+')
-
-        const { n: numeratorI, d: denominatorI } = divideFraction(tempIN3, tempD3)
-
-        result = new Numeral({
-          r: (a.r * b.r + a.i * b.i) / (b.r * b.r + b.i * b.i),
-          i: (-a.r * b.i + b.r * a.i) / (b.r * b.r + b.i * b.i),
-          nr: numeratorR,
-          dr: denominatorR,
-          ni: numeratorI,
-          di: denominatorI
-
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Number') {
-        const num1R = decimalToIntegerScaling({ number: a.nr, shift: a.dr })
-        const num2 = decimalToIntegerScaling({ number: b })
-        const num1I = decimalToIntegerScaling({ number: a.ni, shift: a.di })
-
-        const { n: numeratorR, d: denominatorR } = divideFraction(num1R, num2)
-        const { n: numeratorI, d: denominatorI } = divideFraction(num1I, num2)
-
-        result = new Numeral({
-          r: a.r / b,
-          i: a.i / b,
-          nr: numeratorR,
-          dr: denominatorR,
-          ni: numeratorI,
-          di: denominatorI
-        })
-      } else if (a.constructor.name === 'Number' && b.constructor.name === 'Numeral') {
-        const num1 = decimalToIntegerScaling({ number: a })
-        const num1N = decimalToIntegerScaling({ number: -a })
-        const num2R = decimalToIntegerScaling({ number: b.nr, shift: b.dr })
-        const num2I = decimalToIntegerScaling({ number: b.ni, shift: b.di })
-
-        const tempRN = multiplyFraction(num1, num2R)
-
-        const tempD1 = multiplyFraction(num2R, num2R)
-        const tempD2 = multiplyFraction(num2I, num2I)
-        const tempD3 = addFraction(tempD1, tempD2, '+')
-
-        const { n: numeratorR, d: denominatorR } = divideFraction(tempRN, tempD3)
-
-        const tempIN = multiplyFraction(num1N, num2I)
-
-        const { n: numeratorI, d: denominatorI } = divideFraction(tempIN, tempD3)
-
-        result = new Numeral({
-          r: (a * b.r) / (b.r * b.r + b.i * b.i),
-          i: (-a * b.i) / (b.r * b.r + b.i * b.i),
-          nr: numeratorR,
-          dr: denominatorR,
-          ni: numeratorI,
-          di: denominatorI
-        })
-      }
+      const result = new Numeral({
+        r: (A.r * B.r + A.i * B.i) / (B.r * B.r + B.i * B.i),
+        i: (-A.r * B.i + B.r * A.i) / (B.r * B.r + B.i * B.i),
+        nr, dr, ni, di
+      })
 
       return await checkNumeral(result, '/')
     } catch (error) {
@@ -332,34 +129,21 @@ class Numeral {
   }
 
   static async modulus(a, b) {
-    let result
-
     try {
-      if ((a.constructor.name !== 'Number' && a.i) || (b.constructor.name !== 'Number' && b.i) || b % 1) {
-        throw { data: { a, b, operator: '%' }, code: 'unsuportedOperation' }
-      }
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
 
-      if (a.constructor.name === 'Number' && b.constructor.name === 'Number') {
-        result = new Numeral({
-          r: a % b,
-          i: 0
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Numeral') {
-        result = new Numeral({
-          r: a.r % b.r,
-          i: 0
-        })
-      } else if (a.constructor.name === 'Numeral' && b.constructor.name === 'Number') {
-        result = new Numeral({
-          r: a.r % b,
-          i: 0
-        })
-      } else if (a.constructor.name === 'Number' && b.constructor.name === 'Numeral') {
-        result = new Numeral({
-          r: a % b.r,
-          i: 0
-        })
+      if (B.r === 0 && B.i === 0) {
+        throw { data: { A, B, operator: '%' }, code: 'impossibleModulo' }
       }
+      
+      // divise num par denom ensuite mod puis intRescale et simplify
+      // Can convert to (x * (n/d)) mod y to avoid repeating decimals etc...
+
+      const result = new Numeral({
+        r: A.r % B.r,
+        i: 0
+      })
 
       return await checkNumeral(result, '%')
     } catch (error) {
