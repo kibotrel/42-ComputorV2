@@ -3,8 +3,8 @@ const { leastCommonFactor, greatestCommonDivisor } = require('@srcs/maths/basic-
 const simplifyFraction = ({ numerator, denominator }) => {
   const commonDivisor = greatestCommonDivisor({ a: numerator, b: denominator })
 
-  numerator = numerator / commonDivisor
-  denominator = denominator / commonDivisor
+  numerator = (numerator / commonDivisor) * (commonDivisor < 0 ? -1 : 1)
+  denominator = (denominator / commonDivisor) * (commonDivisor < 0 ? -1 : 1)
 
   return { n: numerator, d: denominator }
 }
