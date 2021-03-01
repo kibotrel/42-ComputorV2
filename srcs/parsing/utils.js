@@ -39,7 +39,8 @@ const imaginaryCheck = async ({ string, flags }, infixStack) => {
             throw { data: string, code: 'misformattedInteger', index: flags.numberStart }
           } else {
             let imaginaryFactor = string.substring(flags.numberStart, string.length - 1)
-
+            
+            infixStack.push('(')
             if (imaginaryFactor) {
               if (imaginaryFactor[imaginaryFactor.length - 1].match(/[+\-]/))
                 imaginaryFactor += '1'
@@ -53,10 +54,12 @@ const imaginaryCheck = async ({ string, flags }, infixStack) => {
           }
         }
       } else {
+        infixStack.push('(')
         infixStack.push('1')
         infixStack.push('*')
       }
       infixStack.push('i')
+      infixStack.push(')')
     } else if (flags.complex) {
       throw { data: string, code : 'illegalImaginary', index: string.length - 1 }
     }
