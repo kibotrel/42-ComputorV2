@@ -1,11 +1,17 @@
+const { decimalToIntegerScaling } = require('@srcs/maths/fractions.js')
+
 const checkNumeral = async (numeral, operator) => {
   try {
     if (numeral === undefined) {
       throw { data: operator, code: 'invalidOperation' }
-    } else if (Object.values(numeral).find(num => num === Number.NEGATIVE_INFINITY || num === Number.POSITIVE_INFINITY)) {
-      throw { code: 'tooBigNumber' }
-    } else if (Object.values(numeral).find(num => Number.isNaN(num))) {
-      throw { data: numeral, code: 'notNumber'}
+    } else {
+      for (const property in numeral) {
+        if (numeral[property] === Number.NEGATIVE_INFINITY || numeral[property] === Number.POSITIVE_INFINITY) {
+          throw { data: { numeral, faultyProperty: property }, code: 'tooBigNumber' }
+        } else if (Number.isNaN(numeral[property])) {
+          throw { data: { numeral, faultyProperty: property }, code: 'notNumber' }
+        }
+      }
     }
 
     return numeral
@@ -14,4 +20,27 @@ const checkNumeral = async (numeral, operator) => {
   }
 }
 
-module.exports = { checkNumeral }
+const toNumeral = async (value) => {
+  try {
+    if (value.constructor.name === 'Numeral') {
+      return value
+    } else if (value.constructor.name === 'Number') {
+      const { n: nr, d: dr } = decimalToIntegerScaling({ number: value })
+
+      return { r: value, i: 0, nr, dr, ni: 0, di: 1 }
+    } else {
+      throw { data: value, code: 'notNumber' }
+    }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+const numeralFractionalParts = (numeral) => {
+  const re = { n: numeral.nr, d: numeral.dr }
+  const im = { n: numeral.ni, d: numeral.di }
+
+  return { re, im }
+}
+
+module.exports = { checkNumeral, toNumeral, numeralFractionalParts }
