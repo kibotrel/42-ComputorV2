@@ -1,4 +1,5 @@
 const Numeral = require('@classes/numeral')
+const { decimalToIntegerScaling } = require('@srcs/maths/fractions.js')
 
 const updateFlags = ({ power, number, operator, decimal, sign, numberStart, complex, variable }) => {
   const newFlags = {
@@ -98,11 +99,14 @@ const digitsCheck = async ({ string, flags }, infixStack) => {
 
 const parseImaginary = (token) => {
   if (token[0] === '-' && token[1] === 'i') {
-    return new Numeral({ r: 0, i: -1 })
+    return new Numeral({ r: 0, i: -1, ni: -1, di: 1 })
   } else if ((token[0] === '+' && token[1] === 'i') || token[0] === 'i') {
-    return new Numeral({ r: 0, i: 1 })
+    return new Numeral({ r: 0, i: 1,  ni: 1, di: 1 })
   } else {
-    return new Numeral({ r: 0, i: parseFloat(token) })
+    const value = parseFloat(token)
+    const { n: ni, d: di } = decimalToIntegerScaling({ number: value })
+
+    return new Numeral({ r: 0, i: value, ni, di })
   }
 }
 
