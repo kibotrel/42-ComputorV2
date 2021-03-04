@@ -12,6 +12,12 @@
     "precedence": 1
   },
   {
+    "name": "MOD",
+    "symbol": "%",
+    "associativity": "l",
+    "precedence": 1
+  },
+  {
     "name": "DIV",
     "symbol": "/",
     "associativity": "l",
@@ -20,12 +26,6 @@
   {
     "name": "MUL",
     "symbol": "*",
-    "associativity": "l",
-    "precedence": 2
-  },
-  {
-    "name": "MOD",
-    "symbol": "%",
     "associativity": "l",
     "precedence": 2
   },
