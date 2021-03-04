@@ -70,4 +70,34 @@ const multiplyFraction = (a, b) => {
 const divideFraction = (a, b) => {
   return multiplyFraction(a, { n: b.d, d: b.n })
 }
-module.exports = { decimalToIntegerScaling, addFraction, multiplyFraction, divideFraction }
+
+const modulusFraction = (a, b, quotient, remainder) => {
+  const numeralFractionalParts = (numeral) => {
+    return { re: { n: numeral.nr, d: numeral.dr }, im: { n: numeral.ni, d: numeral.di }}
+  }
+
+  if (!a.i && !b.i) {
+    const { n: numerator, d: denominator } = decimalToIntegerScaling({ number: remainder })
+    const { n: nr, d: dr } = simplifyFraction({ numerator, denominator })
+    
+    return { nr, dr, ni: 0, di: 1 }
+  } else {
+    const { re: re1, im: im1 } = numeralFractionalParts(a)
+    const { re: re2, im: im2 } = numeralFractionalParts(a)
+    const qre = decimalToIntegerScaling({ number: quotient.r })
+    const qim = decimalToIntegerScaling({ number: quotient.i })
+
+    const tempR1 = multiplyFraction(qre, re2)
+    const tempR2 = multiplyFraction(qim, im2)
+    const tempR3 = addFraction(re1, tempR1, '-')
+    const { n: nr, d: dr } = addFraction(tempR3, tempR2, '+')
+
+    const tempI1 = multiplyFraction(qre, im2)
+    const tempI2 = multiplyFraction(qim, re2)
+    const tempI3 = addFraction(im1, tempI1, '-')
+    const { n: ni, d: di } = addFraction(tempI3, tempI2, '-') 
+
+    return { nr, dr, ni, di }
+  }
+}
+module.exports = { decimalToIntegerScaling, addFraction, multiplyFraction, divideFraction, modulusFraction, simplifyFraction }

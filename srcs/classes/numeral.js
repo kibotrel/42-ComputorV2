@@ -1,5 +1,6 @@
 const { checkNumeral, toNumeral, numeralFractionalParts } = require('@srcs/maths/utils.js')
-const { decimalToIntegerScaling, addFraction, multiplyFraction, divideFraction } = require('@srcs/maths/fractions.js')
+const { remainder } = require('@srcs/maths/basic-functions.js')
+const { simplifyFraction, addFraction, multiplyFraction, divideFraction, modulusFraction, decimalToIntegerScaling } = require('@srcs/maths/fractions.js')
 
 // r stands for real, i for imaginary, n for numerator and d for denominator
 
@@ -40,7 +41,7 @@ class Numeral {
     try {
       const A = await toNumeral(a)
       const B = await toNumeral(b)
-      
+
       const { re: re1, im: im1 } = numeralFractionalParts(A)
       const { re: re2, im: im2 } = numeralFractionalParts(B)
 
@@ -49,7 +50,7 @@ class Numeral {
 
       const result = new Numeral({
         r: A.r - B.r,
-        i: B.i - B.i,
+        i: A.i - B.i,
         nr, dr, ni, di
       })
 
@@ -133,16 +134,28 @@ class Numeral {
       const A = await toNumeral(a)
       const B = await toNumeral(b)
 
-      if (B.r === 0 && B.i === 0) {
+      if ((B.r === 0 && B.i === 0) || Math.floor(B.r) !== B.r || Math.floor(B.i) !== B.i) {
         throw { data: { A, B, operator: '%' }, code: 'impossibleModulo' }
       }
-      
-      // divise num par denom ensuite mod puis intRescale et simplify
-      // Can convert to (x * (n/d)) mod y to avoid repeating decimals etc...
+
+      // Compute division quotient of two Gaussian number in order to
+      // compute its reminder according to https://bit.ly/3uPCk53 and
+      // https://bit.ly/3t1RdzJ for integer numbers.
+
+      const divResult = await Numeral.divide(a, b)
+      const r = remainder({ a: A.r, b: B.r })
+
+      const q = {
+        r: parseInt(Math.round(divResult.r).toString()),
+        i: parseInt(Math.round(divResult.i).toString())
+      }
+
+      const { nr, dr, ni, di } = modulusFraction(A, B, q,  r)
 
       const result = new Numeral({
-        r: A.r % B.r,
-        i: 0
+        r: (A.i || B.i ? A.r - q.r * B.r + q.i * B.i : r),
+        i: (A.i || B.i ? A.i - q.r * B.i - q.i * B.r : 0),
+        nr, dr, ni, di
       })
 
       return await checkNumeral(result, '%')
@@ -151,18 +164,21 @@ class Numeral {
     }
   }
   
-  static async power(x, n) {
+  static async power(a, b) {
     let result
 
     try {
-      if ((x.constructor.name === 'Numeral' && x.i) || (n.constructor.name === 'Numeral' && n.r % 1 && !n.i) || (n.constructor.name === 'Number' && n % 1)) {
-        throw { data: { x, n, operator: '^' }, code: 'unsuportedOperation' } // Will be implemented
-      } else if (n.constructor.name === 'Numeral' && n.i) {
-        throw { data: { x, n, operator: '^' }, code: 'invalidOperation' }
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
+
+      // Will be implemented
+
+      if (A.i || B.i || Math.trunc(B.r) !== B.r) {
+        throw { data: { x, n, operator: '^' }, code: 'unsuportedOperation' }
       }
 
-      x = x.r !== undefined ? x.r : x
-      n = n.r !== undefined ? n.r : n
+      const x = A.r
+      const n = B.r
 
       if (x === 0) {
         result = new Numeral({
@@ -170,16 +186,23 @@ class Numeral {
           i: 0
         })
       } else {
-        const absolutePower = n < 0 ? -n : n
-        let total = 1
+        const power = Math.abs(n)
 
-        for (let i = 1; i <= absolutePower; i++) {
-          total *= x
+        let value = 1
+
+        for (let i = 1; i <= power; i++) {
+          value *= x
         }
 
+        value = (n < 0 ? 1 / value : value)
+
+        const { n: numerator, d: denominator } = decimalToIntegerScaling({ number: value })
+        const { n: nr, d: dr } = simplifyFraction({ numerator, denominator })
+
         result = new Numeral({
-          r: n < 0 ? 1 / total : total,
-          i: 0
+          r: value,
+          i: 0,
+          nr, dr
         })
       }
 
