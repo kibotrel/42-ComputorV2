@@ -14,6 +14,12 @@ const Client = Reader.createInterface({ input: process.stdin, output: process.st
 
 global.Config = require('@configs/env.json')
 
+// This variable holds every single registered variable
+// during the program context and can be read and modified
+// everywhere else.
+
+global.Variables = []
+
 const inputHandler = require('@srcs/handlers/input.js')
 const errorHandler = require('@srcs/handlers/error.js')
 
@@ -22,8 +28,11 @@ Client.write('> ')
 Client.on('line', async (payload) => {
   try {
     const feedback = await inputHandler(payload)
-    console.log(feedback)
-    console.log(feedback.print())
+
+    if (feedback !== undefined) {
+      console.log(feedback)
+      console.log(feedback.print())
+    }
   } catch (error) {
     errorHandler(error)
   }

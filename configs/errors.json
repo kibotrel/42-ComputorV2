@@ -58,5 +58,9 @@
   {
     "code": "impossibleModulo",
     "message": ""
+  },
+  {
+    "code": "unrecognizedCommand",
+    "message": ""
   }
 ]

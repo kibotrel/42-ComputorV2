@@ -221,9 +221,9 @@ class Numeral {
       // since we don't really need that much decimal digits. more informations on
       // https://bit.ly/2OT0qLO
 
-      const real = parseFloat(this.r.toPrecision(Config.floatPrecision))
+      const real = parseFloat(this.r.toPrecision(Config.number.precision))
       const separatorSign = this.i < 0 ? '-' : '+'
-      const imaginary = this.i < -1 || (this.i < 0 && this.i > -1) ? -parseFloat(this.i.toPrecision(Config.floatPrecision)) : this.i > 1 || (this.i > 0 && this.i < 1) ? parseFloat(this.i.toPrecision(Config.floatPrecision)) : ''
+      const imaginary = this.i < -1 || (this.i < 0 && this.i > -1) ? -parseFloat(this.i.toPrecision(Config.number.precision)) : this.i > 1 || (this.i > 0 && this.i < 1) ? parseFloat(this.i.toPrecision(Config.number.precision)) : ''
 
       return `${this.r ? real : ''}${this.r && this.i ? ` ${separatorSign} ` : this.i < 0 ? separatorSign : ''}${this.i ? `${imaginary}i` : ''}`
     }

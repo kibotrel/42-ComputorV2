@@ -1,3 +1,4 @@
+const commmandHandler = require('@srcs/handlers/command.js')
 const expressionValue = require('@srcs/maths/compute.js')
 
 // Transform input string to lowercase only and remove all whitespaces
@@ -9,9 +10,13 @@ module.exports = async (payload) => {
   if (inputLine === 'exit') {
     process.exit(0)
   }
+
+   // Need to sanitize input before everything ! (= / =? + possible commands
+
   try {
-    // Need to sanitize input before everything ! (= / =? + possible commands)
-    if (inputLine.match(/^[0-9+\-\.\/*%^()i]+$/)) {
+    if (inputLine.startsWith('!')) {
+      await commmandHandler(inputLine)
+    } else if (inputLine.match(/^[0-9+\-\.\/*%^()i]+$/)) {
       return await expressionValue(inputLine)
     }
   } catch (error) {

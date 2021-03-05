@@ -14,7 +14,7 @@ const decimalToIntegerScaling = ({ number, shift }) => {
   // by calculating the length of the truncated digits after
   // the dot in the string representation of the number
 
-  let numberString = parseFloat(number.toPrecision(Config.floatPrecision)).toString()
+  let numberString = parseFloat(number.toPrecision(Config.number.precision)).toString()
   const floatIndex = numberString.indexOf('.')
 
   if (floatIndex >= 0) {
@@ -28,7 +28,7 @@ const decimalToIntegerScaling = ({ number, shift }) => {
 
     // Once again a trick to correct precision error from javascript
 
-    number = parseFloat(number.toPrecision(Config.floatPrecision))
+    number = parseFloat(number.toPrecision(Config.number.precision))
 
     let scalingFactor = (!shiftAmount ? 1 : 10)
 
