@@ -62,5 +62,17 @@
   {
     "code": "unrecognizedCommand",
     "message": ""
+  },
+  {
+    "code": "unknownVariable",
+    "message": ""
+  },
+  {
+    "code": "badInputFormat",
+    "message": ""
+  },
+  {
+    "code": "forbiddenVariableName",
+    "message": ""
   }
 ]
