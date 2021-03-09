@@ -1,6 +1,6 @@
 const number = ({ string, i }, flags) => {
   try {
-    if (flags.complex) {
+    if (flags.complex || flags.variable) {
       throw { data: string, code: 'illegalTerm', index: i }
     }
 
@@ -17,7 +17,7 @@ const number = ({ string, i }, flags) => {
 
 const decimal = async ({ string, i }, flags) => {
   try {
-    if (flags.complex) {
+    if (flags.complex || flags.variable) {
       throw { data: string, code: 'illegalTerm', index: i }
     } else if (!flags.number || flags.decimal) {
       throw { data: string, code: 'misformattedFloat', index: i }
@@ -32,15 +32,19 @@ const decimal = async ({ string, i }, flags) => {
 const variable = async ({ string, i }, flags, infixStack) => {
   try {
     const current = string[i]
-    const previous = i > 0 ? string[i - 1] : ''
-    const next = string.length - i > 1 ? string[i + 1] : ''
 
-    if (current === 'i' && !next.match(/[a-z]/) && !previous.match(/[a-z]/)) {
+    if (current === 'i' && !flags.variable) {
       flags.complex = true
 
       if (flags.numberStart < 0) {
         flags.numberStart = i
       } 
+    } else if (!flags.variable) {
+      flags.variable = true
+
+      if (flags.numberStart < 0) {
+        flags.numberStart = i
+      }
     }
 
     flags.operator = false

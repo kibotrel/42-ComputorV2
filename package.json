@@ -17,7 +17,8 @@
     "@configs": "configs",
     "@srcs": "srcs",
     "@classes": "srcs/classes",
-    "@commands": "srcs/commands"
+    "@commands": "srcs/commands",
+    "@env": "srcs/env"
   },
 
   "scripts": {

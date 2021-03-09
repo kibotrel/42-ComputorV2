@@ -39,6 +39,8 @@ module.exports = async (payload) => {
       }
     } else if (inputLine.match(/^[0-9+\-\.\/*%^()i]+$/)) {
       return await expressionValue(inputLine)
+    } else {
+      throw { data: inputLine, code: 'badInputFormat' }
     }
   } catch (error) {
     return Promise.reject(error)

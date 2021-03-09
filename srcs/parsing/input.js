@@ -1,7 +1,7 @@
 const { updateFlags } = require('@srcs/parsing/utils.js')
 const { leftBracket, rightBracket } = require('@srcs/parsing/brackets.js')
 const { number, decimal, variable } = require('@srcs/parsing/operands.js')
-const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck } = require('@srcs/parsing/utils.js')
+const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck } = require('@srcs/parsing/utils.js')
 const operator = require('@srcs/parsing/operators.js')
 
 const lastChecks = async ({ string, flags }, infixStack, bracketStack) => {
@@ -10,6 +10,7 @@ const lastChecks = async ({ string, flags }, infixStack, bracketStack) => {
     await digitsCheck({ string, flags }, infixStack)
     await imaginaryCheck({ string, flags }, infixStack)
     await formatCheck(string)
+    await variableCheck({ string, flags }, infixStack)
   } catch (error) {
     return Promise.reject(error)
   }

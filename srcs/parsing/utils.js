@@ -97,6 +97,16 @@ const digitsCheck = async ({ string, flags }, infixStack) => {
   }
 }
 
+const variableCheck = async ({ string, flags }, infixStack) => {
+  try {
+    if (flags.variable && flags.numberStart > -1) {
+      infixStack.push(string.substring(flags.numberStart, string.length))
+    }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
 const parseImaginary = (token) => {
   if (token[0] === '-' && token[1] === 'i') {
     return new Numeral({ r: 0, i: -1, ni: -1, di: 1 })
@@ -110,4 +120,4 @@ const parseImaginary = (token) => {
   }
 }
 
-module.exports = { updateFlags, formatCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }
+module.exports = { updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }
