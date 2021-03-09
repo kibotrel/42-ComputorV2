@@ -74,5 +74,9 @@
   {
     "code": "forbiddenVariableName",
     "message": ""
+  },
+  {
+    "code": "invalidCommand",
+    "message": ""
   }
 ]

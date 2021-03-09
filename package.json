@@ -16,7 +16,8 @@
     "@root": ".",
     "@configs": "configs",
     "@srcs": "srcs",
-    "@classes": "srcs/classes"
+    "@classes": "srcs/classes",
+    "@commands": "srcs/commands"
   },
 
   "scripts": {
