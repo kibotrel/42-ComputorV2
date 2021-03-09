@@ -171,38 +171,35 @@ class Numeral {
       const A = await toNumeral(a)
       const B = await toNumeral(b)
 
-      // Will be implemented
+      // Will be implemented soon.
 
-      if (A.i || B.i || Math.trunc(B.r) !== B.r) {
-        throw { data: { x, n, operator: '^' }, code: 'unsuportedOperation' }
+      if (B.i || Math.trunc(B.r) !== B.r) {
+        throw { data: { A, B, operator: '^' }, code: 'unsuportedOperation' }
       }
 
-      const x = A.r
-      const n = B.r
-
-      if (x === 0) {
+      if (A.r === 0 && A.i === 0) {
         result = new Numeral({
-          r: n === 0 ? 1 : 0,
+          r: B.r === 0 ? 1 : 0,
           i: 0
         })
       } else {
-        const power = Math.abs(n)
+        const power = Math.abs(B.r)
 
-        let value = 1
+        let value = A
 
-        for (let i = 1; i <= power; i++) {
-          value *= x
+        for (let i = 1; i < power; i++) {
+          value = await Numeral.multiply(value, A)
         }
 
-        value = (n < 0 ? 1 / value : value)
+        if (B.r < 0) {
+          value = await Numeral.divide(1, value)
+        }
 
-        const { n: numerator, d: denominator } = decimalToIntegerScaling({ number: value })
-        const { n: nr, d: dr } = simplifyFraction({ numerator, denominator })
+        const { r, i, nr, dr, ni, di } = value
 
         result = new Numeral({
-          r: value,
-          i: 0,
-          nr, dr
+          r, i,
+          nr, dr, ni, di
         })
       }
 
@@ -214,7 +211,7 @@ class Numeral {
 
   print() {
     if (!this.r && !this.i) {
-      return '\x1b[33m0\x1b[0m'
+      return '0'
     } else {
       // Used the parseFloat(x.toPrecision(15)) to correct small floating point
       // errors that happen sometimes due to the lack of precision in Javascript
