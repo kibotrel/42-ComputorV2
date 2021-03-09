@@ -76,7 +76,7 @@ const modulusFraction = (a, b, quotient, remainder) => {
     return { re: { n: numeral.nr, d: numeral.dr }, im: { n: numeral.ni, d: numeral.di }}
   }
 
-  if (!a.i && !b.i) {
+  if (!a.i && !b.i) {
     const { n: numerator, d: denominator } = decimalToIntegerScaling({ number: remainder })
     const { n: nr, d: dr } = simplifyFraction({ numerator, denominator })
     
