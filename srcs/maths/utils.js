@@ -29,7 +29,9 @@ const toNumeral = async (value) => {
 
       return { r: value, i: 0, nr, dr, ni: 0, di: 1 }
     } else {
-      throw { data: value, code: 'notNumber' }
+      const { r, i , nr, dr, ni, di } = value
+
+      return { r, i, nr, dr, ni, di }
     }
   } catch (error) {
     return Promise.reject(error)
