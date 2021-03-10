@@ -120,4 +120,8 @@ const parseImaginary = (token) => {
   }
 }
 
-module.exports = { updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }
+const isFunction = (token) => {
+  return token.match(/^[a-z]+\(([+\-]?[a-z]+|[+\-]?\d+(\.\d+)?([+\-](\d+(\.\d+)?)?\*?i)?)(,([+\-]?[a-z]+|[+\-]?\d+(\.\d+)?([+\-](\d+(\.\d+)?)?\*?i)?))*\)$/)
+}
+
+module.exports = { isFunction, updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }

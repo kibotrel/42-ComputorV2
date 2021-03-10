@@ -1,5 +1,5 @@
 const { Variables } = global
-const expressionValue = require('@srcs/maths/compute.js')
+const { numeralValue } = require('@srcs/maths/compute.js')
 
 const addToVariableList = (id, value) => {
   const i = Variables.findIndex( variable => variable.id === id)
@@ -26,7 +26,7 @@ const resolveVariable = async (request) => {
     if (request.match(/^[a-z]+$/)) {
       throw { data: request, code: 'unknownVariable' }
     } else {
-      return await expressionValue(request)
+      return await numeralValue(request)
     }
   } catch (error) {
     return Promise.reject(error)

@@ -1,6 +1,8 @@
 const commmandHandler = require('@srcs/handlers/command.js')
 const { resolveVariable, addToVariableList } = require('@srcs/handlers/variable.js')
-const expressionValue = require('@srcs/maths/compute.js')
+const { numeralValue } = require('@srcs/maths/compute.js')
+const createFunction = require('@srcs/parsing/function.js')
+const { isFunction } = require('@srcs/parsing/utils.js')
 
 const { env: { forbiddenVariables } } = Config
 
@@ -15,10 +17,9 @@ module.exports = async (payload) => {
   }
 
   try {
-    if (!inputLine.match(/^[0-9a-z+\-*\/%^()\[\]=!?.]+$/)) {
+    if (!inputLine.match(/^[0-9a-z+\-*\/%^()\[\]=!?.,]+$/)) {
       throw { data: inputLine, code: "badInputFormat" }
     }
-
     if (inputLine.startsWith('!')) {
       await commmandHandler(inputLine)
     } else if (inputLine.endsWith('=?')) {
@@ -26,19 +27,28 @@ module.exports = async (payload) => {
     } else if ((inputLine.match(/=/g) || []).length === 1) {
       const { [0]: id, [1]: inputValue } = inputLine.split('=')
 
-      if (!id || !id.match(/^[a-z]+$/) || !inputValue) {
+      if (!id || !inputValue) {
         throw { data: inputLine, code: "badInputFormat" }
+      } else if (isFunction(id)) {
+        const value = await createFunction(id, inputValue)
+        const realId = id.substring(0, id.indexOf('('))
+        
+        addToVariableList(realId, value)
+
+        return value
+      } else if (!id.match(/^[a-z]+$/)) {
+        throw { data: id, code: "invalidVariableFormat" }
       } else if (forbiddenVariables.indexOf(id) !== -1) {
         throw { data: id, code: 'forbiddenVariableName' }
       } else {
-        const value = await expressionValue(inputValue)
+        const value = await numeralValue(inputValue)
 
         addToVariableList(id, value)
 
         return value
       }
     } else if (inputLine.match(/^[0-9+\-\.\/*%^()i]+$/)) {
-      return await expressionValue(inputLine)
+      return await numeralValue(inputLine)
     } else {
       throw { data: inputLine, code: 'badInputFormat' }
     }

@@ -53,7 +53,7 @@ const computePostfix = async (postfixNotation) => {
   }
 }
 
-module.exports = async (inputLine) => {
+const numeralValue = async (inputLine) => {
   try {
     const infixNotation = await parseLine(inputLine)
     // console.log(infixNotation)
@@ -64,3 +64,5 @@ module.exports = async (inputLine) => {
     return Promise.reject(error)
   }
 }
+
+module.exports = { numeralValue, computePostfix }
