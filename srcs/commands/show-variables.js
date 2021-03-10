@@ -9,7 +9,11 @@ module.exports = (command, argument, type) => {
 
     for (const element of Variables) {
       if (element.value.constructor.name === type) {
-        showList.push(`${element.id}: ${element.value.print()}`)
+        if (type === 'Expression') {
+          showList.push(`${element.id}(${element.value.variables.join(', ')}) = ${element.value.print()}`)
+        } else {
+          showList.push(`${element.id}: ${element.value.print()}`)
+        }
       }
     }
 

@@ -12,7 +12,7 @@ module.exports = async (inputLine) => {
             await showVariables(command,commandArgument, 'Numeral'); break
           case '!matrices':
             await showVariables(command, commandArgument, 'Matrix'); break
-          case 'functions':
+          case '!functions':
             await showVariables(command, commandArgument, 'Expression'); break
           default:
             break
