@@ -34,7 +34,7 @@ module.exports = async (prototype, definition) => {
     const seenArguments = []
 
     for (const argument of argumentList) {
-      if (!argument.match(/^[a-z]+$/)) {
+      if (!argument.match(/^[a-z]+$/) || argument === 'i') {
         throw { data: prototype, code: 'badInputFormat' }
       }
 
