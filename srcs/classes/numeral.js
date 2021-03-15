@@ -119,7 +119,7 @@ class Numeral {
 
       const result = new Numeral({
         r: (A.r * B.r + A.i * B.i) / (B.r * B.r + B.i * B.i),
-        i: (-A.r * B.i + B.r * A.i) / (B.r * B.r + B.i * B.i),
+        i: (B.r * A.i - A.r * B.i) / (B.r * B.r + B.i * B.i),
         nr, dr, ni, di
       })
 
