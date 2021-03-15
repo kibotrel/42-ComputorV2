@@ -33,6 +33,10 @@ module.exports = async (payload) => {
         const value = await createFunction(id, inputValue)
         const realId = id.substring(0, id.indexOf('('))
         
+        if (forbiddenVariables.indexOf(realId) !== -1) {
+          throw { data: realId, code: 'forbiddenVariableName' }
+        }
+
         addToVariableList(realId, value)
 
         return value
