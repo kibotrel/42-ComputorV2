@@ -9,7 +9,7 @@ module.exports = (infixStack) => {
   const operatorStack = []
 
   for (const token of infixStack) {
-    if (!token.match(/^[+\-*\/%^()]$/)) {
+    if (token.constructor.name !== 'String' || !token.match(/^[+\-*\/%^()]$/)) {
       postfixStack.push(token)
     } else if (token.match(/^[+\-*\/%^]$/)) {
       while (operatorStack.length) {

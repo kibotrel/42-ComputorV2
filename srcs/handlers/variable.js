@@ -1,5 +1,7 @@
 const { Variables } = global
 const { numeralValue } = require('@srcs/maths/compute.js')
+const { isFunction } = require('@srcs/parsing/utils.js')
+const Expression = require("@classes/expression.js")
 
 const addToVariableList = (id, value) => {
   const i = Variables.findIndex( variable => variable.id === id)
@@ -25,6 +27,19 @@ const resolveVariable = async (request) => {
 
     if (request.match(/^[a-z]+$/)) {
       throw { data: request, code: 'unknownVariable' }
+    } else if (isFunction(request)) {
+      const arguments = request.substring(request.indexOf('(') + 1, request.indexOf(')')).split(',')
+      const functionName = request.substring(0, request.indexOf('('))
+      const func = await resolveVariable(functionName)
+      const argumentList = []
+
+      for (const argument of arguments) {
+        const value = await numeralValue(argument)
+
+        argumentList.push(value)
+      }
+
+      return await Expression.evaluate(func, argumentList)
     } else {
       return await numeralValue(request)
     }

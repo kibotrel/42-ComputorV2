@@ -3,7 +3,7 @@ const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
 const evaluate = require('@srcs/maths/basic-operations.js')
 const { parseImaginary } = require('@srcs/parsing/utils.js')
 const { resolveVariable } = require('@env/variables.js')
-
+const { toNumeral } = require('@srcs/maths/utils.js')
 const Numeral = require('@classes/numeral')
 
 const checkLastElement = async (token) => {
@@ -16,6 +16,7 @@ const checkLastElement = async (token) => {
       } else if ((token.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
         return await resolveVariable(token)
       } else {
+        // return await toNumeral(parseFloat(token))
         return new Numeral({ r: parseFloat(token), i: 0 }) // TODO WHEN VARIABLE WILL BE ADDED
       }
     }
@@ -26,10 +27,10 @@ const checkLastElement = async (token) => {
 
 const computePostfix = async (postfixNotation) => {
   const stack = []
-  
+
   try {
     for (const token of postfixNotation) {
-      if (!token.match(/^[+\-*\/%^]$/)) {
+      if (token.constructor.name !== 'String' || !token.match(/^[+\-*\/%^]$/)) {
         stack.push(token)
       } else {
         let secondOperand = stack.pop()

@@ -1,6 +1,6 @@
 const { checkNumeral, toNumeral, numeralFractionalParts } = require('@srcs/maths/utils.js')
 const { remainder } = require('@srcs/maths/basic-functions.js')
-const { simplifyFraction, addFraction, multiplyFraction, divideFraction, modulusFraction, decimalToIntegerScaling } = require('@srcs/maths/fractions.js')
+const { addFraction, multiplyFraction, divideFraction, modulusFraction } = require('@srcs/maths/fractions.js')
 
 // r stands for real, i for imaginary, n for numerator and d for denominator
 

@@ -30,7 +30,8 @@ Client.on('line', async (payload) => {
     const feedback = await inputHandler(payload)
 
     if (feedback !== undefined && feedback) {
-      console.log(`${feedback.print()}`)
+      // console.log(feedback)
+      console.log(`  ${feedback.print()}`)
     }
   } catch (error) {
     errorHandler(error)

@@ -1,4 +1,4 @@
-const { decimalToIntegerScaling } = require('@srcs/maths/fractions.js')
+const { decimalToIntegerScaling, simplifyFraction } = require('@srcs/maths/fractions.js')
 
 const checkNumeral = async (numeral, operator) => {
   try {
@@ -25,7 +25,8 @@ const toNumeral = async (value) => {
     if (value.constructor.name === 'Numeral') {
       return value
     } else if (value.constructor.name === 'Number') {
-      const { n: nr, d: dr } = decimalToIntegerScaling({ number: value })
+      const { n: numerator, d: denominator } = decimalToIntegerScaling({ number: value })
+      const { n: nr, d: dr } = simplifyFraction({ numerator, denominator })
 
       return { r: value, i: 0, nr, dr, ni: 0, di: 1 }
     } else {
