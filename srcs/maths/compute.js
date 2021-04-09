@@ -8,6 +8,25 @@ const { isFunction } = require('@srcs/parsing/utils.js')
 const Numeral = require('@classes/numeral.js')
 const Expression = require('@classes/expression.js')
 
+const computeFunction = async (token) => {
+  let functionName = token.substring(0, token.indexOf('('))
+  const sign = functionName[0] === '-' ? -1 : 1
+
+  if (functionName[0].match(/[+\-]/)) {
+    functionName = functionName.substring(1)
+  }
+
+  const expression = await resolveVariable(functionName)
+  const variables = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
+  const result = await Expression.evaluate(expression, variables)
+
+  if (sign < 0) {
+    return await Numeral.substract(0, result)
+  } else {
+    return result
+  }
+}
+
 const checkLastElement = async (token) => {
   try {
     if (token.constructor.name === 'Numeral') {
@@ -18,22 +37,7 @@ const checkLastElement = async (token) => {
       } else if ((token.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
         return await resolveVariable(token)
       } else if (isFunction(token)) {
-        let functionName = token.substring(0, token.indexOf('('))
-        const sign = functionName[0] === '-' ? -1 : 1
-
-        if (functionName[0].match(/[+\-]/)) {
-          functionName = functionName.substring(1)
-        }
-
-        const expression = await resolveVariable(functionName)
-        const variables = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
-        const result = await Expression.evaluate(expression, variables)
-
-        if (sign < 0) {
-          return await Numeral.substract(0, result)
-        } else {
-          return result
-        }
+        return await computeFunction(token)
       } else {
         // return await toNumeral(parseFloat(token))
         return new Numeral({ r: parseFloat(token), i: 0 }) // TODO WHEN VARIABLE WILL BE ADDED
@@ -55,11 +59,19 @@ const computePostfix = async (postfixNotation) => {
         let secondOperand = stack.pop()
         let firstOperand = stack.pop()
 
-        if (firstOperand.constructor.name === 'String' && (firstOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
-          firstOperand = await resolveVariable(firstOperand)
+        if (firstOperand.constructor.name === 'String') {
+          if ((firstOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
+            firstOperand = await resolveVariable(firstOperand)
+          } else if (isFunction(firstOperand)) {
+            firstOperand = await computeFunction(firstOperand)
+          }
         }
-        if (secondOperand.constructor.name === 'String' && (secondOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
-          secondOperand = await resolveVariable(secondOperand)
+        if (secondOperand.constructor.name === 'String') {
+          if ((secondOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
+            secondOperand = await resolveVariable(secondOperand)
+          } else if (isFunction(secondOperand)) {
+            secondOperand = await computeFunction(secondOperand)
+          }
         }
 
         const result = await evaluate({ firstOperand, operator: token, secondOperand })
