@@ -3,7 +3,7 @@
 // the right order by stacking left brackets and destack on
 // right brackets.
 
-const { resolveVariable } = require("@env/variables.js")
+const { resolveVariable } = require('@env/variables.js')
 
 const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {

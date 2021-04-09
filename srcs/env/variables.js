@@ -1,4 +1,4 @@
-const Numeral = require("@classes/numeral.js")
+const Numeral = require('@classes/numeral.js')
 
 const { Variables } = global
 
