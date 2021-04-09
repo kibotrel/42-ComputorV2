@@ -19,8 +19,7 @@ const checkLastElement = async (token) => {
 
         return await Expression.evaluate(expression, variables)
       } else {
-        // return await toNumeral(parseFloat(token))
-        return new Numeral({ r: parseFloat(token), i: 0 }) // TODO WHEN VARIABLE WILL BE ADDED
+        return new Numeral({ r: parseFloat(token), i: 0 })
       }
     }
   } catch (error) {
