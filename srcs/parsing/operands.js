@@ -29,7 +29,7 @@ const decimal = async ({ string, i }, flags) => {
   }
 }
 
-const variable = async ({ string, i }, flags, infixStack) => {
+const variable = async ({ string, i }, flags) => {
   try {
     const current = string[i]
 

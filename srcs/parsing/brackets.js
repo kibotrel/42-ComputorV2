@@ -3,22 +3,56 @@
 // the right order by stacking left brackets and destack on
 // right brackets.
 
+const { resolveVariable } = require("@env/variables.js")
+
 const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {
+    let multiplySign = false
+
+    // Check if we need to add a multiply sign between the bracket
+    // and the token before it. This is happening if the last token
+    // is either a number or a custom variable that isn't a function
+
     if (flags.numberStart !== -1) {
-      infixStack.push(string.substring(flags.numberStart, i))
+      if (flags.complex) {
+        infixStack.push(string.substring(flags.numberStart, i))
+        multiplySign = true
+      } else if (flags.variable) {
+        const variableName = string.substring(flags.numberStart, i)
+        let variable
+
+        // Need to rework this part when built-in will be added.
+
+        if (variableName[0].match(/[+\-]/)) {
+          variable = resolveVariable(variableName.substring(1))
+        } else {
+          variable = resolveVariable(variableName)
+        }
+
+        if (variable.constructor.name === 'Numeral') {
+          infixStack.push(string.substring(flags.numberStart, i))
+          multiplySign = true
+        } else {
+          const remainingString = string.substring(i)
+          const functionArguments = remainingString.substring(0, remainingString.indexOf(')') + 1)
+
+          infixStack.push(`${variableName}${functionArguments}`)
+          return i + functionArguments.length - 1
+        }
+      }
+
+      if (multiplySign) {
+        infixStack.push('*')
+      }
     }
 
-    if (i !== 0) {
-      if (string[i - 1].match(/[\d)]/)) {
-        infixStack.push('*')
-      } else if (string[i - 1] === '.') {
-        throw { data: string, code: 'invalidLeftBracket', index: i }
-      }
+    if (i !== 0 && string[i - 1] === '.') {
+      throw { data: string, code: 'invalidLeftBracket', index: i }
     }
 
     infixStack.push('(')
     bracketStack.push(1)
+    return i
   } catch (error) {
     return Promise.reject(error)
   }

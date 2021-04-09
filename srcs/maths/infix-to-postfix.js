@@ -1,12 +1,7 @@
-const parseLine = require('@srcs/parsing/input.js')
-const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
 const evaluate = require('@srcs/maths/basic-operations.js')
 const { parseImaginary } = require('@srcs/parsing/utils.js')
 const { resolveVariable } = require('@env/variables.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
-
-const Numeral = require('@classes/numeral.js')
-const Expression = require('@classes/expression.js')
 
 const checkLastElement = async (token) => {
   try {
@@ -18,22 +13,11 @@ const checkLastElement = async (token) => {
       } else if ((token.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
         return await resolveVariable(token)
       } else if (isFunction(token)) {
-        let functionName = token.substring(0, token.indexOf('('))
-        const sign = functionName[0] === '-' ? -1 : 1
-
-        if (functionName[0].match(/[+\-]/)) {
-          functionName = functionName.substring(1)
-        }
-
+        const functionName = token.substring(0, token.indexOf('('))
         const expression = await resolveVariable(functionName)
         const variables = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
-        const result = await Expression.evaluate(expression, variables)
 
-        if (sign < 0) {
-          return await Numeral.substract(0, result)
-        } else {
-          return result
-        }
+        return await Expression.evaluate(expression, variables)
       } else {
         // return await toNumeral(parseFloat(token))
         return new Numeral({ r: parseFloat(token), i: 0 }) // TODO WHEN VARIABLE WILL BE ADDED
@@ -44,7 +28,7 @@ const checkLastElement = async (token) => {
   }
 }
 
-const computePostfix = async (postfixNotation) => {
+module.exports = async (postfixNotation) => {
   const stack = []
 
   try {
@@ -72,17 +56,3 @@ const computePostfix = async (postfixNotation) => {
     return Promise.reject(error)
   }
 }
-
-const numeralValue = async (inputLine) => {
-  try {
-    const infixNotation = await parseLine(inputLine)
-    console.log(infixNotation)
-    const postfixNotation = infixToPosfix(infixNotation)
-    console.log(postfixNotation)
-    return await computePostfix(postfixNotation)
-  } catch (error) {
-    return Promise.reject(error)
-  }
-}
-
-module.exports = { numeralValue, computePostfix }

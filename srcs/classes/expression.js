@@ -1,5 +1,5 @@
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
-const { computePostfix } = require('@srcs/maths/compute.js')
+const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
 class Expression {
   constructor({ functionName, argumentList, infixExpression }) {
@@ -25,7 +25,7 @@ class Expression {
 
       const postfixNotation = infixToPostfix(infixStack)
 
-      return computePostfix(postfixNotation)
+      return await computePostfix(postfixNotation)
     } catch (error) {
       return Promise.reject(error)
     }

@@ -25,7 +25,7 @@ module.exports = async (string) => {
   try {
     for (let i = 0; i < string.length; i++) {
       if (string[i] === '(') {
-        await leftBracket({ string, i }, flags, infixStack, bracketStack)
+        i = await leftBracket({ string, i }, flags, infixStack, bracketStack)
         flags = updateFlags({ numberStart: -1 })
       } else if (string[i] === ')') {
         await rightBracket({ string, i }, flags, infixStack, bracketStack)
