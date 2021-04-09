@@ -31,6 +31,11 @@ const resolveVariable = async (request) => {
       const arguments = request.substring(request.indexOf('(') + 1, request.indexOf(')')).split(',')
       const functionName = request.substring(0, request.indexOf('('))
       const func = await resolveVariable(functionName)
+
+      if (func.constructor.name != 'Expression') {
+        throw { data: functionName, code: 'notFunction' }
+      }
+
       const argumentList = []
 
       for (const argument of arguments) {
