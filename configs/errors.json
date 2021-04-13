@@ -1,4 +1,4 @@
-[
+ [
   {
     "code": "invalidLeftBracket",
     "message": ""
@@ -89,6 +89,18 @@
   },
   {
     "code": "notFunction",
+    "message": ""
+  },
+  {
+    "code": "notEquation",
+    "message": ""
+  },
+  {
+    "code": "forbiddenCharacters",
+    "message": ""
+  },
+  {
+    "code": "badPolynomString",
     "message": ""
   }
 ]

@@ -1,5 +1,6 @@
 const { env: { commands } } = Config
 const showVariables = require('@commands/show-variables.js')
+const showRoots = require('@commands/show-roots.js')
 
 module.exports = async (inputLine) => {
   try {
@@ -9,18 +10,17 @@ module.exports = async (inputLine) => {
 
         switch (command) {
           case '!variables':
-            await showVariables(command,commandArgument, 'Numeral'); break
+            return await showVariables(command,commandArgument, 'Numeral')
           case '!matrices':
-            await showVariables(command, commandArgument, 'Matrix'); break
+            return await showVariables(command, commandArgument, 'Matrix')
           case '!functions':
-            await showVariables(command, commandArgument, 'Expression'); break
-          default:
-            break
+            return await showVariables(command, commandArgument, 'Expression')
+          case '!solve':
+            return await showRoots(commandArgument)
         }
-
-        return
       }
     }
+ 
     throw { data: "", code: 'unrecognizedCommand' }
   } catch (error) {
     return Promise.reject(error)  
