@@ -1,19 +1,4 @@
-const toSuperscript = (number) => {
-  const superscriptDigits = '⁰¹²³⁴⁵⁶⁷⁸⁹'
-  const numberString = number.toString()
-
-  if (!numberString.match(/^\d+$/)) {
-    return number
-  } else {
-    let superscriptNumber = ''
-
-    for(let i = 0; i < numberString.length; i++) {
-      superscriptNumber += superscriptDigits[parseInt(numberString[i])]
-    }
-
-    return superscriptNumber
-  }
-}
+const { toSuperscript } = require('@srcs/equation/utils.js')
 
 const printReducedEquation = (polynomList) => {
   let reducedEquation = ''
@@ -46,4 +31,44 @@ const printReducedEquation = (polynomList) => {
 
   console.log(`\n\x1b[1;4mReduced form:\x1b[0m\n\n\t\x1b[33m${reducedEquation}\x1b[0m\n`)
 }
-module.exports = { printReducedEquation }
+
+const printEquationType = (degree) => {
+  const types = {
+    0: 'constant',
+    1: 'linear',
+    2: 'quadratic'
+  }
+
+  if (degree <= 2) {
+    console.log(`\x1b[1;4mPolynomial degree:\x1b[0m\n\n\tThis is a \x1b[33;1m${types[degree]}\x1b[0m equation (degree ${degree}).`)
+  } else {
+    console.log(`\x1b[1;4mPolynomial degree:\x1b[0m\n\n\tThis is a polynomial equation of degree \x1b[33;1m${degree}\x1b[0m.\n\n\tUnfortunately, this software cannot solve\n\tpolynomial equations of degree higher than \x1b[33;1m2\x1b[0m.\n`)
+  }
+}
+
+const printConstant = (c) => {
+  console.log('\n\x1b[1;4mSolution(s):\x1b[0m\n')
+
+  if (c === 0) {
+    console.log('\t\x1b[33;1mℝ\x1b[0m, the set of real number is the solution to this equation.\n')
+  } else {
+    console.log('\tThis equation does not have any solution.\n')
+  }
+}
+
+const printLinear = (b, c) => {
+  const root = parseFloat(Number(-c / b).toPrecision(Config.number.toPrecision))
+
+  console.log('\n\x1b[1;4mSolution(s):\x1b[0m\n')
+  
+  if (Config.equation.verbose) {
+    console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${b}, b = ${c}\n\n\tResolution:\n\n\t\tx = -a / b\n\t\tx = ${-c} / ${b}\n\t\t\x1b[4mx = ${root}\n\x1b[0m`)
+  }
+
+  console.log(`\tThe solution to this equation is \x1b[1;33m${root}\x1b[0m.\n`)
+}
+
+const printQuadratic = (b, c) => {
+  const root = parseFloat(Number(-c / b).toPrecision(Config.number.toPrecision))
+}
+module.exports = { printReducedEquation, printEquationType, printConstant, printLinear, printQuadratic }

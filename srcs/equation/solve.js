@@ -1,5 +1,6 @@
 const parseEquation = require('@srcs/equation/parse.js')
-const { printReducedEquation } = require('@srcs/equation/print.js')
+const { printReducedEquation, printEquationType, printConstant, printLinear, printQuadratic } = require('@srcs/equation/print.js')
+const { equationDegree } = require('@srcs/equation/utils.js')
 
 const reduceEquation = (polynomList) => {
   let reducedList = []
@@ -29,8 +30,27 @@ module.exports = async (equation) => {
   try {
     const polynomList = await parseEquation(equation)
     const reducedList = reduceEquation(polynomList)
+    const degree = equationDegree(reducedList)
 
     printReducedEquation(reducedList)
+    printEquationType(degree)
+
+    if (degree <= 2) {
+      const foundA = reducedList.filter((element) => {return element.power === 2})[0]
+      const foundB = reducedList.filter((element) => {return element.power === 1})[0]
+      const foundC = reducedList.filter((element) => {return element.power === 0})[0]
+
+      const a = (foundA ? foundA.factor * foundA.sign : 0)
+      const b = (foundB ? foundB.factor * foundB.sign : 0)
+      const c = (foundC ? foundC.factor * foundC.sign : 0)
+
+      switch (degree) {
+        case 0: printConstant(c); break
+        case 1: printLinear(b, c); break
+        case 2: printQuadratic(a, b, c); break
+      }
+    }
+
   } catch (error) {
     return Promise.reject(error)
   }
