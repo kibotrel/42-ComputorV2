@@ -30,8 +30,11 @@ Client.on('line', async (payload) => {
     const feedback = await inputHandler(payload)
 
     if (feedback !== undefined && feedback) {
-      // console.log(feedback)
-      console.log(`  ${feedback.print()}`)
+      if (feedback.constructor.name === 'Numeral') {
+        console.log(`\n\x1b[1mComputation result :\x1b[0m\n\n\t${feedback.print()}\n`)
+      } else {
+        console.log(`\nNew ${feedback.constructor.name} created!\n\n\t${feedback.print()}`)
+      }
     }
   } catch (error) {
     errorHandler(error)

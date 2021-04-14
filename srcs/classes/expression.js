@@ -33,7 +33,9 @@ class Expression {
   }
 
   print() {
-    return `${this.definition.join(' ')}`
+    let printedString = this.definition.join(' ')
+
+    return printedString
   }
 }
 

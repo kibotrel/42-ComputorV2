@@ -16,8 +16,8 @@ class Numeral {
 
   static async add(a, b) {
     try {
-      const A = await toNumeral(a)
-      const B = await toNumeral(b)
+      const A = toNumeral(a)
+      const B = toNumeral(b)
 
       const { re: re1, im: im1 } = numeralFractionalParts(A)
       const { re: re2, im: im2 } = numeralFractionalParts(B)
@@ -39,8 +39,8 @@ class Numeral {
 
   static async substract(a, b) {
     try {
-      const A = await toNumeral(a)
-      const B = await toNumeral(b)
+      const A = toNumeral(a)
+      const B = toNumeral(b)
 
       const { re: re1, im: im1 } = numeralFractionalParts(A)
       const { re: re2, im: im2 } = numeralFractionalParts(B)
@@ -62,8 +62,8 @@ class Numeral {
 
   static async multiply(a, b) {
     try {
-      const A = await toNumeral(a)
-      const B = await toNumeral(b)
+      const A = toNumeral(a)
+      const B = toNumeral(b)
       
       const { re: re1, im: im1 } = numeralFractionalParts(A)
       const { re: re2, im: im2 } = numeralFractionalParts(B)
@@ -90,8 +90,8 @@ class Numeral {
 
   static async divide(a, b) {
     try {
-      const A = await toNumeral(a)
-      const B = await toNumeral(b)
+      const A = toNumeral(a)
+      const B = toNumeral(b)
       
       if (B.r === 0 && B.i === 0) {
         throw { data: { A, B, operator: '/' }, code: 'impossibleDivision' }
@@ -131,8 +131,8 @@ class Numeral {
 
   static async modulus(a, b) {
     try {
-      const A = await toNumeral(a)
-      const B = await toNumeral(b)
+      const A = toNumeral(a)
+      const B = toNumeral(b)
 
       if ((B.r === 0 && B.i === 0) || Math.floor(B.r) !== B.r || Math.floor(B.i) !== B.i) {
         throw { data: { A, B, operator: '%' }, code: 'impossibleModulo' }
@@ -168,8 +168,8 @@ class Numeral {
     let result
 
     try {
-      const A = await toNumeral(a)
-      const B = await toNumeral(b)
+      const A = toNumeral(a)
+      const B = toNumeral(b)
 
       // Will be implemented soon.
 
@@ -222,7 +222,39 @@ class Numeral {
       const separatorSign = this.i < 0 ? '-' : '+'
       const imaginary = this.i < -1 || (this.i < 0 && this.i > -1) ? -parseFloat(this.i.toPrecision(Config.number.precision)) : this.i > 1 || (this.i > 0 && this.i < 1) ? parseFloat(this.i.toPrecision(Config.number.precision)) : ''
 
-      return `${this.r ? real : ''}${this.r && this.i ? ` ${separatorSign} ` : this.i < 0 ? separatorSign : ''}${this.i ? `${imaginary}i` : ''}`
+      let printedString = '\x1b[33;1m'
+
+      if (!Config.number.fractionForm) {
+        if (this.r) {
+          printedString += real
+        }
+
+        if (this.r && this.i) {
+          printedString += ` ${separatorSign} `
+        } else if (this.i < 0) {
+          printedString += separatorSign
+        }
+
+        if (this.i) {
+          printedString += `${imaginary}i`
+        }
+      } else {
+        if (this.r) {
+          printedString += Number.isInteger(real) ? real : `${this.nr}/${this.dr}`
+        }
+
+        if (this.r && this.i) {
+          printedString += ` ${separatorSign} `
+        } else if (this.i < 0) {
+          printedString += separatorSign
+        }
+
+        if (this.i) {
+          printedString += Number.isInteger(imaginary) ? `${imaginary}i` : `(${Math.abs(this.ni)} / ${this.di})i`
+        }
+      }
+
+      return `${printedString}\x1b[0m`
     }
   }
 }

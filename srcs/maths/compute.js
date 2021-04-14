@@ -87,9 +87,8 @@ const computePostfix = async (postfixNotation) => {
 const numeralValue = async (inputLine) => {
   try {
     const infixNotation = await parseLine(inputLine)
-    console.log(infixNotation)
     const postfixNotation = infixToPosfix(infixNotation)
-    console.log(postfixNotation)
+
     return await computePostfix(postfixNotation)
   } catch (error) {
     return Promise.reject(error)
