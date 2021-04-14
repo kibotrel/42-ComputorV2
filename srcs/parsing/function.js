@@ -5,7 +5,7 @@ const sanitizeStack = (stack) => {
   const finalStack = []
 
   for (const token of stack) {
-  if (token.match(/^(([a-z]+)|([+-]?([0-9]*)(\.([0-9]+))?))$/) || token.match(/^[+\-*/%^]$/)) {
+    if (token.match(/^(([a-z]+)|([+-]?([0-9]*)(\.([0-9]+))?))$/) || token.match(/^[+\-*/%^\(\)]$/)) {
       finalStack.push(token)
     } else if (token.match(/^[+-]?([0-9]*)(\.([0-9]+))?[a-z]+$/)){
       const breakpoint = /[a-z]/.exec(token).index
