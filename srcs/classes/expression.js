@@ -33,9 +33,14 @@ class Expression {
   }
 
   print() {
-    let printedString = this.definition.join(' ')
+    let definition = this.definition.join(' ')
 
-    return printedString
+    for (let i = 0; i < definition.length; i++) {
+      if (definition[i] === ' ' && (definition[i - 1] === '(' ||definition[i + 1] === ')')) {
+        definition = definition.slice(0, i) + definition.slice(i + 1, definition.length)
+      }
+    }
+    return `${this.name}(${this.variables.join(', ')}) = ${definition}`
   }
 }
 
