@@ -10,18 +10,18 @@ module.exports = (command, argument, type) => {
     for (const element of Variables) {
       if (element.value.constructor.name === type) {
         if (type === 'Expression') {
-          showList.push(`${element.id}(${element.value.variables.join(', ')}) = ${element.value.print()}`)
+          showList.push(`${element.value.print()}`)
         } else {
-          showList.push(`${element.id}: ${element.value.print()}`)
+          showList.push(`\x1b[32;1m${element.id}\x1b[0;1m = ${element.value.print()}`)
         }
       }
     }
 
     if (!showList.length) {
-      console.log(`No ${type} recorded yet!`)
+      console.log(`\n\x1b[1mNo \x1b[32m${type}\x1b[0;1m recorded yet!\x1b[0m\n`)
     } else {
-      console.log(`Found ${showList.length} ${type} element(s):`)
-      console.log(`  ${showList.join('\n  ')}`)
+      console.log(`\n\x1b[1mFound \x1b[33m${showList.length} \x1b[32m${type}\x1b[0;1m element(s):\x1b[0m\n`)
+      console.log(`\t${showList.join('\n\t')}\n`)
     }
   } catch (error) {
     return Promise.reject(error)

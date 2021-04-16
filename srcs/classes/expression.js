@@ -33,14 +33,26 @@ class Expression {
   }
 
   print() {
-    let definition = this.definition.join(' ')
+    // Turns variable into bold yellow to represent numeral values.
+
+    const definitionStack = this.definition
+
+    for (let i = 0; i < definitionStack.length; i++) {
+      if (!definitionStack[i].match(/^[+\-\*\/%\^\(\)]$/)) {
+        definitionStack[i] = `\x1b[33m${definitionStack[i]}\x1b[0;1m`
+      }
+    }
+    let definition = definitionStack.join(' ')
+
+    // Removes space after left bracket and before right bracket to make the
+    // output prettier.
 
     for (let i = 0; i < definition.length; i++) {
       if (definition[i] === ' ' && (definition[i - 1] === '(' ||definition[i + 1] === ')')) {
         definition = definition.slice(0, i) + definition.slice(i + 1, definition.length)
       }
     }
-    return `${this.name}(${this.variables.join(', ')}) = ${definition}`
+    return `\x1b[32;1m${this.name}\x1b[0;1m(\x1b[33m${this.variables.join('\x1b[0;1m, \x1b[33m')}\x1b[0;1m) = ${definition}\x1b[0m`
   }
 }
 

@@ -33,7 +33,7 @@ Client.on('line', async (payload) => {
       if (feedback.constructor.name === 'Numeral') {
         console.log(`\n\x1b[1mComputation result :\x1b[0m\n\n\t${feedback.print()}\n`)
       } else {
-        console.log(`\nNew ${feedback.constructor.name} created!\n\n\t${feedback.print()}`)
+        console.log(`\n\x1b[1mNew ${feedback.constructor.name} stored!\x1b[0m\n\n\t${feedback.print()}`)
       }
     }
   } catch (error) {
