@@ -27,14 +27,12 @@ Client.write('> ')
 
 Client.on('line', async (payload) => {
   try {
-    const feedback = await inputHandler(payload)
+    const { value, type } = await inputHandler(payload)
 
-    if (feedback !== undefined && feedback) {
-      if (feedback.constructor.name === 'Numeral') {
-        console.log(`\n\x1b[1mComputation result :\x1b[0m\n\n\t${feedback.print()}\n`)
-      } else {
-        console.log(`\n\x1b[1mNew ${feedback.constructor.name} stored!\x1b[0m\n\n\t${feedback.print()}`)
-      }
+    if (type === 'computation') {
+      console.log(`\n\x1b[1mComputation result :\x1b[0m\n\n\t${value.print()}\n`)
+    } else if (type.match(/^(expression|numeral)$/)) {
+      console.log(`\n\x1b[1mNew \x1b[32m${value.constructor.name}\x1b[0;1m stored!\x1b[0m\n\n\t${value.print()}\n`)
     }
   } catch (error) {
     errorHandler(error)
@@ -42,3 +40,4 @@ Client.on('line', async (payload) => {
 
   Client.write('> ')
 }) 
+

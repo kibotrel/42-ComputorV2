@@ -23,7 +23,9 @@ module.exports = async (payload) => {
     if (inputLine.startsWith('!')) {
       await commmandHandler(inputLine)
     } else if (inputLine.endsWith('=?')) {
-      return await numeralValue(inputLine.substring(0, inputLine.length - 2))
+      const value =  await numeralValue(inputLine.substring(0, inputLine.length - 2))
+      
+      return { value, type: 'computation' }
     } else if ((inputLine.match(/=/g) || []).length === 1) {
       const { [0]: id, [1]: inputValue } = inputLine.split('=')
 
@@ -39,7 +41,7 @@ module.exports = async (payload) => {
 
         addToVariableList(realId, value)
 
-        return value
+        return { value, type: 'expression' }
       } else if (!id.match(/^[a-z]+$/)) {
         throw { data: id, code: 'invalidVariableFormat' }
       } else if (forbiddenVariables.indexOf(id) !== -1) {
@@ -49,7 +51,7 @@ module.exports = async (payload) => {
 
         addToVariableList(id, value)
 
-        return value
+        return { value, type: 'numeral' }
       }
     } else {
       throw { data: inputLine, code: 'badInputFormat' }
