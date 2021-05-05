@@ -35,24 +35,28 @@ class Expression {
   print() {
     // Turns variable into bold yellow to represent numeral values.
 
-    const definitionStack = this.definition
+    const definitionStack = []
 
-    for (let i = 0; i < definitionStack.length; i++) {
-      if (!definitionStack[i].match(/^[+\-\*\/%\^\(\)]$/)) {
-        definitionStack[i] = `\x1b[33m${definitionStack[i]}\x1b[0;1m`
+    for (let i = 0; i < this.definition.length; i++) {
+      if (!this.definition[i].match(/^[+\-\*\/%\^\(\)]$/)) {
+        definitionStack.push(`\x1b[33m${this.definition[i]}\x1b[0;1m`)
+      } else {
+        definitionStack.push(this.definition[i])
       }
     }
-    let definition = definitionStack.join(' ')
+  
+    let expression = definitionStack.join(' ')
 
     // Removes space after left bracket and before right bracket to make the
     // output prettier.
 
-    for (let i = 0; i < definition.length; i++) {
-      if (definition[i] === ' ' && (definition[i - 1] === '(' ||definition[i + 1] === ')')) {
-        definition = definition.slice(0, i) + definition.slice(i + 1, definition.length)
+    for (let i = 0; i < expression.length; i++) {
+      if (expression[i] === ' ' && (expression[i - 1] === '(' || expression[i + 1] === ')')) {
+        expression = expression.slice(0, i) + expression.slice(i + 1, expression.length)
       }
     }
-    return `\x1b[32;1m${this.name}\x1b[0;1m(\x1b[33m${this.variables.join('\x1b[0;1m, \x1b[33m')}\x1b[0;1m) = ${definition}\x1b[0m`
+
+    return `\x1b[32;1m${this.name}\x1b[0;1m(\x1b[33m${this.variables.join('\x1b[0;1m, \x1b[33m')}\x1b[0;1m) = ${expression}\x1b[0m`
   }
 }
 
