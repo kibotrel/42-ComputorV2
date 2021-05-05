@@ -2,11 +2,17 @@ const evaluate = require('@srcs/maths/basic-operations.js')
 const { parseImaginary } = require('@srcs/parsing/utils.js')
 const { resolveVariable } = require('@env/variables.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
+const { toNumeral } = require('@srcs/maths/utils.js')
+
+const Numeral = require('@classes/numeral.js')
 
 const checkLastElement = async (token) => {
   try {
     if (token.constructor.name === 'Numeral') {
-      return token
+      const { nr, dr } = toNumeral(token.r)
+      const { nr: ni, dr: di } = toNumeral(token.i)
+
+      return new Numeral({ r: token.r, i: token.i, nr, ni, dr, di })
     } else if (token.constructor.name === 'String') {
       if ((token.match(/[a-z]/g) || []).length === 1 && (token.match(/i/g) || []).length === 1) {
         return parseImaginary(token)
@@ -19,7 +25,7 @@ const checkLastElement = async (token) => {
 
         return await Expression.evaluate(expression, variables)
       } else {
-        return new Numeral({ r: parseFloat(token), i: 0 })
+        return new Numeral(toNumeral(parseFloat(token)))
       }
     }
   } catch (error) {

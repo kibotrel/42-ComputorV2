@@ -4,6 +4,7 @@ const evaluate = require('@srcs/maths/basic-operations.js')
 const { parseImaginary } = require('@srcs/parsing/utils.js')
 const { resolveVariable } = require('@env/variables.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
+const { toNumeral } = require('@srcs/maths/utils.js')
 
 const Numeral = require('@classes/numeral.js')
 const Expression = require('@classes/expression.js')
@@ -39,7 +40,7 @@ const checkLastElement = async (token) => {
       } else if (isFunction(token)) {
         return await computeFunction(token)
       } else {
-        return new Numeral({ r: parseFloat(token), i: 0 })
+        return new Numeral(toNumeral(parseFloat(token)))
       }
     }
   } catch (error) {
