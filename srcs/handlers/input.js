@@ -3,8 +3,60 @@ const { addToVariableList } = require('@srcs/handlers/variable.js')
 const { numeralValue } = require('@srcs/maths/compute.js')
 const createFunction = require('@srcs/parsing/function.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
+const { resolveVariable } = require('@srcs/handlers/variable.js')
 
 const { env: { forbiddenVariables } } = Config
+
+const storeVariable = async (inputLine) => {
+  try {
+    const { [0]: id, [1]: inputValue } = inputLine.split('=')
+
+    if (!id || !inputValue) {
+      throw { data: inputLine, code: 'badInputFormat' }
+    } else if (isFunction(id)) {
+      const value = await createFunction(id, inputValue)
+      const realId = id.substring(0, id.indexOf('('))
+      
+      if (forbiddenVariables.indexOf(realId) !== -1) {
+        throw { data: realId, code: 'forbiddenVariableName' }
+      }
+
+      addToVariableList(realId, value)
+
+      return { value, type: 'expression' }
+    } else if (!id.match(/^[a-z]+$/)) {
+      throw { data: id, code: 'invalidVariableFormat' }
+    } else if (forbiddenVariables.indexOf(id) !== -1) {
+      throw { data: id, code: 'forbiddenVariableName' }
+    } else {
+      const value = await numeralValue(inputValue)
+
+      addToVariableList(id, value)
+
+      return { value, type: 'numeral' }
+    }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+const computeInput = async (inputLine) => {
+  try {
+    const realInput = inputLine.substring(0, inputLine.length - 2)
+
+    let value
+    if (isFunction(realInput)) {
+      value = await resolveVariable(realInput)
+      console.log(value)
+    } else {
+      value = await numeralValue(realInput)
+    }
+    
+    return { value, type: 'computation' }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
 
 // Transform input string to lowercase only and remove all whitespaces
 // then depending on the type of input, call the correct process.
@@ -23,36 +75,9 @@ module.exports = async (payload) => {
     if (inputLine.startsWith('!')) {
       await commmandHandler(inputLine)
     } else if (inputLine.endsWith('=?')) {
-      const value =  await numeralValue(inputLine.substring(0, inputLine.length - 2))
-      
-      return { value, type: 'computation' }
+      return await computeInput(inputLine)
     } else if ((inputLine.match(/=/g) || []).length === 1) {
-      const { [0]: id, [1]: inputValue } = inputLine.split('=')
-
-      if (!id || !inputValue) {
-        throw { data: inputLine, code: 'badInputFormat' }
-      } else if (isFunction(id)) {
-        const value = await createFunction(id, inputValue)
-        const realId = id.substring(0, id.indexOf('('))
-        
-        if (forbiddenVariables.indexOf(realId) !== -1) {
-          throw { data: realId, code: 'forbiddenVariableName' }
-        }
-
-        addToVariableList(realId, value)
-
-        return { value, type: 'expression' }
-      } else if (!id.match(/^[a-z]+$/)) {
-        throw { data: id, code: 'invalidVariableFormat' }
-      } else if (forbiddenVariables.indexOf(id) !== -1) {
-        throw { data: id, code: 'forbiddenVariableName' }
-      } else {
-        const value = await numeralValue(inputValue)
-
-        addToVariableList(id, value)
-
-        return { value, type: 'numeral' }
-      }
+      return await storeVariable(inputLine)
     } else {
       throw { data: inputLine, code: 'badInputFormat' }
     }
