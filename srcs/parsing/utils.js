@@ -121,7 +121,7 @@ const parseImaginary = (token) => {
 }
 
 const isFunction = (token) => {
-  return token.match(/^[+\-]?[a-z]+\(([+\-]?[a-z]+|([+\-]?\d+(\.\d+)?)?([+\-]?\d+(\.\d+)?\*?i)?)(,([+\-]?[a-z]+|([+\-]?\d+(\.\d+)?)?([+\-]?\d+(\.\d+)?\*?i)?)*)+\)$/)
+  return token.match(/^[+\-]?[a-z]+\(([+\-]?[a-z]+|([+\-]?\d+(\.\d+)?)?([+\-]?\d+(\.\d+)?\*?i)?)(,([+\-]?[a-z]+|([+\-]?\d+(\.\d+)?)?([+\-]?\d+(\.\d+)?\*?i)?)*)*\)$/)
 }
 
 module.exports = { isFunction, updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }
