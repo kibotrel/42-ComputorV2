@@ -18,7 +18,8 @@
     "@srcs": "srcs",
     "@classes": "srcs/classes",
     "@commands": "srcs/commands",
-    "@env": "srcs/env"
+    "@env": "srcs/env",
+    "@handlers": "srcs/handlers"
   },
 
   "scripts": {

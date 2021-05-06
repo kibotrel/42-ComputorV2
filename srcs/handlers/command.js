@@ -1,6 +1,7 @@
 const { env: { commands } } = Config
-const showVariables = require('@commands/show-variables.js')
+
 const showRoots = require('@commands/show-roots.js')
+const showVariables = require('@commands/show-variables.js')
 
 module.exports = async (inputLine) => {
   try {

@@ -1,7 +1,9 @@
-const parseLine = require('@srcs/parsing/input.js')
 const Expression = require('@classes/expression')
+
+const { isVariableRegistered, sanitizeName } = require('@env/variables.js')
+
+const parseLine = require('@srcs/parsing/input.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
-const { isVariableRegistered, sanitizeName } = require('@srcs/env/variables.js')
 
 const sanitizeStack = (stack) => {
   const finalStack = []

@@ -1,5 +1,6 @@
-const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
 const computePostfix = require('@srcs/maths/infix-to-postfix.js')
+
+const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
 
 class Expression {

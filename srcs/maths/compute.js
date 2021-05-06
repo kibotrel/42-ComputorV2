@@ -1,13 +1,14 @@
-const parseLine = require('@srcs/parsing/input.js')
-const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
-const evaluate = require('@srcs/maths/basic-operations.js')
-const { parseImaginary } = require('@srcs/parsing/utils.js')
-const { resolveVariable } = require('@env/variables.js')
-const { isFunction } = require('@srcs/parsing/utils.js')
-const { toNumeral } = require('@srcs/maths/utils.js')
-
 const Numeral = require('@classes/numeral.js')
 const Expression = require('@classes/expression.js')
+
+const { resolveVariable } = require('@env/variables.js')
+
+const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
+const parseLine = require('@srcs/parsing/input.js')
+const { parseImaginary, isFunction } = require('@srcs/parsing/utils.js')
+
+const evaluate = require('@srcs/maths/basic-operations.js')
+const { toNumeral } = require('@srcs/maths/utils.js')
 
 const computeFunction = async (token) => {
   let functionName = token.substring(0, token.indexOf('('))

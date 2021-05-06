@@ -1,7 +1,10 @@
 const { Variables } = global
-const { numeralValue } = require('@srcs/maths/compute.js')
-const { isFunction } = require('@srcs/parsing/utils.js')
+
 const Expression = require('@classes/expression.js')
+
+const { numeralValue } = require('@srcs/maths/compute.js')
+
+const { isFunction } = require('@srcs/parsing/utils.js')
 
 const addToVariableList = (id, value) => {
   const i = Variables.findIndex( variable => variable.id === id)

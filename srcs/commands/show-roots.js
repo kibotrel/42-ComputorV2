@@ -1,5 +1,5 @@
-const solveEquation = require('@srcs/equation/solve.js')
 const plotEquation = require('@srcs/equation/plot.js')
+const solveEquation = require('@srcs/equation/solve.js')
 
 module.exports = async (input) => {
   try {

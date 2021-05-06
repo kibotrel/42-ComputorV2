@@ -1,11 +1,12 @@
-const commmandHandler = require('@srcs/handlers/command.js')
-const { addToVariableList } = require('@srcs/handlers/variable.js')
+const { env: { forbiddenVariables } } = Config
+
+const commmandHandler = require('@handlers/command.js')
+const { addToVariableList, resolveVariable } = require('@handlers/variable.js')
+
 const { numeralValue } = require('@srcs/maths/compute.js')
+
 const createFunction = require('@srcs/parsing/function.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
-const { resolveVariable } = require('@srcs/handlers/variable.js')
-
-const { env: { forbiddenVariables } } = Config
 
 const storeVariable = async (inputLine) => {
   try {
@@ -43,11 +44,10 @@ const storeVariable = async (inputLine) => {
 const computeInput = async (inputLine) => {
   try {
     const realInput = inputLine.substring(0, inputLine.length - 2)
-
     let value
+
     if (isFunction(realInput)) {
       value = await resolveVariable(realInput)
-      console.log(value)
     } else {
       value = await numeralValue(realInput)
     }

@@ -1,10 +1,11 @@
-const evaluate = require('@srcs/maths/basic-operations.js')
-const { parseImaginary } = require('@srcs/parsing/utils.js')
+const Numeral = require('@classes/numeral.js')
+
 const { resolveVariable } = require('@env/variables.js')
-const { isFunction } = require('@srcs/parsing/utils.js')
+
+const evaluate = require('@srcs/maths/basic-operations.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
 
-const Numeral = require('@classes/numeral.js')
+const { parseImaginary, isFunction } = require('@srcs/parsing/utils.js')
 
 const checkLastElement = async (token) => {
   try {
