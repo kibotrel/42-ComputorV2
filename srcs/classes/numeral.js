@@ -211,7 +211,7 @@ class Numeral {
 
   print() {
     if (!this.r && !this.i) {
-      return '0'
+      return '\x1b[33;1m0\x1b[0m'
     } else {
       // Used the parseFloat(x.toPrecision(15)) to correct small floating point
       // errors that happen sometimes due to the lack of precision in Javascript

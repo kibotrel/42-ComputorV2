@@ -2,9 +2,25 @@ const Numeral = require('@classes/numeral.js')
 
 const { Variables } = global
 
+const sanitizeName = (token) => {
+  let name
+  
+  if (token.indexOf('(') > 0) {
+    name = token.substring(0, token.indexOf('('))
+  } else {
+    name = token
+  }
+
+  if (name[0].match(/\+|-/)) {
+    name = name.substring(1)
+  }
+
+  return name
+}
+
 const resolveVariable = async (token) => {
   try {
-    const id = (token[0].match(/\+|-/) ? token.substring(1, token.length) : token)
+    const id = sanitizeName(token)
     const sign = (token[0] === '-' ? -1 : 1)
 
     for (const variable of Variables) {
@@ -27,4 +43,16 @@ const resolveVariable = async (token) => {
   }
 }
 
-module.exports = { resolveVariable }
+const isVariableRegistered = (token) => {
+  const name = sanitizeName(token)
+
+  for (const variable of Variables) {
+    if (variable.id === name) {
+      return true
+    }
+  }
+
+  return false
+}
+
+module.exports = { resolveVariable, isVariableRegistered, sanitizeName }

@@ -1,11 +1,13 @@
 const parseLine = require('@srcs/parsing/input.js')
 const Expression = require('@classes/expression')
+const { isFunction } = require('@srcs/parsing/utils.js')
+const { isVariableRegistered, sanitizeName } = require('@srcs/env/variables.js')
 
 const sanitizeStack = (stack) => {
   const finalStack = []
 
   for (const token of stack) {
-    if (token.match(/^(([a-z]+)|([+-]?([0-9]*)(\.([0-9]+))?))$/) || token.match(/^[+\-*/%^\(\)]$/)) {
+    if (token.match(/^(([a-z]+)|([+-]?([0-9]*)(\.([0-9]+))?))$/) || token.match(/^[+\-*/%^\(\)]$/) || isFunction(token)) {
       finalStack.push(token)
     } else if (token.match(/^[+-]?([0-9]*)(\.([0-9]+))?[a-z]+$/)){
       const breakpoint = /[a-z]/.exec(token).index
@@ -47,11 +49,17 @@ module.exports = async (prototype, definition) => {
 
     const expression = await parseLine(definition)
     const infixExpression = sanitizeStack(expression)
-    
+
     for (const token of infixExpression) {
-      if ((token.length === 1 && token.match(/[a-z]/) && token[0] !== 'i') || (token.length > 1 && token.match(/[a-z]+/))) {
+      if ((token.length === 1 && token.match(/[a-z]/) && token[0] !== 'i') || (token.length > 1 && token.match(/^[a-z]+$/))) {
         if (argumentList.indexOf(token) === -1) {
           throw { data: token, code: 'unknownVariable' }
+        }
+      } else if (isFunction(token)) {
+        if (!isVariableRegistered(token)) {
+          throw { data: token, code: 'unknownFunction' }
+        } else if (sanitizeName(token) === functionName) {
+          throw { data: functionName, code: 'cyclicDeclaration' }
         }
       }
     }
