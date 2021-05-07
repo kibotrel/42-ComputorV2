@@ -1,6 +1,6 @@
-const Expression = require('@classes/expression')
+const { isVariableRegistered } = require('@handlers/variable.js')
 
-const { isVariableRegistered, sanitizeName } = require('@env/variables.js')
+const { sanitizeName } = require('@env/utils.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const { isFunction } = require('@srcs/parsing/utils.js')

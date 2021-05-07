@@ -1,7 +1,4 @@
-const Numeral = require('@classes/numeral.js')
-const Expression = require('@classes/expression.js')
-
-const { resolveVariable } = require('@env/variables.js')
+const { isVariableRegistered, sanitizeName } = require('@env/utils.js')
 
 const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
 const parseLine = require('@srcs/parsing/input.js')
@@ -10,22 +7,50 @@ const { parseImaginary, isFunction } = require('@srcs/parsing/utils.js')
 const evaluate = require('@srcs/maths/basic-operations.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
 
-const computeFunction = async (token) => {
-  let functionName = token.substring(0, token.indexOf('('))
-  const sign = functionName[0] === '-' ? -1 : 1
+const computeVariable = async (token, type) => {
+  try {
+    const variableName = sanitizeName(token)
+    const sign = (token[0] === '-' ? -1 : 1)
 
-  if (functionName[0].match(/[+\-]/)) {
-    functionName = functionName.substring(1)
-  }
+    if (variableName === 'i') {
+      return new Numeral({ r: 0, i: (sign < 0 ? -1 : 1) })
+    }
 
-  const expression = await resolveVariable(functionName)
-  const variables = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
-  const result = await Expression.evaluate(expression, variables)
+    const variable = isVariableRegistered(variableName)
 
-  if (sign < 0) {
-    return await Numeral.substract(0, result)
-  } else {
-    return result
+    if (!variable) {
+      throw { data: variableName, code: `unknown${type}` }
+    }
+
+    // Add Matrix constructor later
+
+    if (variable.constructor.name === 'Numeral') {
+      if (sign < 0) {
+        return await Numeral.substract(0, variable)
+      } else {
+        return variable
+      }
+    } else if (variable.constructor.name === 'Expression') {
+      const fun = variable
+      const arguments = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
+      const argumentList = []
+
+      for (const argument of arguments) {
+        const value = await numeralValue(argument)
+    
+        argumentList.push(value)
+      }
+
+      const value = await Expression.evaluate(fun, argumentList)
+
+      if (sign < 0) {
+        return await Nummeral.substract(0, value)
+      } else {
+        return value
+      }
+    }
+  } catch (error) {
+    return Promise.reject(error)
   }
 }
 
@@ -37,9 +62,9 @@ const checkLastElement = async (token) => {
       if ((token.match(/[a-z]/g) || []).length === 1 && (token.match(/i/g) || []).length === 1) {
         return parseImaginary(token)
       } else if ((token.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
-        return await resolveVariable(token)
+        return await computeVariable(token, 'Variable')
       } else if (isFunction(token)) {
-        return await computeFunction(token)
+        return await computeVariable(token, 'Function')
       } else {
         return new Numeral(toNumeral(parseFloat(token)))
       }
@@ -62,16 +87,17 @@ const computePostfix = async (postfixNotation) => {
 
         if (firstOperand.constructor.name === 'String') {
           if ((firstOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
-            firstOperand = await resolveVariable(firstOperand)
+            firstOperand = await computeVariable(firstOperand, 'Variable')
           } else if (isFunction(firstOperand)) {
-            firstOperand = await computeFunction(firstOperand)
+            firstOperand = await computeVariable(firstOperand, 'Function' )
           }
         }
+
         if (secondOperand.constructor.name === 'String') {
           if ((secondOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
-            secondOperand = await resolveVariable(secondOperand)
+            secondOperand = await computeVariable(secondOperand, 'Variable')
           } else if (isFunction(secondOperand)) {
-            secondOperand = await computeFunction(secondOperand)
+            secondOperand = await computeVariable(secondOperand, 'Function')
           }
         }
 

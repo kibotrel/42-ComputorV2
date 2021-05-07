@@ -1,5 +1,3 @@
-const Numeral = require('@classes/numeral.js')
-
 const { toSuperscript } = require('@srcs/equation/utils.js')
 
 const { toNumeral } = require('@srcs/maths/utils.js')

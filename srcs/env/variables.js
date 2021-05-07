@@ -1,58 +1,53 @@
-const Numeral = require('@classes/numeral.js')
+const { isVariableRegistered, sanitizeName } = require('@env/utils.js')
 
-const { Variables } = global
+const { numeralValue } = require('@srcs/maths/compute.js')
 
-const sanitizeName = (token) => {
-  let name
-  
-  if (token.indexOf('(') > 0) {
-    name = token.substring(0, token.indexOf('('))
-  } else {
-    name = token
-  }
-
-  if (name[0].match(/\+|-/)) {
-    name = name.substring(1)
-  }
-
-  return name
-}
-
-const resolveVariable = async (token) => {
+const computeVariable = async (token, type) => {
   try {
-    const id = sanitizeName(token)
+    const variableName = sanitizeName(token)
     const sign = (token[0] === '-' ? -1 : 1)
 
-    for (const variable of Variables) {
-      if (variable.id === id) {
-        if (sign < 0) {
-          return await Numeral.substract(0, variable.value)
-        } else {
-          return variable.value
-        }
-      }
+    if (variableName === 'i') {
+      return new Numeral({ r: 0, i: (sign < 0 ? -1 : 1) })
     }
 
-    if (id === 'i') {
-      return new Numeral({ r: 0, i: (sign < 0 ? -1 : 1) })
-    } else {
-      throw { data: id, code: 'unknownVariable' }
+    const variable = isVariableRegistered(variableName)
+
+    if (!variable) {
+      throw { data: variableName, code: `unknown${type}` }
+    }
+
+    // Add Matrix constructor later
+
+    if (variable.constructor.name === 'Numeral') {
+      if (sign < 0) {
+        return await Numeral.substract(0, variable)
+      } else {
+        return variable
+      }
+    } else if (variable.constructor.name === 'Expression') {
+      const fun = variable
+      const arguments = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
+      const argumentList = []
+
+      for (const argument of arguments) {
+        const value = await numeralValue(argument)
+    
+        argumentList.push(value)
+      }
+
+      const value = await Expression.evaluate(fun, argumentList)
+
+      if (sign < 0) {
+        return await Nummeral.substract(0, value)
+      } else {
+        return value
+      }
     }
   } catch (error) {
     return Promise.reject(error)
   }
 }
 
-const isVariableRegistered = (token) => {
-  const name = sanitizeName(token)
 
-  for (const variable of Variables) {
-    if (variable.id === name) {
-      return true
-    }
-  }
-
-  return false
-}
-
-module.exports = { resolveVariable, isVariableRegistered, sanitizeName }
+module.exports = { computeVariable }

@@ -3,7 +3,9 @@
 // the right order by stacking left brackets and destack on
 // right brackets.
 
-const { resolveVariable } = require('@env/variables.js')
+const { isVariableRegistered } = require('@env/utils.js')
+
+const { isFunction } = require('@srcs/parsing/utils.js')
 
 const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {
@@ -14,7 +16,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
     // is either a number or a custom variable that isn't a function
 
     if (flags.numberStart !== -1) {
-      if (flags.complex) {
+      if (flags.complex || flags.number) {
         infixStack.push(string.substring(flags.numberStart, i))
         multiplySign = true
       } else if (flags.variable) {
@@ -24,15 +26,27 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
         // Need to rework this part when built-in will be added.
 
         if (variableName[0].match(/[+\-]/)) {
-          variable = resolveVariable(variableName.substring(1))
+          variable = await isVariableRegistered(variableName.substring(1))
         } else {
-          variable = resolveVariable(variableName)
+          variable = await isVariableRegistered(variableName)
         }
 
-        if (variable.constructor.name === 'Numeral') {
+        if (!variable) {
+          const remainingString = string.substring(i)
+          const functionArguments = remainingString.substring(0, remainingString.indexOf(')') + 1)
+          
+          if (isFunction(`${variableName}${functionArguments}`)) {
+            infixStack.push(`${variableName}${functionArguments}`)
+            return i + functionArguments.length - 1
+          } else {
+            infixStack.push(string.substring(flags.numberStart, i))
+            multiplySign = true
+          }
+        }
+        else if (variable.constructor.name === 'Numeral') {
           infixStack.push(string.substring(flags.numberStart, i))
           multiplySign = true
-        } else {
+        } else if (variable.constructor.name === 'Expression') {
           const remainingString = string.substring(i)
           const functionArguments = remainingString.substring(0, remainingString.indexOf(')') + 1)
 

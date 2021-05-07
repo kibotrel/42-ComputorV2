@@ -1,5 +1,3 @@
-const Numeral = require('@classes/numeral')
-
 const { decimalToIntegerScaling } = require('@srcs/maths/fractions.js')
 
 const updateFlags = ({ power, number, operator, decimal, sign, numberStart, complex, variable }) => {

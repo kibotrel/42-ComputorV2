@@ -20,6 +20,12 @@ global.Config = require('@configs/env.json')
 
 global.Variables = []
 
+// Custom classes that are designated to handle math stuff
+// that is related to each one.
+
+global.Numeral = require('@classes/numeral.js')
+global.Expression = require('@classes/expression.js')
+
 const inputHandler = require('@srcs/handlers/input.js')
 const errorHandler = require('@srcs/handlers/error.js')
 

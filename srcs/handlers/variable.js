@@ -1,6 +1,6 @@
 const { Variables } = global
 
-const Expression = require('@classes/expression.js')
+const { isVariableRegistered } = require('@env/utils.js')
 
 const { numeralValue } = require('@srcs/maths/compute.js')
 
@@ -22,10 +22,10 @@ const resolveVariable = async (request) => {
       throw { data: '=?', code: 'badInputFormat' }
     }
 
-    for (let i = 0; i < Variables.length; i++) {
-      if (Variables[i].id === request) {
-        return Variables[i].value
-      }
+    const variable = isVariableRegistered(request)
+    
+    if (variable) {
+      return variable
     }
 
     if (request.match(/^[a-z]+$/)) {

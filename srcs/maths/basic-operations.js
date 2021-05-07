@@ -1,5 +1,3 @@
-const Numeral = require('@classes/numeral.js')
-
 const { parseImaginary } = require('@srcs/parsing/utils.js')
 
 const sanitizeOperand = async (operand) => {
