@@ -73,7 +73,7 @@ module.exports = async (payload) => {
       throw { data: inputLine, code: 'badInputFormat' }
     }
     if (inputLine.startsWith('!')) {
-      await commmandHandler(inputLine)
+      return await commmandHandler(inputLine)
     } else if (inputLine.endsWith('=?')) {
       return await computeInput(inputLine)
     } else if ((inputLine.match(/=/g) || []).length === 1) {

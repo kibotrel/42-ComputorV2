@@ -5,24 +5,32 @@ const showVariables = require('@commands/show-variables.js')
 
 module.exports = async (inputLine) => {
   try {
+    let executedCommand = null
+
     for (const command of commands) {
       if (inputLine.startsWith(command)) {
         const commandArgument = inputLine.substring(command.length)
 
+        executedCommand = command
+
         switch (command) {
           case '!variables':
-            return await showVariables(command,commandArgument, 'Numeral')
+            await showVariables(command,commandArgument, 'Numeral'); break
           case '!matrices':
-            return await showVariables(command, commandArgument, 'Matrix')
+            await showVariables(command, commandArgument, 'Matrix'); break
           case '!functions':
-            return await showVariables(command, commandArgument, 'Expression')
+            await showVariables(command, commandArgument, 'Expression'); break
           case '!solve':
-            return await showRoots(commandArgument)
+            await showRoots(commandArgument); break
         }
       }
     }
- 
-    throw { data: "", code: 'unrecognizedCommand' }
+
+    if (!executedCommand) {
+      throw { data: inputLine, code: 'unrecognizedCommand' }
+    }
+
+    return { value: executedCommand, type: 'command' }
   } catch (error) {
     return Promise.reject(error)  
   }
