@@ -47,7 +47,7 @@ const computeInput = async (inputLine) => {
     let value
 
     if (isFunction(realInput)) {
-      value = await resolveVariable(realInput)
+      value = await resolveVariable(realInput, 'Function')
     } else {
       value = await numeralValue(realInput)
     }

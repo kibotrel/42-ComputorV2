@@ -17,6 +17,10 @@ const computeVariable = async (token, type) => {
       throw { data: variableName, code: `unknown${type}` }
     }
 
+    if (type === 'Variable' && variable.constructor.name !== 'Numeral' || type === 'Function' && variable.constructor.name !== 'Expression') {
+      throw { data: token, code: 'incorrectDataType' }
+    }
+
     // Add Matrix constructor later
 
     if (variable.constructor.name === 'Numeral') {
@@ -26,9 +30,13 @@ const computeVariable = async (token, type) => {
         return variable
       }
     } else if (variable.constructor.name === 'Expression') {
-      const fun = variable
+      const func = variable
       const arguments = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
       const argumentList = []
+
+      if (arguments.length !== func.variables.length) {
+        throw { data: { found: arguments.length, expected: func.variables.length }, code: 'missingParameters' }
+      }
 
       for (const argument of arguments) {
         const value = await numeralValue(argument)
@@ -36,7 +44,7 @@ const computeVariable = async (token, type) => {
         argumentList.push(value)
       }
 
-      const value = await Expression.evaluate(fun, argumentList)
+      const value = await Expression.evaluate(func, argumentList)
 
       if (sign < 0) {
         return await Nummeral.substract(0, value)

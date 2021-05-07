@@ -88,10 +88,6 @@
     "message": ""
   },
   {
-    "code": "notFunction",
-    "message": ""
-  },
-  {
     "code": "notEquation",
     "message": ""
   },
@@ -105,6 +101,14 @@
   },
   {
     "code": "unknownFunction",
+    "message": ""
+  },
+  {
+    "code": "incorrectDataType",
+    "message": ""
+  },
+  {
+    "code": "missingParameters",
     "message": ""
   }
 ]
