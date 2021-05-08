@@ -64,7 +64,6 @@ class Expression {
         }
       }
 
-      console.log(infixStack)
       const postfixNotation = infixToPostfix(infixStack)
 
       return await computePostfix(postfixNotation)
