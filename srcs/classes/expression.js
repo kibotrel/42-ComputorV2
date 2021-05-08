@@ -1,7 +1,42 @@
+const { isVariableRegistered } = require('@env/utils.js')
+
 const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
+
+const computeNestedExpression = async (token, expression, variables) => {
+  try {
+    const func = isVariableRegistered(token)
+
+    if (!func || func.constructor.name !== 'Expression') {
+      throw { data: token, code: 'unknownFunction' }
+    }
+
+    const sign = (token[0] === '-' ? -1 : 1)
+    const args = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
+
+    for (let i = 0; i < args.length; i++) {
+      const variableIndex = expression.variables.indexOf(args[i])
+
+      if (variableIndex < 0) {
+        throw { data: args[i], code: 'illegalParameter'}
+      } else {
+        args[i] = variables[variableIndex]
+      }
+    }
+
+    const value = await Expression.evaluate(func, args)
+
+    if (sign < 0) {
+      return await Numeral.substract(0, value)
+    } else {
+      return value
+    }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
 
 class Expression {
   constructor({ functionName, argumentList, infixExpression }) {
@@ -20,11 +55,16 @@ class Expression {
 
         if (variableIndex >= 0) {
           infixStack.push(variables[variableIndex])
+        } else if (isFunction(definition[i])) {
+          const functionImage = await computeNestedExpression(definition[i], expression, variables)
+
+          infixStack.push(functionImage)
         } else {
           infixStack.push(definition[i])
         }
       }
 
+      console.log(infixStack)
       const postfixNotation = infixToPostfix(infixStack)
 
       return await computePostfix(postfixNotation)

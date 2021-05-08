@@ -110,5 +110,9 @@
   {
     "code": "missingParameters",
     "message": ""
+  },
+  {
+    "code": "illegalParameter",
+    "message": ""
   }
 ]

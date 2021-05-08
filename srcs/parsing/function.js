@@ -1,4 +1,4 @@
-const { isVariableRegistered } = require('@handlers/variable.js')
+const { isVariableRegistered } = require('@env/utils.js')
 
 const { sanitizeName } = require('@env/utils.js')
 
