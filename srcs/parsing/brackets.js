@@ -1,26 +1,57 @@
+const { isVariableRegistered } = require('@env/utils.js')
+
+const { isComposite } = require('@srcs/parsing/utils.js')
+
+
+const lookForEnclosure = (string) => {
+  const stack = []
+
+  for (let i = 0; i < string.length; i++) {
+    if (string[i] === '(') {
+      stack.push(i)
+    } else if (string[i] === ')') {
+      stack.pop()
+
+      if (!stack.length) {
+        return i
+      }
+    }
+  }
+}
+
 // These two functions are meant to certify that if the given
 // infix expression contains brackets, they are appearing in
 // the right order by stacking left brackets and destack on
 // right brackets.
 
-const { isVariableRegistered } = require('@env/utils.js')
-
-const { isFunction } = require('@srcs/parsing/utils.js')
-
 const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {
-    let multiplySign = false
-
     // Check if we need to add a multiply sign between the bracket
     // and the token before it. This is happening if the last token
     // is either a number or a custom variable that isn't a function
 
     if (flags.numberStart !== -1) {
-      if (flags.complex || flags.number) {
+      let multiplySign = false
+
+      if (flags.complex || (flags.number && !flags.variable)) {
         infixStack.push(string.substring(flags.numberStart, i))
         multiplySign = true
       } else if (flags.variable) {
-        const variableName = string.substring(flags.numberStart, i)
+        // Determine if the opperand is either a function, a variable
+        // or a composite (value mulltiplied by either of the above)
+        // then check if the function / variable is stored and resolve it
+        // if found.
+
+        let variableName = string.substring(flags.numberStart, i)
+        let factor
+
+        if (isComposite(variableName)) {
+          const breakpoint = /[a-z]/.exec(variableName).index
+
+          factor = variableName.substring(0, breakpoint)
+          variableName = variableName.substring(breakpoint, variableName.length)
+        }
+
         let variable
 
         // Need to rework this part when built-in will be added.
@@ -31,27 +62,29 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
           variable = await isVariableRegistered(variableName)
         }
 
-        if (!variable) {
-          const remainingString = string.substring(i)
-          const functionArguments = remainingString.substring(0, remainingString.indexOf(')') + 1)
-          
-          if (isFunction(`${variableName}${functionArguments}`)) {
-            infixStack.push(`${variableName}${functionArguments}`)
-            return i + functionArguments.length - 1
+        if (variable.constructor.name === 'Numeral') {
+          if (factor) {
+            infixStack.push('(', factor, '*', variableName, ')')
           } else {
-            infixStack.push(string.substring(flags.numberStart, i))
-            multiplySign = true
+            infixStack.push(variableName)
           }
-        }
-        else if (variable.constructor.name === 'Numeral') {
-          infixStack.push(string.substring(flags.numberStart, i))
           multiplySign = true
         } else if (variable.constructor.name === 'Expression') {
           const remainingString = string.substring(i)
-          const functionArguments = remainingString.substring(0, remainingString.indexOf(')') + 1)
+          const closingIndex = lookForEnclosure(remainingString)
+          const functionArguments = remainingString.substring(0, closingIndex + 1)
 
-          infixStack.push(`${variableName}${functionArguments}`)
+          variableName = `${variableName}${functionArguments}`
+
+          if (factor) {
+            infixStack.push('(', factor, '*', variableName, ')')
+          } else {
+            infixStack.push(variableName)
+          }
+
           return i + functionArguments.length - 1
+        } else {
+          throw { data: variableName, code: 'unknownVariable'}
         }
       }
 
@@ -89,4 +122,4 @@ const rightBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   }
 }
 
-module.exports = { leftBracket, rightBracket }
+module.exports = { leftBracket, rightBracket, lookForEnclosure }

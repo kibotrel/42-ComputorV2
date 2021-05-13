@@ -5,32 +5,6 @@ const { sanitizeName } = require('@env/utils.js')
 const parseLine = require('@srcs/parsing/input.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
 
-const sanitizeStack = (stack) => {
-  const finalStack = []
-
-  for (const token of stack) {
-    if (token.match(/^(([a-z]+)|([+-]?([0-9]*)(\.([0-9]+))?))$/) || token.match(/^[+\-*/%^\(\)]$/) || isFunction(token)) {
-      finalStack.push(token)
-    } else if (token.match(/^[+-]?([0-9]*)(\.([0-9]+))?[a-z]+$/)){
-      const breakpoint = /[a-z]/.exec(token).index
-      let factor = token.substring(0, breakpoint)
-
-      if (factor.length === 1 && factor[0].match(/[+\-]/)) {
-        factor += '1'
-      }
-      const variable = token.substring(breakpoint, token.length)
-
-      finalStack.push('(')
-      finalStack.push(factor)
-      finalStack.push('*')
-      finalStack.push(variable)
-      finalStack.push(')')
-    }
-  }
-
-  return finalStack
-}
-
 module.exports = async (prototype, definition) => {
   try {
     const functionName =  prototype.substring(0, prototype.indexOf('('))
@@ -49,8 +23,7 @@ module.exports = async (prototype, definition) => {
       }
     }
 
-    const expression = await parseLine(definition)
-    const infixExpression = sanitizeStack(expression)
+    const infixExpression = await parseLine(definition)
 
     for (const token of infixExpression) {
       if ((token.length === 1 && token.match(/[a-z]/) && token[0] !== 'i') || (token.length > 1 && token.match(/^[a-z]+$/))) {

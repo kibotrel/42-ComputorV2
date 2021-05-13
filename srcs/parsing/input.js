@@ -1,7 +1,50 @@
 const { leftBracket, rightBracket } = require('@srcs/parsing/brackets.js')
 const { number, decimal, variable } = require('@srcs/parsing/operands.js')
-const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck, updateFlags } = require('@srcs/parsing/utils.js')
+const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck, updateFlags, isFunction, isNumber, isVariable, isSyntax, isComposite } = require('@srcs/parsing/utils.js')
 const operator = require('@srcs/parsing/operators.js')
+
+// This function is here to detect composite opperands to break
+// them in distinct opperands, adding immplicit multiplications
+// and keeping the right operating priorities then repopulating
+// the stack accordingly for future computations.
+
+const sanitizeStack = async (infixStack) => {
+  try  {
+    const finalStack = []
+
+    for (const token of infixStack) {
+      if (isSyntax(token)) {
+        finalStack.push(token)
+      } else if (isNumber(token) || isVariable(token) || isFunction(token)) {
+        if (finalStack[finalStack.length - 1] === ')') {
+          finalStack.push('*')
+        }
+
+        finalStack.push(token)
+      } else if (isComposite(token)){
+        const breakpoint = /[a-z]/.exec(token).index
+        const variableName = token.substring(breakpoint, token.length)
+        const factor = token.substring(0, breakpoint)
+
+        if (isVariable(variableName) || isFunction(variableName)) {
+          if (finalStack[finalStack.length - 1] === ')') {
+            finalStack.push('*')
+          }
+
+          finalStack.push('(', factor, '*', variableName, ')')
+        } else {
+          throw { data: token, code: 'illegalTerm' }
+        }
+      } else {
+        throw { data: token, code: 'illegalTerm' }
+      }
+    }
+
+    return finalStack
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
 
 const lastChecks = async ({ string, flags }, infixStack, bracketStack) => {
   try {
@@ -42,7 +85,7 @@ module.exports = async (string) => {
 
     await lastChecks({ string, flags }, infixStack, bracketStack)
 
-    return infixStack
+    return await sanitizeStack(infixStack)
   } catch (error) {
     return Promise.reject(error)
   }

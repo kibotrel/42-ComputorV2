@@ -30,36 +30,17 @@ const bracketsCheck = async (string, bracketStack) => {
 const imaginaryCheck = async ({ string, flags }, infixStack) => {
   try {
     if (flags.complex && string[string.length - 1] === 'i') {
-      if (string.length > 1) {
-        if (flags.numberStart > -1 && infixStack[infixStack.length - flags.numberStart - 2] === ')') {
-          infixStack.push('*')
-        }
-        if (flags.numberStart > -1) {
-          if (string[flags.numberStart].match(/\d/) && string[flags.numberStart - 1] === ')') {
-            throw { data: string, code: 'misformattedInteger', index: flags.numberStart }
-          } else {
-            let imaginaryFactor = string.substring(flags.numberStart, string.length - 1)
-            
-            infixStack.push('(')
-            if (imaginaryFactor) {
-              if (imaginaryFactor[imaginaryFactor.length - 1].match(/[+\-]/))
-                imaginaryFactor += '1'
-              infixStack.push(imaginaryFactor)
-            } else {
-              infixStack.push('1')
-            }
-            if (infixStack[infixStack.length - 1] !== '*') {
-              infixStack.push('*')
-            }
+      if (string.length > 1 && flags.numberStart > -1) {
+        let imaginaryFactor = string.substring(flags.numberStart, string.length - 1)
+        
+        if (imaginaryFactor) {
+          if (imaginaryFactor[imaginaryFactor.length - 1].match(/[+\-]/)) {
+            imaginaryFactor += '1'
           }
         }
-      } else {
-        infixStack.push('(')
-        infixStack.push('1')
-        infixStack.push('*')
+
+        infixStack.push(`${imaginaryFactor}i`)
       }
-      infixStack.push('i')
-      infixStack.push(')')
     } else if (flags.complex) {
       throw { data: string, code : 'illegalImaginary', index: string.length - 1 }
     }
@@ -123,4 +104,20 @@ const isFunction = (token) => {
   return token.match(/^[+\-]?[a-z]+\(([+\-]?[a-z]+|([+\-]?\d+(\.\d+)?)?([+\-]?\d+(\.\d+)?\*?i)?)(,([+\-]?[a-z]+|([+\-]?\d+(\.\d+)?)?([+\-]?\d+(\.\d+)?\*?i)?)*)*\)$/)
 }
 
-module.exports = { isFunction, updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }
+const isNumber = (token) => {
+  return token.match(/^[+\-]?\d+(\.\d+)?$/)
+}
+
+const isVariable = (token) => {
+  return token.match(/^[+\-]?[a-z]+$/)
+}
+
+const isSyntax = (token) => {
+  return token.match(/^[+\-*/%^\(\)]$/)
+}
+
+const isComposite = (token) => {
+  return token.match(/^[+\-]?\d+(\.\d+)?[a-z]+(\(.+\))?$/)
+}
+
+module.exports = { isFunction, isNumber, isVariable, isSyntax, isComposite, updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }
