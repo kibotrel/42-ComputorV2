@@ -30,7 +30,7 @@ const bracketsCheck = async (string, bracketStack) => {
 const imaginaryCheck = async ({ string, flags }, infixStack) => {
   try {
     if (flags.complex && string[string.length - 1] === 'i') {
-      if (string.length > 1 && flags.numberStart > -1) {
+      if (string.length >= 1 && flags.numberStart > -1) {
         let imaginaryFactor = string.substring(flags.numberStart, string.length - 1)
         
         if (imaginaryFactor) {
