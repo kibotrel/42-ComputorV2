@@ -1,6 +1,6 @@
 const { leftBracket, rightBracket } = require('@srcs/parsing/brackets.js')
 const { number, decimal, variable } = require('@srcs/parsing/operands.js')
-const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck, updateFlags, isFunction, isNumber, isVariable, isSyntax, isComposite } = require('@srcs/parsing/utils.js')
+const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck, updateFlags, isFunction, isNumber, isVariable, isSyntax, isComposite, compositeParts } = require('@srcs/parsing/utils.js')
 const operator = require('@srcs/parsing/operators.js')
 
 // This function is here to detect composite opperands to break
@@ -22,16 +22,21 @@ const sanitizeStack = async (infixStack) => {
 
         finalStack.push(token)
       } else if (isComposite(token)){
-        const breakpoint = /[a-z]/.exec(token).index
-        const variableName = token.substring(breakpoint, token.length)
-        const factor = token.substring(0, breakpoint)
+        const { variableName, factor } = compositeParts(token)
+
+        if (finalStack[finalStack.length - 1] === ')') {
+          finalStack.push('*')
+        }
 
         if (isVariable(variableName) || isFunction(variableName)) {
-          if (finalStack[finalStack.length - 1] === ')') {
-            finalStack.push('*')
-          }
-
           finalStack.push('(', factor, '*', variableName, ')')
+        } else if (variableName.match(/^[+\-]?[a-z]+\(.*\)$/)) {
+          if (factor) {
+            finalStack.push('(', factor, '*', variableName, ')')
+          } else {
+            finalStack.push(variableName)
+          }
+        
         } else {
           throw { data: token, code: 'illegalTerm' }
         }

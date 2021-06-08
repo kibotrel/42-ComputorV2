@@ -31,7 +31,7 @@ const computeVariable = async (token, type) => {
       }
     } else if (variable.constructor.name === 'Expression') {
       const func = variable
-      const arguments = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
+      const arguments = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
       const argumentList = []
 
       if (arguments.length !== func.variables.length) {

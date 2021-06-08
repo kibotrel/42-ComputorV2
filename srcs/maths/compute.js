@@ -32,7 +32,7 @@ const computeVariable = async (token, type) => {
       }
     } else if (variable.constructor.name === 'Expression') {
       const fun = variable
-      const arguments = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
+      const arguments = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
       const argumentList = []
 
       for (const argument of arguments) {
@@ -63,7 +63,7 @@ const checkLastElement = async (token) => {
         return parseImaginary(token)
       } else if ((token.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
         return await computeVariable(token, 'Variable')
-      } else if (isFunction(token)) {
+      } else if (isFunction(token) || token.match(/^[+\-]?[a-z]+\(.*\)$/)) {
         return await computeVariable(token, 'Function')
       } else {
         return new Numeral(toNumeral(parseFloat(token)))
@@ -88,7 +88,7 @@ const computePostfix = async (postfixNotation) => {
         if (firstOperand.constructor.name === 'String') {
           if ((firstOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
             firstOperand = await computeVariable(firstOperand, 'Variable')
-          } else if (isFunction(firstOperand)) {
+          } else if (isFunction(firstOperand) || firstOperand.match(/^[+\-]?[a-z]+\(.*\)$/)) {
             firstOperand = await computeVariable(firstOperand, 'Function' )
           }
         }
@@ -96,7 +96,7 @@ const computePostfix = async (postfixNotation) => {
         if (secondOperand.constructor.name === 'String') {
           if ((secondOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
             secondOperand = await computeVariable(secondOperand, 'Variable')
-          } else if (isFunction(secondOperand)) {
+          } else if (isFunction(secondOperand) || secondOperand.match(/^[+\-]?[a-z]+\(.*\)$/)) {
             secondOperand = await computeVariable(secondOperand, 'Function')
           }
         }

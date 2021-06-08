@@ -1,5 +1,3 @@
-const { parseImaginary } = require('@srcs/parsing/utils.js')
-
 const sanitizeOperand = async (operand) => {
   let trueOperand
 
@@ -7,10 +5,6 @@ const sanitizeOperand = async (operand) => {
     if (operand.constructor.name === 'String') {
       if (operand === 'i') {
         trueOperand = new Numeral({ r: 0, i: 1 })
-      } else if (operand.match(/[a-z]/g)) {
-        if ((operand.match(/[a-z]/g) || []).length === 1 && (operand.match(/i/g) || []).length === 1) {
-          trueOperand = parseImaginary(operand)
-        }
       } else {
         trueOperand = parseFloat(operand)
 
