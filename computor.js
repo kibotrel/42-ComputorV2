@@ -20,6 +20,11 @@ global.Config = require('@configs/env.json')
 
 global.Variables = []
 
+/// This variable holds the lasts commands sent to the
+// program's context.
+
+global.InputHistory = []
+
 // Custom classes that are designated to handle math stuff
 // that is related to each one.
 

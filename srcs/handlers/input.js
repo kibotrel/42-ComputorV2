@@ -1,5 +1,7 @@
 const { env: { forbiddenVariables } } = Config
 
+const { registerHistory } = require('@env/history.js')
+
 const commmandHandler = require('@handlers/command.js')
 const { addToVariableList, resolveVariable } = require('@handlers/variable.js')
 
@@ -63,6 +65,8 @@ const computeInput = async (inputLine) => {
 
 module.exports = async (payload) => {
   const inputLine = payload.toLowerCase().replace(/^>| /g, '')
+
+  registerHistory(payload)
 
   if (inputLine === 'exit') {
     process.exit(0)

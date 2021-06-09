@@ -26,4 +26,16 @@ const sanitizeName = (token) => {
   return name
 }
 
-module.exports = { isVariableRegistered, sanitizeName }
+const countDigits = (number) => {
+  return number.toString().length
+}
+
+const fillDigits = (number, targetSize) => {
+  const template = '0'
+  const numberSize = countDigits(number)
+  const digitsToAdd = targetSize - numberSize
+
+  return `${template.repeat(digitsToAdd)}${number.toString()}`
+}
+
+module.exports = { isVariableRegistered, sanitizeName, countDigits, fillDigits }
