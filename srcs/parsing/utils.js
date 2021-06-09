@@ -112,13 +112,18 @@ const compositeParts = (token) => {
   }
 
   const variableName = token.substring(breakpoint, token.length)
-  const factor = token.substring(0, breakpoint)
+  let factor = token.substring(0, breakpoint)
+
+  if (factor.length === 1 && factor.match(/[+\-]/)) {
+    factor = `${factor}1`
+  }
+  console.log(factor)
 
   return { variableName, factor }
 }
 
 const isFunction = (token) => {
-  return token.match(/^[+\-]?[a-z]+\([+\-]?(((\d+(\.\d+)?)?([a-z]+)?([+\-\/*^%](\d+(\.\d+)?)?([a-z]+)?)?)|[a-z]+|\d+(\.\d+)?)(,([+\-]?(((\d+(\.\d+)?)?([a-z]+)?([+\-\/*^%](\d+(\.\d+)?)?([a-z]+)?)?)|[a-z]+|\d+(\.\d+)?)))*\)$/)
+  return token.match(/^[+\-]?[a-z]+\(([a-z]+|[+\-]?\d+(\.\d+)?)(,(([a-z]+|[+\-]?\d+(\.\d+)?)))*\)$/)
 }
 
 const isNumber = (token) => {
@@ -134,7 +139,11 @@ const isSyntax = (token) => {
 }
 
 const isComposite = (token) => {
-  return token.match(/^[+\-]?(\d+(\.\d+)?)?[a-z]+(\(.+\))?$/)
+  return token.match(/^[+\-]?(\d+(\.\d+)?)?[a-z]+(\(([a-z]+|[+\-]?\d+(\.\d+)?|[a-z]+\(([a-z]+|[+\-]?\d+(\.\d+)?)(,((([a-z]+|[+\-]?\d+(\.\d+)?))))*\))(,(([a-z]+|[+\-]?\d+(\.\d+)?|[a-z]+\(([a-z]+|[+\-]?\d+(\.\d+)?)(,((([a-z]+|[+\-]\d+(\.\d+)?))))*\))))*\))?$/)
 }
 
-module.exports = { isFunction, isNumber, isVariable, isSyntax, isComposite, compositeParts, updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }
+const isCompositeFunction = (token) => {
+  return token.match(/^[+\-]?[a-z]+\(([a-z]+|[+\-]?\d+(\.\d+)?|[a-z]+\(([a-z]+|[+\-]?\d+(\.\d+)?)(,((([a-z]+|[+\-]?\d+(\.\d+)?))))*\))(,(([a-z]+|[+\-]?\d+(\.\d+)?|[a-z]+\(([a-z]+|[+\-]?\d+(\.\d+)?)(,((([a-z]+|[+\-]\d+(\.\d+)?))))*\))))*\)$/)
+}
+
+module.exports = { isFunction, isNumber, isVariable, isSyntax, isComposite, isCompositeFunction, compositeParts, updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }

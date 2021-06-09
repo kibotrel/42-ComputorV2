@@ -114,5 +114,9 @@
   {
     "code": "illegalParameter",
     "message": ""
+  },
+  {
+    "code": "illegalFunction",
+    "message": ""
   }
 ]

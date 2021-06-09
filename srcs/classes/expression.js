@@ -3,7 +3,7 @@ const { isVariableRegistered } = require('@env/utils.js')
 const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
-const { isFunction } = require('@srcs/parsing/utils.js')
+const { isFunction, isCompositeFunction } = require('@srcs/parsing/utils.js')
 
 const computeNestedExpression = async (token, expression, variables) => {
   try {
@@ -14,7 +14,7 @@ const computeNestedExpression = async (token, expression, variables) => {
     }
 
     const sign = (token[0] === '-' ? -1 : 1)
-    const args = token.substring(token.indexOf('(') + 1, token.indexOf(')')).split(',')
+    const args = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
 
     for (let i = 0; i < args.length; i++) {
       const variableIndex = expression.variables.indexOf(args[i])
@@ -35,6 +35,20 @@ const computeNestedExpression = async (token, expression, variables) => {
     }
   } catch (error) {
     return Promise.reject(error)
+  }
+}
+
+const prettifyParameter = (parameter) => {
+  if (isFunction(parameter) || isCompositeFunction(parameter)) {
+    const name = parameter.substring(0, parameter.indexOf('('))
+    const variables = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')).split(',')
+    for (let i = 0; i < variables.length; i++) {
+      variables[i] = prettifyParameter(variables[i])
+    }
+
+    return `\x1b[32;1m${name}\x1b[0;1m(${variables.join(', ')}\x1b[0;1m)`
+  } else {
+    return `\x1b[33m${parameter}\x1b[0;1m`
   }
 }
 
@@ -79,13 +93,17 @@ class Expression {
     const definitionStack = []
 
     for (let i = 0; i < this.definition.length; i++) {
-      if (!this.definition[i].match(/^[+\-\*\/%\^\(\)]$/) && this.definition[i].match(/^[a-z]+$|^[+\-]?[0-9\.]+$/)) {
+      if (!this.definition[i].match(/^[+\-\*\/%\^\(\)]$/) && this.definition[i].match(/^[+\-]?[a-z]+$|^[+\-]?[0-9\.]+$/)) {
         definitionStack.push(`\x1b[33m${this.definition[i]}\x1b[0;1m`)
-      } else if (isFunction(this.definition[i])) {
+      } else if (isFunction(this.definition[i]) || isCompositeFunction(this.definition[i])) {
         const name = this.definition[i].substring(0, this.definition[i].indexOf('('))
-        const variables = this.definition[i].substring(this.definition[i].indexOf('(') + 1, this.definition[i].indexOf(')')).split(',')
+        const variables = this.definition[i].substring(this.definition[i].indexOf('(') + 1, this.definition[i].lastIndexOf(')')).split(',')
+
+        for (let i = 0; i < variables.length; i++) {
+          variables[i] = prettifyParameter(variables[i])
+        }
         
-        definitionStack.push(`\x1b[32;1m${name}\x1b[0;1m(\x1b[33m${variables.join('\x1b[0;1m, \x1b[33m')}\x1b[0;1m)`)
+        definitionStack.push(`\x1b[32;1m${name}\x1b[0;1m(${variables.join(', ')}\x1b[0;1m)`)
       } else {
         definitionStack.push(this.definition[i])
       }

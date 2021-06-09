@@ -1,6 +1,6 @@
 const { isVariableRegistered } = require('@env/utils.js')
 
-const { isComposite } = require('@srcs/parsing/utils.js')
+const { isComposite, isCompositeFunction } = require('@srcs/parsing/utils.js')
 
 
 const lookForEnclosure = (string) => {
@@ -76,7 +76,15 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
 
           variableName = `${variableName}${functionArguments}`
 
+          if (!isCompositeFunction(variableName)) {
+            throw { data: variableName, code: 'illegalFunction'}
+          }
+
           if (factor) {
+            if (factor.length === 1 && factor.match(/[+\-]/)) {
+              factor = `${factor}1`
+            }
+          
             infixStack.push('(', factor, '*', variableName, ')')
           } else {
             infixStack.push(variableName)

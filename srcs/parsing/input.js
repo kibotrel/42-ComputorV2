@@ -1,6 +1,6 @@
 const { leftBracket, rightBracket } = require('@srcs/parsing/brackets.js')
 const { number, decimal, variable } = require('@srcs/parsing/operands.js')
-const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck, updateFlags, isFunction, isNumber, isVariable, isSyntax, isComposite, compositeParts } = require('@srcs/parsing/utils.js')
+const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck, updateFlags, isFunction, isNumber, isVariable, isSyntax, isComposite, isCompositeFunction, compositeParts } = require('@srcs/parsing/utils.js')
 const operator = require('@srcs/parsing/operators.js')
 
 // This function is here to detect composite opperands to break
@@ -30,7 +30,7 @@ const sanitizeStack = async (infixStack) => {
 
         if (isVariable(variableName) || isFunction(variableName)) {
           finalStack.push('(', factor, '*', variableName, ')')
-        } else if (variableName.match(/^[+\-]?[a-z]+\(.*\)$/)) {
+        } else if (isCompositeFunction(variableName)) {
           if (factor) {
             finalStack.push('(', factor, '*', variableName, ')')
           } else {
