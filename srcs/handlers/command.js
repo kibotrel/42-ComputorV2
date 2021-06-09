@@ -24,7 +24,7 @@ module.exports = async (inputLine) => {
           case '!solve':
             await showRoots(commandArgument); break
           case '!history':
-            showHistory(); break
+            await showHistory(command, commandArgument); break
         }
       }
     }
