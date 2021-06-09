@@ -2,6 +2,8 @@ const { isVariableRegistered, sanitizeName } = require('@env/utils.js')
 
 const { numeralValue } = require('@srcs/maths/compute.js')
 
+const { isFunction, isCompositeFunction } = require('@srcs/parsing/utils.js')
+
 const computeVariable = async (token, type) => {
   try {
     const variableName = sanitizeName(token)
@@ -57,5 +59,44 @@ const computeVariable = async (token, type) => {
   }
 }
 
+const removeDependencies = (tested) => {
+  const deletedExpressions = []
 
-module.exports = { computeVariable }
+  for (let i = 0; i < Variables.length; i++) {
+    const variable = Variables[i].value
+
+    if (variable.constructor.name === 'Expression') {
+      for (const token of variable.definition) {
+        if (isFunction(token) || isCompositeFunction(token)) {
+          const tokenName = token.substring(0, token.indexOf('('))
+
+          if (tested.name === tokenName && tested.variables.length != variable.variables.length) {
+            Variables.splice(i, 1)
+
+            deletedExpressions.push(variable)
+            Array.prototype.push.apply(deletedExpressions, removeDependencies(variable.name))
+
+            break
+          }
+        }
+      }
+    }
+  }
+
+  return deletedExpressions
+}
+const checkExpressions = (expression) => {
+  const deletedExpressions = removeDependencies(expression)
+
+  const promptedExpressions = []
+
+  for (const expression of deletedExpressions) {
+    promptedExpressions.push(`\t- ${expression.print()}`)
+  }
+
+  if (deletedExpressions.length) {
+    console.log(`\x1b[1mFound \x1b[32m${deletedExpressions.length}\x1b[0;1m conflict(s) induced by this \x1b[32mExpression\x1b[0;1m:\x1b[0m\n\n${promptedExpressions.join('\n')}\n\n\x1b[1mThis list of \x1b[32mExpression\x1b[0;1m has been deleted.\x1b[0m\n`)
+  }
+}
+
+module.exports = { computeVariable, checkExpressions }

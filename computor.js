@@ -31,8 +31,10 @@ global.InputHistory = []
 global.Numeral = require('@classes/numeral.js')
 global.Expression = require('@classes/expression.js')
 
-const inputHandler = require('@srcs/handlers/input.js')
-const errorHandler = require('@srcs/handlers/error.js')
+const inputHandler = require('@handlers/input.js')
+const errorHandler = require('@handlers/error.js')
+
+const { checkExpressions } = require('@env/variables.js')
 
 Client.write('> ')
 
@@ -44,6 +46,10 @@ Client.on('line', async (payload) => {
       console.log(`\n\x1b[1mComputation result :\x1b[0m\n\n\t${value.print()}\n`)
     } else if (type.match(/^(expression|numeral)$/)) {
       console.log(`\n\x1b[1mNew \x1b[32m${value.constructor.name}\x1b[0;1m stored!\x1b[0m\n\n\t${value.print()}\n`)
+    }
+    
+    if (type === 'expression') {
+      checkExpressions(value)
     }
   } catch (error) {
     errorHandler(error)
