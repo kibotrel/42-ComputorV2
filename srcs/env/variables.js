@@ -2,7 +2,7 @@ const { isVariableRegistered, sanitizeName } = require('@env/utils.js')
 
 const { numeralValue } = require('@srcs/maths/compute.js')
 
-const { isFunction, isCompositeFunction } = require('@srcs/parsing/utils.js')
+const { isFunction } = require('@srcs/parsing/utils.js')
 
 const computeVariable = async (token, type) => {
   try {
@@ -67,7 +67,7 @@ const removeDependencies = (tested) => {
 
     if (variable.constructor.name === 'Expression') {
       for (const token of variable.definition) {
-        if (isFunction(token) || isCompositeFunction(token)) {
+        if (isFunction(token)) {
           const tokenName = token.substring(0, token.indexOf('('))
 
           if (tested.name === tokenName && tested.variables.length != variable.variables.length) {

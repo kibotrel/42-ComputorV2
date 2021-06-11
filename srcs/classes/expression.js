@@ -3,7 +3,7 @@ const { isVariableRegistered } = require('@env/utils.js')
 const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
-const { isFunction, isCompositeFunction } = require('@srcs/parsing/utils.js')
+const { isFunction } = require('@srcs/parsing/utils.js')
 
 const computeNestedExpression = async (token, expression, variables) => {
   try {
@@ -39,7 +39,7 @@ const computeNestedExpression = async (token, expression, variables) => {
 }
 
 const prettifyParameter = (parameter) => {
-  if (isFunction(parameter) || isCompositeFunction(parameter)) {
+  if (isFunction(parameter)) {
     const name = parameter.substring(0, parameter.indexOf('('))
     const variables = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')).split(',')
     for (let i = 0; i < variables.length; i++) {
@@ -95,7 +95,7 @@ class Expression {
     for (let i = 0; i < this.definition.length; i++) {
       if (!this.definition[i].match(/^[+\-\*\/%\^\(\)]$/) && this.definition[i].match(/^[+\-]?[a-z]+$|^[+\-]?[0-9\.]+$/)) {
         definitionStack.push(`\x1b[33m${this.definition[i]}\x1b[0;1m`)
-      } else if (isFunction(this.definition[i]) || isCompositeFunction(this.definition[i])) {
+      } else if (isFunction(this.definition[i])) {
         const name = this.definition[i].substring(0, this.definition[i].indexOf('('))
         const variables = this.definition[i].substring(this.definition[i].indexOf('(') + 1, this.definition[i].lastIndexOf(')')).split(',')
 

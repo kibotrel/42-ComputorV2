@@ -1,6 +1,6 @@
 const { isVariableRegistered } = require('@env/utils.js')
 
-const { isComposite, isCompositeFunction } = require('@srcs/parsing/utils.js')
+const { isComposite, isFunction, compositeParts } = require('@srcs/parsing/utils.js')
 
 
 const lookForEnclosure = (string) => {
@@ -46,21 +46,15 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
         let factor
 
         if (isComposite(variableName)) {
-          const breakpoint = /[a-z]/.exec(variableName).index
+          const compositeData = compositeParts(variableName)
 
-          factor = variableName.substring(0, breakpoint)
-          variableName = variableName.substring(breakpoint, variableName.length)
+          factor = compositeData.factor
+          variableName = compositeData.variableName
         }
 
-        let variable
+        const variable = await isVariableRegistered(variableName)
 
         // Need to rework this part when built-in will be added.
-
-        if (variableName[0].match(/[+\-]/)) {
-          variable = await isVariableRegistered(variableName.substring(1))
-        } else {
-          variable = await isVariableRegistered(variableName)
-        }
 
         if (variable.constructor.name === 'Numeral') {
           if (factor) {
@@ -76,7 +70,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
 
           variableName = `${variableName}${functionArguments}`
 
-          if (!isCompositeFunction(variableName)) {
+          if (!isFunction(variableName)) {
             throw { data: variableName, code: 'illegalFunction'}
           }
 

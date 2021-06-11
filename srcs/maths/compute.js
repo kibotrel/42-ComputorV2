@@ -2,7 +2,7 @@ const { isVariableRegistered, sanitizeName } = require('@env/utils.js')
 
 const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
 const parseLine = require('@srcs/parsing/input.js')
-const { parseImaginary, isFunction, isCompositeFunction } = require('@srcs/parsing/utils.js')
+const { parseImaginary, isFunction } = require('@srcs/parsing/utils.js')
 
 const evaluate = require('@srcs/maths/basic-operations.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
@@ -63,7 +63,7 @@ const checkLastElement = async (token) => {
         return parseImaginary(token)
       } else if ((token.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
         return await computeVariable(token, 'Variable')
-      } else if (isFunction(token) || isCompositeFunction(token)) {
+      } else if (isFunction(token)) {
         return await computeVariable(token, 'Function')
       } else {
         return new Numeral(toNumeral(parseFloat(token)))
@@ -88,7 +88,7 @@ const computePostfix = async (postfixNotation) => {
         if (firstOperand.constructor.name === 'String') {
           if ((firstOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
             firstOperand = await computeVariable(firstOperand, 'Variable')
-          } else if (isFunction(firstOperand) || isCompositeFunction(firstOperand)) {
+          } else if (isFunction(firstOperand)) {
             firstOperand = await computeVariable(firstOperand, 'Function' )
           }
         }
@@ -96,7 +96,7 @@ const computePostfix = async (postfixNotation) => {
         if (secondOperand.constructor.name === 'String') {
           if ((secondOperand.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
             secondOperand = await computeVariable(secondOperand, 'Variable')
-          } else if (isFunction(secondOperand) || isCompositeFunction(secondOperand)) {
+          } else if (isFunction(secondOperand)) {
             secondOperand = await computeVariable(secondOperand, 'Function')
           }
         }
