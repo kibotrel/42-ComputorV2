@@ -44,6 +44,10 @@ const resolveVariable = async (request, type) => {
       const func = variable
       const sign = (request[0] === '-' ? -1 : 1)
 
+      if (!arguments[0]) {
+        arguments.pop()
+      }
+
       if (arguments.length !== func.variables.length) {
         throw { data: { found: arguments.length, expected: func.variables.length }, code: 'missingParameters' }
       }
