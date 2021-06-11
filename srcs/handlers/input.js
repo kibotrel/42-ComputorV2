@@ -64,7 +64,7 @@ const computeInput = async (inputLine) => {
 // then depending on the type of input, call the correct process.
 
 module.exports = async (payload) => {
-  const inputLine = payload.toLowerCase().replace(/^>| /g, '')
+  const inputLine = payload.toLowerCase().replace(/^>|\s/g, '')
 
   registerHistory(payload)
 
