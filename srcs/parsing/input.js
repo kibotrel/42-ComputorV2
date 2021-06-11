@@ -63,6 +63,10 @@ module.exports = async (string) => {
   let flags = updateFlags({ numberStart: -1 })
 
   try {
+    if (!string) {
+      throw { code: 'EmptyFunction' }
+    }
+
     for (let i = 0; i < string.length; i++) {
       if (string[i] === '(') {
         i = await leftBracket({ string, i }, flags, infixStack, bracketStack)

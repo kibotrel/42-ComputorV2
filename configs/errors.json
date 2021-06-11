@@ -118,5 +118,9 @@
   {
     "code": "illegalFunction",
     "message": ""
+  },
+  {
+    "code": "emptyFunction",
+    "message": ""
   }
 ]

@@ -48,7 +48,9 @@ const resolveVariable = async (request, type) => {
         arguments.pop()
       }
 
-      if (arguments.length !== func.variables.length) {
+      if (!arguments.length) {
+        throw { data: variable.name, code: 'EmptyFunction' }
+      } else if (arguments.length !== func.variables.length) {
         throw { data: { found: arguments.length, expected: func.variables.length }, code: 'missingParameters' }
       }
   

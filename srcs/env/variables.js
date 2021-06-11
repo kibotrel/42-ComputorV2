@@ -36,7 +36,13 @@ const computeVariable = async (token, type) => {
       const arguments = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
       const argumentList = []
 
-      if (arguments.length !== func.variables.length) {
+      if (!arguments[0]) {
+        arguments.pop()
+      }
+
+      if (!arguments.length) {
+        throw { data: variable.name, code: 'EmptyFunction' }
+      } else if (arguments.length !== func.variables.length) {
         throw { data: { found: arguments.length, expected: func.variables.length }, code: 'missingParameters' }
       }
 
