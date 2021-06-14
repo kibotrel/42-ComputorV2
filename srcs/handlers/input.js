@@ -64,21 +64,26 @@ const computeInput = async (inputLine) => {
 // then depending on the type of input, call the correct process.
 
 module.exports = async (payload) => {
-  const inputLine = payload.toLowerCase().replace(/^>|\s/g, '')
-
-  registerHistory(payload)
-
-  if (inputLine === 'exit') {
-    process.exit(0)
-  }
-
   try {
+    let inputLine = payload.toLowerCase().replace(/^> /g, '').trim()
+
+    registerHistory(inputLine)
+
+    if (inputLine === 'exit') {
+      process.exit(0)
+    } 
+    
+    if (inputLine.startsWith('!')) {
+      return await commmandHandler(inputLine)
+    }
+
+    inputLine = inputLine.replace(/ /g, '')
+
     if (!inputLine.match(/^[0-9a-z+\-*\/%^()\[\]=!?.,]+$/)) {
       throw { data: inputLine, code: 'badInputFormat' }
     }
-    if (inputLine.startsWith('!')) {
-      return await commmandHandler(inputLine)
-    } else if (inputLine.endsWith('=?')) {
+
+    if (inputLine.endsWith('=?')) {
       return await computeInput(inputLine)
     } else if ((inputLine.match(/=/g) || []).length === 1) {
       return await storeVariable(inputLine)

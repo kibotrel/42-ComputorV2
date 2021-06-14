@@ -6,34 +6,28 @@ const showHistory = require('@commands/show-history.js')
 
 module.exports = async (inputLine) => {
   try {
-    let executedCommand = null
+    const commandParts = inputLine.split(/\s+/)
+    const commandName = commandParts[0]
+    const commandArguments = commandParts.slice(1, commandParts.length)
 
-    for (const command of commands) {
-      if (inputLine.startsWith(command)) {
-        const commandArgument = inputLine.substring(command.length)
-
-        executedCommand = command
-
-        switch (command) {
-          case '!variables':
-            await showVariables(command,commandArgument, 'Numeral'); break
-          case '!matrices':
-            await showVariables(command, commandArgument, 'Matrix'); break
-          case '!functions':
-            await showVariables(command, commandArgument, 'Expression'); break
-          case '!solve':
-            await showRoots(commandArgument); break
-          case '!history':
-            await showHistory(command, commandArgument); break
-        }
-      }
+    if (commands.indexOf(commandName) < 0) {
+      throw { data: commandParts.join(' '), code: 'unrecognizedCommand' }
     }
 
-    if (!executedCommand) {
-      throw { data: inputLine, code: 'unrecognizedCommand' }
+    switch (commandName) {
+      case '!variables':
+        await showVariables(commandArguments, 'Numeral'); break
+      case '!matrices':
+        await showVariables(commandArguments, 'Matrix'); break
+      case '!functions':
+        await showVariables(commandArguments, 'Expression'); break
+      case '!solve':
+        await showRoots(commandArguments); break
+      case '!history':
+        await showHistory(commandArguments); break
     }
 
-    return { value: executedCommand, type: 'command' }
+    return { value: commandName, type: 'command' }
   } catch (error) {
     return Promise.reject(error)  
   }

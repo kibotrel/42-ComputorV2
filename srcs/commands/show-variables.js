@@ -1,10 +1,10 @@
 const { Variables } = global
 
-module.exports = (command, argument, type) => {
+module.exports = (argumentsList, type) => {
   try {
     const showList = []
-    if (argument) {
-      throw { data: `${command}${argument}`, code: 'invalidCommand' }
+    if (argumentsList.length) {
+      throw { data: argumentsList.join(' '), code: 'invalidArgument' }
     }
 
     for (const element of Variables) {

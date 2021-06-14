@@ -76,10 +76,6 @@
     "message": ""
   },
   {
-    "code": "invalidCommand",
-    "message": ""
-  },
-  {
     "code": "invalidVariableFormat",
     "message": ""
   },
