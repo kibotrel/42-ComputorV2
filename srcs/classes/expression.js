@@ -88,9 +88,10 @@ class Expression {
   }
 
   print() {
-    // Turns variable into bold yellow to represent numeral values.
-
     const definitionStack = []
+
+    // Turns variables and numeral values in bold yellow and Expressions
+    // in bold green.
 
     for (let i = 0; i < this.definition.length; i++) {
       if (!this.definition[i].match(/^[+\-\*\/%\^\(\)]$/) && this.definition[i].match(/^[+\-]?[a-z]+$|^[+\-]?[0-9\.]+$/)) {

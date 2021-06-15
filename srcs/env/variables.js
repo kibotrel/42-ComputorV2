@@ -65,6 +65,13 @@ const computeVariable = async (token, type) => {
   }
 }
 
+// This function ensure Expression system integrity by removing
+// Expression prototypes when a new version a Expression composite
+// does not have the same amount of variables than its previous
+// version and also recursively sanitize the Expression list by
+// removing every Expression where the deleted one imply another
+// conflict.
+
 const removeDependencies = (tested) => {
   const deletedExpressions = []
 

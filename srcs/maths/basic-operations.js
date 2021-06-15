@@ -23,6 +23,7 @@ const sanitizeOperand = async (operand) => {
     return Promise.reject(error)
   }
 }
+
 const checkOperands = async ({ firstOperand, secondOperand }) => {
   try {
     const a = await sanitizeOperand(firstOperand)
