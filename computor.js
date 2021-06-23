@@ -43,7 +43,7 @@ Client.on('line', async (payload) => {
     const { value, type } = await inputHandler(payload)
 
     if (type === 'computation') {
-      console.log(`\n\x1b[1mComputation result :\x1b[0m\n\n\t${value.print()}\n`)
+      console.log(`\n\x1b[1mComputation result:\x1b[0m\n\n\t${value.print()}\n`)
     } else if (type.match(/^(expression|numeral)$/)) {
       console.log(`\n\x1b[1mNew \x1b[32m${value.constructor.name}\x1b[0;1m stored!\x1b[0m\n\n\t${value.print()}\n`)
     }

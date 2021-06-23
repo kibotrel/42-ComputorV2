@@ -3,6 +3,8 @@ const { env: { commands } } = Config
 const showRoots = require('@commands/show-roots.js')
 const showVariables = require('@commands/show-variables.js')
 const showHistory = require('@commands/show-history.js')
+const showConfig = require('@commands/show-config.js')
+const updateSetting = require('@commands/update-setting.js')
 
 module.exports = async (inputLine) => {
   try {
@@ -25,6 +27,10 @@ module.exports = async (inputLine) => {
         await showRoots(commandArguments); break
       case '!history':
         await showHistory(commandArguments); break
+      case '!set':
+        await updateSetting(commandArguments); break
+      case '!config':
+        await showConfig(commandArguments); break
     }
 
     return { value: commandName, type: 'command' }

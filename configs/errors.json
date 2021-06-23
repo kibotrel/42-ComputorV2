@@ -118,5 +118,17 @@
   {
     "code": "emptyFunction",
     "message": ""
+  },
+  {
+    "code": "protectedSetting",
+    "message": ""
+  },
+  {
+    "code": "unknownSetting",
+    "message": ""
+  },
+  {
+    "code": "inccorectSettingType",
+    "message": ""
   }
 ]
