@@ -1,15 +1,32 @@
 const plotEquation = require('@srcs/equation/plot.js')
 const solveEquation = require('@srcs/equation/solve.js')
 
+const isEquationToken = (token) => {
+  return token.match(/^([+\-]?\d+(\.\d+)?|[+\-]?x(\^\d+)?|[+\-]?\d+(\.\d+)?\*?x(\^\d+)?|[=+\-])+$/)
+}
+
+const parseArguments = async (argumentsList) => {
+  try {
+    const params = []
+
+    for (const argument of argumentsList) {
+      if (isEquationToken(argument)) {
+        params.push(argument)
+      } else {
+        throw { data: argumentsList.join(' '), code: 'invalidArgument'}
+      }
+    }
+    
+    return params.join('')
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
 module.exports = async (argumentsList) => {
   try {
-    const input = argumentsList[0]
-
-    if (argumentsList.length != 1) {
-      throw { data: argumentsList.join(' '), code: 'invalidArgument' }
-    }
-
-    const equation = await solveEquation(input)
+    const params = await parseArguments(argumentsList)
+    const equation = await solveEquation(params)
 
     if (Config.equation.graph) {
       await plotEquation(equation)

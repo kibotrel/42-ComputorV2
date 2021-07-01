@@ -30,4 +30,5 @@ const remainder = ({ a, b }) => {
     return nextFactor - a
   }
 }
+
 module.exports = { leastCommonFactor, greatestCommonDivisor, remainder }

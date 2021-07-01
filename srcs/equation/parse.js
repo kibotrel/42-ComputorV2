@@ -65,8 +65,6 @@ const parsePolynomList = async (equation) => {
 
 module.exports = async (equation) => {
   try {
-    equation = equation.replace(/\s+/g, '')
-
     if (!equation.includes('=') || (equation.match(/=/g) || []).length !== 1) {
       throw { data: equation, code: 'notEquation' }
     } else if (!equation.match(/^[+-=*0-9x^]+$/)) {
