@@ -16,19 +16,44 @@ const greatestCommonDivisor = ({ a, b }) => {
   return a
 }
 
-const remainder = ({ a, b }) => {
-  if (a < 0 === b < 0) {
-    return a % b
+const remainder = ({ dividend, divisor }) => {
+  if (dividend < 0 === divisor < 0) {
+    return dividend % divisor
   } else {
-    a = Math.abs(a)
+    dividend = absolute(dividend)
 
     let nextFactor = 0
-    while(nextFactor < a) {
-      nextFactor += b
+    while(nextFactor < dividend) {
+      nextFactor += divisor
     }
 
-    return nextFactor - a
+    return nextFactor - dividend
   }
 }
 
-module.exports = { leastCommonFactor, greatestCommonDivisor, remainder }
+const power = ({ number, exponent }) => {
+  if ((number === 0 && exponent === 0) || number === 1 || exponent === 0) {
+    return 1
+  } else if (number === 0) {
+    return 0
+  } else if (exponent < 0) {
+    return 1 / power(a, absolute(b))
+  }
+  return a * power(a, b - 1)
+}
+
+const absolute = (a) => {
+  return a > 0 ? a : -a
+}
+
+const floor = (number) => {
+	if (Number.isInteger(numberString)) {
+  	return number
+  } else {
+  	const flooredValue = parseInt(number)
+    
+    return flooredValue - (number < 0 ? 1 : 0)
+  }
+}
+
+module.exports = { leastCommonFactor, greatestCommonDivisor, remainder, absolute, power, floor }

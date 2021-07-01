@@ -1,4 +1,4 @@
-const { remainder } = require('@srcs/maths/basic-functions.js')
+const { remainder, absolute, floor } = require('@srcs/maths/basic-functions.js')
 const { addFraction, multiplyFraction, divideFraction, modulusFraction } = require('@srcs/maths/fractions.js')
 const { checkNumeral, toNumeral, numeralFractionalParts } = require('@srcs/maths/utils.js')
 
@@ -134,7 +134,7 @@ class Numeral {
       const A = toNumeral(a)
       const B = toNumeral(b)
 
-      if ((B.r === 0 && B.i === 0) || Math.floor(B.r) !== B.r || Math.floor(B.i) !== B.i) {
+      if ((B.r === 0 && B.i === 0) || floor(B.r) !== B.r || floor(B.i) !== B.i) {
         throw { data: { A, B, operator: '%' }, code: 'impossibleModulo' }
       }
 
@@ -183,7 +183,7 @@ class Numeral {
           i: 0
         })
       } else {
-        const power = Math.abs(B.r)
+        const power = absolute(B.r)
 
         let value = A
 
@@ -250,7 +250,7 @@ class Numeral {
         }
 
         if (this.i) {
-          printedString += Number.isInteger(imaginary) ? `${imaginary}i` : `(${Math.abs(this.ni)} / ${this.di})i`
+          printedString += Number.isInteger(imaginary) ? `${imaginary}i` : `(${absolute(this.ni)} / ${this.di})i`
         }
       }
 

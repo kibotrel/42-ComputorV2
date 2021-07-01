@@ -19,7 +19,8 @@
     "@classes": "srcs/classes",
     "@commands": "srcs/commands",
     "@env": "srcs/env",
-    "@handlers": "srcs/handlers"
+    "@handlers": "srcs/handlers",
+    "@plot": "nodejs-plotter"
   },
 
   "scripts": {
