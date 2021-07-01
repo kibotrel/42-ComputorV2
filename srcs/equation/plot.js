@@ -1,6 +1,6 @@
 const { plot } = require('@plot/plotter.js')
 
-const { power } = require('@srcs/maths/basic-functions.js')
+const { pow } = require('@srcs/maths/basic-functions.js')
 
  const timeStamp = () => {
   const now = new Date()
@@ -28,7 +28,7 @@ module.exports = async (polynomList) => {
     let y = 0
 
     for (const polynom of polynomList) {
-      y += (polynom.sign * polynom.factor * power(x, polynom.power))
+      y += (polynom.sign * polynom.factor * pow(x, polynom.power))
     }
 
     data.push(y)

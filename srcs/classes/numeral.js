@@ -1,4 +1,4 @@
-const { remainder, absolute, floor } = require('@srcs/maths/basic-functions.js')
+const { remainder, abs, floor } = require('@srcs/maths/basic-functions.js')
 const { addFraction, multiplyFraction, divideFraction, modulusFraction } = require('@srcs/maths/fractions.js')
 const { checkNumeral, toNumeral, numeralFractionalParts } = require('@srcs/maths/utils.js')
 
@@ -183,7 +183,7 @@ class Numeral {
           i: 0
         })
       } else {
-        const power = absolute(B.r)
+        const power = abs(B.r)
 
         let value = A
 
@@ -250,7 +250,7 @@ class Numeral {
         }
 
         if (this.i) {
-          printedString += Number.isInteger(imaginary) ? `${imaginary}i` : `(${absolute(this.ni)} / ${this.di})i`
+          printedString += Number.isInteger(imaginary) ? `${imaginary}i` : `(${abs(this.ni)} / ${this.di})i`
         }
       }
 

@@ -20,7 +20,7 @@ const remainder = ({ dividend, divisor }) => {
   if (dividend < 0 === divisor < 0) {
     return dividend % divisor
   } else {
-    dividend = absolute(dividend)
+    dividend = abs(dividend)
 
     let nextFactor = 0
     while(nextFactor < dividend) {
@@ -31,18 +31,18 @@ const remainder = ({ dividend, divisor }) => {
   }
 }
 
-const power = (number, exponent) => {
+const pow = (number, exponent) => {
   if ((number === 0 && exponent === 0) || number === 1 || exponent === 0) {
     return 1
   } else if (number === 0) {
     return 0
   } else if (exponent < 0) {
-    return 1 / power(number, absolute())
+    return 1 / pow(number, abs(number))
   }
-  return number * power(number, exponent - 1)
+  return number * pow(number, exponent - 1)
 }
 
-const absolute = (a) => {
+const abs = (a) => {
   return a > 0 ? a : -a
 }
 
@@ -56,4 +56,4 @@ const floor = (number) => {
   }
 }
 
-module.exports = { leastCommonFactor, greatestCommonDivisor, remainder, absolute, power, floor }
+module.exports = { leastCommonFactor, greatestCommonDivisor, remainder, abs, pow, floor }

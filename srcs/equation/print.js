@@ -1,7 +1,7 @@
 const { toSuperscript } = require('@srcs/equation/utils.js')
 
-const { squareRoot } = require('@srcs/maths/advanced-functions.js')
-const { absolute } = require('@srcs/maths/basic-functions.js')
+const { sqrt } = require('@srcs/maths/advanced-functions.js')
+const { abs } = require('@srcs/maths/basic-functions.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
 
 const printReducedEquation = (polynomList) => {
@@ -98,7 +98,7 @@ const printQuadratic = async (a, b, c) => {
 
       console.log(`\tThe discriminant of this equation is equal to \x1b[33;1m0\x1b[0m.\n\tSo it has a unique real root: \x1b[1;33m${zeroRoot.print()}\x1b[0m.\n`)
     } else {
-      const absoluteDiscriminant = new Numeral(toNumeral(squareRoot(absolute(discriminant.r))))
+      const absoluteDiscriminant = new Numeral(toNumeral(sqrt(abs(discriminant.r))))
 
       const denominator = new Numeral({ r: 2 * a, i: 0 })
       const numerator1 = new Numeral({ r: -b, i: absoluteDiscriminant.r })
