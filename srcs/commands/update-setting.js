@@ -14,7 +14,6 @@ module.exports = (argumentsList) => {
       throw { data: argumentsList.join(' '), code: 'invalidArgument' }
     }
 
-    console.log(argumentsList)
     const [ setting, value ] = argumentsList
 
     if (Config.env.protectedSettings.indexOf(setting) >= 0) {

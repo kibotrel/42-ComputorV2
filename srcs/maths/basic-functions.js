@@ -31,15 +31,15 @@ const remainder = ({ dividend, divisor }) => {
   }
 }
 
-const power = ({ number, exponent }) => {
+const power = (number, exponent) => {
   if ((number === 0 && exponent === 0) || number === 1 || exponent === 0) {
     return 1
   } else if (number === 0) {
     return 0
   } else if (exponent < 0) {
-    return 1 / power(a, absolute(b))
+    return 1 / power(number, absolute())
   }
-  return a * power(a, b - 1)
+  return number * power(number, exponent - 1)
 }
 
 const absolute = (a) => {
