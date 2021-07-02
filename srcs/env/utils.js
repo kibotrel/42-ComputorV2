@@ -1,3 +1,5 @@
+const { Config } = global
+
 const isVariableRegistered = (token) => {
   const name = sanitizeName(token)
 
@@ -8,6 +10,12 @@ const isVariableRegistered = (token) => {
   }
 
   return false
+}
+
+const isValidBuiltin = (token) => {
+  const name = sanitizeName(token)
+
+  return Config.env.builtinFuctions.indexOf(name) > -1
 }
 
 const sanitizeName = (token) => {
@@ -38,4 +46,4 @@ const fillDigits = (number, targetSize) => {
   return `${template.repeat(digitsToAdd)}${number.toString()}`
 }
 
-module.exports = { isVariableRegistered, sanitizeName, countDigits, fillDigits }
+module.exports = { isVariableRegistered, sanitizeName, countDigits, fillDigits, isValidBuiltin }

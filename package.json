@@ -20,7 +20,8 @@
     "@commands": "srcs/commands",
     "@env": "srcs/env",
     "@handlers": "srcs/handlers",
-    "@plot": "nodejs-plotter"
+    "@plot": "nodejs-plotter",
+    "@builtin": "srcs/builtin"
   },
 
   "scripts": {

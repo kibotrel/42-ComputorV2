@@ -1,6 +1,8 @@
 const { Variables } = global
 
-const { isVariableRegistered } = require('@env/utils.js')
+const builtinHandler = require('@handlers/built-in.js')
+
+const { isVariableRegistered, isValidBuiltin } = require('@env/utils.js')
 
 const { numeralValue } = require('@srcs/maths/compute.js')
 
@@ -23,7 +25,11 @@ const resolveVariable = async (request, type) => {
     const variable = isVariableRegistered(request)
     
     if (!variable) {
-      throw { data: request, code: `unknown${type}` }
+      if (type === 'Function' && isValidBuiltin(request)) {
+        return await builtinHandler(request)
+      } else {
+        throw { data: request, code: `unknown${type}` }
+      }
     }
 
     if (type === 'Variable' && variable.constructor.name !== 'Numeral' || type === 'Function' && variable.constructor.name !== 'Expression') {
@@ -39,7 +45,7 @@ const resolveVariable = async (request, type) => {
         return variable
       }
     } else if (variable.constructor.name === 'Expression') {
-      const arguments = request.substring(request.indexOf('(') + 1, request.indexOf(')')).split(',')
+      const arguments = request.substring(request.indexOf('(') + 1, request.lastIndexOf(')')).split(',')
       const argumentList = []
       const func = variable
       const sign = (request[0] === '-' ? -1 : 1)
