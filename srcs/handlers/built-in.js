@@ -1,6 +1,5 @@
-const exp = require('@builtin/exp.js')
-const { cosh, sinh } = require('@builtin/hyperbolic.js')
-const { cos, sin, rad, deg } = require('@builtin/trigonometric.js')
+const { cos, sin, cosh, sinh } = require('@builtin/transcendental.js')
+const { degree, radian, exp, factorial } = require('@builtin/algebraic.js')
 
 module.exports = async (input) => {
   try {
@@ -22,6 +21,13 @@ module.exports = async (input) => {
         value = await cos(arguments); break
       case 'sin':
         value = await sin(arguments); break
+      case 'rad':
+        value = await radian(arguments); break
+      case 'deg':
+        value = await degree(arguments); break
+      case 'fact':
+        value = await factorial(arguments); break
+
     }
 
     if (sign < 0) {
