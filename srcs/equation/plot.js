@@ -1,7 +1,5 @@
 const { plot } = require('@plot/plotter.js')
 
-const { pow } = require('@srcs/maths/basic-functions.js')
-
  const timeStamp = () => {
   const now = new Date()
   const date = [ now.getMonth() + 1, now.getDate(), now.getFullYear() ]
@@ -19,8 +17,6 @@ const { pow } = require('@srcs/maths/basic-functions.js')
   return `${date.join("-")}_${time.join(":")}`
 }
 
-
-
 module.exports = async (polynomList) => {
   const data = []
 
@@ -28,7 +24,9 @@ module.exports = async (polynomList) => {
     let y = 0
 
     for (const polynom of polynomList) {
-      y += (polynom.sign * polynom.factor * pow(x, polynom.power))
+      const { r: nextTerm } = await Numeral.multiply(await Numeral.multiply(polynom.sign, polynom.factor), await Numeral.power(x, polynom.power))
+
+      y += nextTerm
     }
 
     data.push(y)

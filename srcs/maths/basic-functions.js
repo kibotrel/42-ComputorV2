@@ -31,17 +31,6 @@ const remainder = ({ dividend, divisor }) => {
   }
 }
 
-const pow = (number, exponent) => {
-  if ((number === 0 && exponent === 0) || number === 1 || exponent === 0) {
-    return 1
-  } else if (number === 0) {
-    return 0
-  } else if (exponent < 0) {
-    return 1 / pow(number, abs(number))
-  }
-  return number * pow(number, exponent - 1)
-}
-
 const abs = (a) => {
   return a > 0 ? a : -a
 }
@@ -56,4 +45,4 @@ const floor = (number) => {
   }
 }
 
-module.exports = { leastCommonFactor, greatestCommonDivisor, remainder, abs, pow, floor }
+module.exports = { leastCommonFactor, greatestCommonDivisor, remainder, abs, floor }
