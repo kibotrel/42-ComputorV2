@@ -1,23 +1,12 @@
-const { numeralValue } = require('@srcs/maths/compute.js')
+const { sanitizeArguments } = require('@builtin/utils.js')
+
 const { toNumeral } = require('@srcs/maths/utils.js')
 
 const abs = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'abs', arguments }, code: 'missingParameters' }
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'abs', amount: 1 })
 
-    const [ rawInput ] = arguments
-
-    let x
-
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
-
-    if (x.i === 0) {
+    if (!x.i) {
       return x.r > 0 ? x : new Numeral(toNumeral(-x.r))
     } else {
       return await sqrt([x.r * x.r + x.i * x.i])
@@ -29,24 +18,12 @@ const abs = async (arguments) => {
 
 const radian = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'rad', arguments }, code: 'missingParameters' }
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'rad', amount: 1 })
 
-    const [ rawInput ] = arguments
-
-    let x
-
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
-
-    if (x.i !== 0) {
+    if (x.i) {
       throw { data: x, code: 'builtinNotHandledOperation' }
-    } else if (x.i === 0) {
-      x.r %= (Math.PI * 2)
+    } else {
+      x.r %= 360
     }
     
     // y = x * π / 180
@@ -59,23 +36,11 @@ const radian = async (arguments) => {
 
 const degree = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'deg', arguments }, code: 'missingParameters' }
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'deg', amount: 1 })
 
-    const [ rawInput ] = arguments
-
-    let x
-
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
-
-    if (x.i !== 0) {
+    if (x.i) {
       throw { data: x, code: 'builtinNotHandledOperation' }
-    } else if (x.i === 0) {
+    } else {
       x.r %= (Math.PI * 2)
     }
     
@@ -89,19 +54,7 @@ const degree = async (arguments) => {
 
 const factorial = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'fact', arguments }, code: 'missingParameters' }
-    }
-
-    const [ rawInput ] = arguments
-
-    let x
-
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'fact', amount: 1 })
 
     // A potential good candidate to handle complex and decimal value
     // would be the Gamma function where factorial(x) = Gamma(x + 1).
@@ -131,21 +84,9 @@ const factorial = async (arguments) => {
 
 const sqrt = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'sqrt', arguments }, code: 'missingParameters' }
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'sqrt', amount: 1 })
 
-    const [ rawInput ] = arguments
-
-    let x
-
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
-
-    if (x.i !== 0) {
+    if (x.i) {
       throw { data: x, code: 'builtinNotHandledOperation' }
     }
 
@@ -180,19 +121,7 @@ const sqrt = async (arguments) => {
 
 const exp = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'exp', arguments }, code: 'missingParameters' }
-    }
-
-    const [ rawInput ] = arguments
-
-    let x
-
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'exp', amount: 1 })
 
     let y = await Numeral.add(1, x)
 

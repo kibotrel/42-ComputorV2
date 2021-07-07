@@ -1,6 +1,6 @@
 const { factorial } = require('@builtin/algebraic.js')
+const { sanitizeArguments } = require('@builtin/utils.js')
 
-const { numeralValue } = require('@srcs/maths/compute.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
 
 
@@ -10,21 +10,9 @@ const { toNumeral } = require('@srcs/maths/utils.js')
 
 const sin = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'sin', arguments }, code: 'missingParameters' }
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'sin', amount: 1 })
 
-    const [ rawInput ] = arguments
-    
-    let x
-
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
-
-    if (x.i === 0) {
+    if (!x.i) {
       x.r %= (Math.PI * 2)
     }
     
@@ -50,21 +38,9 @@ const sin = async (arguments) => {
 
 const cos = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'cos', arguments }, code: 'missingParameters' }
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'cos', amount: 1 })
 
-    const [ rawInput ] = arguments
-
-    let x
-
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
-
-    if (x.i === 0) {
+    if (!x.i) {
       x.r %= (Math.PI * 2)
     }
 
@@ -90,19 +66,7 @@ const cos = async (arguments) => {
 
 const cosh = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'cosh', arguments }, code: 'missingParameters' }
-    }
-
-    const [ rawInput ] = arguments
-
-    let x
-    
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'cosh', amount: 1 })
 
     let y = 1
 
@@ -120,19 +84,7 @@ const cosh = async (arguments) => {
 
 const sinh = async (arguments) => {
   try {
-    if (arguments.length !== 1) {
-      throw { data: { name: 'sinh', arguments }, code: 'missingParameters' }
-    }
-
-    const [ rawInput ] = arguments
-
-    let x
-    
-    if (rawInput.constructor.name === 'String') {
-      x = await numeralValue(rawInput)
-    } else {
-      x = new Numeral(toNumeral(rawInput))
-    }
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'sinh', amount: 1 })
 
     let y = x
 
@@ -148,4 +100,70 @@ const sinh = async (arguments) => {
   }
 }
 
-module.exports = { sin, cos, sinh, cosh }
+const ln = async (arguments) => {
+  try {
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'ln', amount: 1 })
+
+    if (x.i || x.r < 0) {
+      throw { data: x, code: 'builtinNotHandledOperation' }
+    }
+
+    const ratio = await Numeral.divide(await Numeral.substract(x, 1), await Numeral.add(x, 1))
+    
+    let y = ratio
+
+    // y = 2 * ((x - 1) / (x + 1) + 1/3 * ((x - 1) / (x + 1))^3 + ... + 1 / (2n + 1) * ((x - 1) / (x + 1))^(2n + 1))
+
+    for (let n = 1; n < Config.function.expensionCount; n++) {
+      y = await Numeral.add(y, await Numeral.multiply(await Numeral.divide(1, n * 2 + 1), await Numeral.power(ratio, 2 * n + 1)))
+    }
+
+    return await Numeral.multiply(2, y)
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+// Implementing long division algorithm explained
+// here => https://bit.ly/3jRzpWD to get the n first
+// digits of the approximated function.
+
+const log = async (arguments) => {
+  try {
+    const { [0]: x } = await sanitizeArguments({ arguments, name: 'log', amount: 1 })
+
+    if (x.i || x.r < 0) {
+      throw { data: x, code: 'builtinNotHandledOperation' }
+    }
+
+    let tmp = x
+    let divCount = 0
+
+    while (tmp.r > 10) {
+      tmp = await Numeral.divide(tmp, 10)
+      divCount++
+    }
+
+    let y = `${divCount.toString()}.`
+
+    for (let i = 0; i < Config.function.expensionCount; i++) {
+      tmp = await Numeral.power(tmp, 10)
+
+      let divCount = 0
+
+      while (tmp.r > 10) {
+        tmp = await Numeral.divide(tmp, 10)
+        divCount++
+      }
+
+      y += divCount.toString()
+    }
+
+    return new Numeral(toNumeral(parseFloat(y)))
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+
+module.exports = { sin, cos, sinh, cosh, ln, log }
