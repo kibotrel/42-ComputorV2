@@ -1,7 +1,6 @@
-const { isVariableRegistered } = require('@env/utils.js')
+const { isVariableRegistered, isValidBuiltin } = require('@env/utils.js')
 
 const { isComposite, isFunction, compositeParts } = require('@srcs/parsing/utils.js')
-
 
 const lookForEnclosure = (string) => {
   const stack = []
@@ -63,7 +62,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
             infixStack.push(variableName)
           }
           multiplySign = true
-        } else if (variable.constructor.name === 'Expression') {
+        } else if (variable.constructor.name === 'Expression' || isValidBuiltin(variableName)) {
           const remainingString = string.substring(i)
           const closingIndex = lookForEnclosure(remainingString)
           const functionArguments = remainingString.substring(0, closingIndex + 1)

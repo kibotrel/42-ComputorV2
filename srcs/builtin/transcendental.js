@@ -165,5 +165,4 @@ const log = async (arguments) => {
   }
 }
 
-
 module.exports = { sin, cos, sinh, cosh, ln, log }

@@ -1,4 +1,4 @@
-const { isVariableRegistered, sanitizeName } = require('@env/utils.js')
+const { isVariableRegistered, sanitizeName, isValidBuiltin } = require('@env/utils.js')
 
 const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
 const parseLine = require('@srcs/parsing/input.js')
@@ -19,7 +19,11 @@ const computeVariable = async (token, type) => {
     const variable = isVariableRegistered(variableName)
 
     if (!variable) {
-      throw { data: variableName, code: `unknown${type}` }
+      if (isValidBuiltin(token)) {
+        return token
+      } else {
+        throw { data: variableName, code: `unknown${type}` }
+      }
     }
 
     // Add Matrix constructor later

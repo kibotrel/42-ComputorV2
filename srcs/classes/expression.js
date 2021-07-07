@@ -1,7 +1,8 @@
-const { isVariableRegistered } = require('@env/utils.js')
+const { isVariableRegistered, isValidBuiltin } = require('@env/utils.js')
 
 const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
+const parseLine = require('@srcs/parsing/input.js')
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
 
@@ -10,7 +11,35 @@ const computeNestedExpression = async (token, expression, variables) => {
     const func = isVariableRegistered(token)
 
     if (!func || func.constructor.name !== 'Expression') {
-      throw { data: token, code: 'unknownFunction' }
+      if (isValidBuiltin(token)) {
+        const name =  token.substring(0, token.indexOf('('))
+        const args = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
+
+        for (let i = 0; i < args.length; i++) {
+          const argumentStack = await parseLine(args[i])
+
+          for (let j = 0; j < argumentStack.length; j++) {
+            const variableIndex = expression.variables.indexOf(args[i])
+
+            if (variableIndex >= 0) {
+              const { r: real, i: imaginary } = variables[variableIndex]
+
+              argumentStack[i] = `${real ? real : ''}${imaginary ? imaginary > 0 ? `+${imaginary}i` : `${imaginary}i` : ''}`
+
+              if (!argumentStack[i].length) {
+                argumentStack[i] = '0'
+              }
+            }
+          }
+          args[i] = argumentStack.join('')
+        }
+ 
+        token = `${name}(${args.join(',')})`
+
+        return await builtinHandler(token)
+      } else {
+        throw { data: token, code: 'unknownFunction' }
+      }
     }
 
     const sign = (token[0] === '-' ? -1 : 1)

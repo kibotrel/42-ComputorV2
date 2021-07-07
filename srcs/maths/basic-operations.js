@@ -1,3 +1,5 @@
+const { isValidBuiltin } = require('@env/utils.js')
+
 const sanitizeOperand = async (operand) => {
   let trueOperand
 
@@ -11,6 +13,9 @@ const sanitizeOperand = async (operand) => {
         if (trueOperand === Number.NEGATIVE_INFINITY || trueOperand === Number.POSITIVE_INFINITY) {
           throw { data: operand, code: 'tooBigNumber' }
         } else if (Number.isNaN(trueOperand)) {
+          if (isValidBuiltin(operand)) {
+            return await builtinHandler(operand)
+          }
           throw { data: operand, code: 'notNumber' }
         }
       }

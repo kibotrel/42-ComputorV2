@@ -31,6 +31,11 @@ global.InputHistory = []
 global.Numeral = require('@classes/numeral.js')
 global.Expression = require('@classes/expression.js')
 
+// Some usefull functions that are needed quite often.
+// Making them global helps to avoid circular dependencies
+
+global.builtinHandler = require('@handlers/built-in.js')
+
 const inputHandler = require('@handlers/input.js')
 const errorHandler = require('@handlers/error.js')
 

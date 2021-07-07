@@ -1,4 +1,4 @@
-const { isVariableRegistered } = require('@env/utils.js')
+const { isVariableRegistered, isValidBuiltin } = require('@env/utils.js')
 
 const { sanitizeName } = require('@env/utils.js')
 
@@ -31,7 +31,7 @@ module.exports = async (prototype, definition) => {
           throw { data: token, code: 'unknownVariable' }
         }
       } else if (isFunction(token)) {
-        if (!isVariableRegistered(token)) {
+        if (!isValidBuiltin(token) && !isVariableRegistered(token)) {
           throw { data: token, code: 'unknownFunction' }
         } else if (sanitizeName(token) === functionName) {
           throw { data: functionName, code: 'cyclicDeclaration' }
