@@ -1,6 +1,32 @@
 const { numeralValue } = require('@srcs/maths/compute.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
 
+const abs = async (arguments) => {
+  try {
+    if (arguments.length !== 1) {
+      throw { data: { name: 'abs', arguments }, code: 'missingParameters' }
+    }
+
+    const [ rawInput ] = arguments
+
+    let x
+
+    if (rawInput.constructor.name === 'String') {
+      x = await numeralValue(rawInput)
+    } else {
+      x = new Numeral(toNumeral(rawInput))
+    }
+
+    if (x.i === 0) {
+      return x.r > 0 ? x : new Numeral(toNumeral(-x.r))
+    } else {
+      return await sqrt([x.r * x.r + x.i * x.i])
+    }
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
 const radian = async (arguments) => {
   try {
     if (arguments.length !== 1) {
@@ -103,6 +129,51 @@ const factorial = async (arguments) => {
   }
 }
 
+const sqrt = async (arguments) => {
+  try {
+    if (arguments.length !== 1) {
+      throw { data: { name: 'sqrt', arguments }, code: 'missingParameters' }
+    }
+
+    const [ rawInput ] = arguments
+
+    let x
+
+    if (rawInput.constructor.name === 'String') {
+      x = await numeralValue(rawInput)
+    } else {
+      x = new Numeral(toNumeral(rawInput))
+    }
+
+    if (x.i !== 0) {
+      throw { data: x, code: 'builtinNotHandledOperation' }
+    }
+
+    let y = 1
+
+    // By definition sqrt(x) must be greater than the one
+    // of the last integer and lesser than the following one
+    // so we compute the nearest perfect root of x to speed
+    // up the process.
+
+    for (let i = 1; i * i <= x.r; i++) {
+      y = i
+    }
+
+    // Following the Babylonian algorithm (More infos => https://bit.ly/3AFLXGy)
+    // itterate the following equation to get closer and closer to the actual
+    // root of x: y = 0.5 * (y + x / y) starting with y as the closest perfect root.
+  
+    for (let i = 0; i < Config.function.expensionCount; i++) {
+      y = await Numeral.multiply(0.5, await Numeral.add(y, await Numeral.divide(x, y)))
+    }
+
+    return new Numeral(toNumeral(y))
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
 // Implementation of Taylor series that approximates
 // functions through infinite expansion process.
 // More info => https://bit.ly/2UeTaMT
@@ -137,4 +208,4 @@ const exp = async (arguments) => {
   }
 }
 
-module.exports = { degree, radian, exp, factorial }
+module.exports = { degree, radian, exp, sqrt, factorial, abs }

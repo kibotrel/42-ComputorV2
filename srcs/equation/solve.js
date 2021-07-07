@@ -2,8 +2,6 @@ const parseEquation = require('@srcs/equation/parse.js')
 const { printReducedEquation, printEquationType, printConstant, printLinear, printQuadratic } = require('@srcs/equation/print.js')
 const { equationDegree } = require('@srcs/equation/utils.js')
 
-const { abs } = require('@srcs/maths/basic-functions.js')
-
 const reduceEquation = (polynomList) => {
   let reducedList = []
 
@@ -19,7 +17,7 @@ const reduceEquation = (polynomList) => {
     } else {
       found.factor = found.sign * found.factor + polynom.sign * polynom.factor
       found.sign = (found.factor >= 0 ? 1 : -1)
-      found.factor = abs(found.factor)
+      found.factor = found.factor > 0 ? found.factor : -found.factor
     }
   }
 

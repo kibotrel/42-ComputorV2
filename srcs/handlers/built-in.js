@@ -1,5 +1,5 @@
 const { cos, sin, cosh, sinh } = require('@builtin/transcendental.js')
-const { degree, radian, exp, factorial } = require('@builtin/algebraic.js')
+const { degree, radian, exp, factorial, sqrt, abs } = require('@builtin/algebraic.js')
 
 module.exports = async (input) => {
   try {
@@ -27,6 +27,10 @@ module.exports = async (input) => {
         value = await degree(arguments); break
       case 'fact':
         value = await factorial(arguments); break
+      case 'sqrt':
+        value = await sqrt(arguments); break
+      case 'abs':
+        value = await abs(arguments); break
 
     }
 

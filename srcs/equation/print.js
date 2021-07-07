@@ -1,7 +1,7 @@
+const { sqrt, abs } = require('@builtin/algebraic.js')
+
 const { toSuperscript } = require('@srcs/equation/utils.js')
 
-const { sqrt } = require('@srcs/maths/advanced-functions.js')
-const { abs } = require('@srcs/maths/basic-functions.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
 
 const printReducedEquation = (polynomList) => {
@@ -72,42 +72,48 @@ const printLinear = (b, c) => {
 
 const printQuadratic = async (a, b, c) => {
   try {
-    const discriminant = new Numeral(toNumeral(b * b - 4 * a * c))
+    a = new Numeral(toNumeral(a))
+    b = new Numeral(toNumeral(b))
+    c = new Numeral(toNumeral(c))
+
+    const discriminant = await Numeral.substract(await Numeral.power(b, 2), await Numeral.multiply(4, await Numeral.multiply(a, c)))
+
+    const minusB = await Numeral.substract(0, b)
+    const twoA = await Numeral.multiply(2, a)
 
     console.log('\n\x1b[1;4mSolution(s):\x1b[0m\n')
 
     if (Config.equation.verbose) {
-      console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${a}, b = ${b}, c = ${c}, Δ = ${discriminant.print()}\x1b[0m\n`)
+      console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${a.print()}, b = ${b.print()}, c = ${c.print()}, Δ = ${discriminant.print()}\x1b[0m\n`)
     }
 
     if (discriminant.r > 0) {
-      const positiveRoot = new Numeral(toNumeral((-b + discriminant.r ** 0.5) / (2 * a)))
-      const negativeRoot = new Numeral(toNumeral((-b - discriminant.r ** 0.5) / (2 * a)))
+      const sqrtDiscriminant = await sqrt([discriminant.r])
+
+      const positiveRoot = await Numeral.divide(await Numeral.add(await Numeral.substract(0, b), sqrtDiscriminant), 2 * a)
+      const negativeRoot = await Numeral.divide(await Numeral.substract(await Numeral.substract(0, b), sqrtDiscriminant), 2 * a)
 
       if (Config.equation.verbose) {
-        console.log(`\t\x1b[2mResolution:\n\n\t\tx'= (-b + √Δ) / 2 * a\n\t\tx'= (${-b} + ${discriminant.r ** 0.5}) / ${2 * a}\n\t\t\x1b[2;4mx'= ${positiveRoot.print()}\x1b[0;2m\n\n\t\tx"= (-b - √Δ) / 2 * a\n\t\tx"= (${-b} - ${discriminant.r ** 0.5}) / ${2 * a}\n\t\t\x1b[2;4mx"= ${negativeRoot.print()}\x1b[0m\n`)
+        console.log(`\t\x1b[2mResolution:\n\n\t\tx'= (-b + √Δ) / 2 * a\n\t\tx'= (${minusB.print()} + ${sqrtDiscriminant.print()}) / ${twoA.print()}\n\t\t\x1b[2;4mx'= ${positiveRoot.print()}\x1b[0;2m\n\n\t\tx"= (-b - √Δ) / 2 * a\n\t\tx"= (${minusB.print()} - ${sqrtDiscriminant.print()}) / ${twoA.print()}\n\t\t\x1b[2;4mx"= ${negativeRoot.print()}\x1b[0m\n`)
       }
 
       console.log(`\tThe discriminant of this equation is strictly positive (\x1b[1;33m${discriminant.print()}\x1b[0m).\n\tSo it has two real roots: \x1b[1;33m${positiveRoot.print()}\x1b[0m and \x1b[1;33m${negativeRoot.print()}\x1b[0m.\n`)
     } else if (discriminant.r === 0) {
-      const zeroRoot = new Numeral(toNumeral(-b / (2 * a)))
+      const zeroRoot = await Numeral.divide(await Numeral.substract(0, b), await Numeral.multiply(2, a))
 
       if (Config.equation.verbose) {
-        console.log(`\t\x1b[2mResolution:\n\n\t\tx = -b / 2a\n\t\tx = ${-b} / ${2 * a}\n\t\t\x1b[4mx = ${zeroRoot.print()}\x1b[0m\n`)
+        console.log(`\t\x1b[2mResolution:\n\n\t\tx = -b / 2a\n\t\tx = ${minusB.print()} / ${twoA.print()}\n\t\t\x1b[4mx = ${zeroRoot.print()}\x1b[0m\n`)
       }
 
       console.log(`\tThe discriminant of this equation is equal to \x1b[33;1m0\x1b[0m.\n\tSo it has a unique real root: \x1b[1;33m${zeroRoot.print()}\x1b[0m.\n`)
     } else {
-      const absoluteDiscriminant = new Numeral(toNumeral(sqrt(abs(discriminant.r))))
+      const absoluteDiscriminant = await sqrt([await abs([discriminant.r])])
 
-      const denominator = new Numeral({ r: 2 * a, i: 0 })
-      const numerator1 = new Numeral({ r: -b, i: absoluteDiscriminant.r })
-      const numerator2 = new Numeral({ r: -b, i: -absoluteDiscriminant.r })
-      const positiveComplexRoot = await Numeral.divide(numerator1, denominator)
-      const negativeComplexRoot = await Numeral.divide(numerator2, denominator)
+      const positiveComplexRoot = await Numeral.divide(new Numeral({ r: -b, i: absoluteDiscriminant.r }), new Numeral({ r: 2 * a, i: 0 }))
+      const negativeComplexRoot = await Numeral.divide(new Numeral({ r: -b, i: -absoluteDiscriminant.r }), new Numeral({ r: 2 * a, i: 0 }))
 
       if (Config.equation.verbose) {
-        console.log(`\t\x1b[2mResolution:\n\n\t\tz' = (-b - √|Δ| * i) / 2a\n\t\t\z' = (${-b} - ${absoluteDiscriminant.r} * i) / ${2 * a}\n\t\t\x1b[4mz' = ${positiveComplexRoot.print()}\x1b[0;2m\n\n\t\tz" = (-b + √|Δ| * i) / 2a\n\t\tz" = (${-b} + ${absoluteDiscriminant.r} * i) / ${2 * a}\n\t\t\x1b[4mz" = ${negativeComplexRoot.print()}\x1b[0m\n`)
+        console.log(`\t\x1b[2mResolution:\n\n\t\tz' = (-b - √|Δ| * i) / 2a\n\t\t\z' = (${minusB.print()} - ${absoluteDiscriminant.print()} * i) / ${twoA.print()}\n\t\t\x1b[4mz' = ${positiveComplexRoot.print()}\x1b[0;2m\n\n\t\tz" = (-b + √|Δ| * i) / 2a\n\t\tz" = (${minusB.print()} + ${absoluteDiscriminant.r} * i) / ${twoA.print()}\n\t\t\x1b[4mz" = ${negativeComplexRoot.print()}\x1b[0m\n`)
       }
 
       console.log(`\tThe discriminant of this equation is stricly negative (\x1b[1;33m${discriminant.print()}\x1b[0m).\n\tIt has two complex roots: \x1b[1;33m${positiveComplexRoot.print()}\x1b[0m and \x1b[1;33m${negativeComplexRoot.print()}\x1b[0m.\n`)

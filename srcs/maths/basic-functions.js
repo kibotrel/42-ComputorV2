@@ -20,7 +20,7 @@ const remainder = ({ dividend, divisor }) => {
   if (dividend < 0 === divisor < 0) {
     return dividend % divisor
   } else {
-    dividend = abs(dividend)
+    dividend = dividend > 0 ? dividend : -dividend
 
     let nextFactor = 0
     while(nextFactor < dividend) {
@@ -29,10 +29,6 @@ const remainder = ({ dividend, divisor }) => {
 
     return nextFactor - dividend
   }
-}
-
-const abs = (a) => {
-  return a > 0 ? a : -a
 }
 
 const floor = (number) => {
@@ -45,4 +41,4 @@ const floor = (number) => {
   }
 }
 
-module.exports = { leastCommonFactor, greatestCommonDivisor, remainder, abs, floor }
+module.exports = { leastCommonFactor, greatestCommonDivisor, remainder, floor }

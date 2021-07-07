@@ -1,4 +1,6 @@
-const { remainder, abs, floor } = require('@srcs/maths/basic-functions.js')
+const { abs } = require('@builtin/algebraic.js')
+
+const { remainder, floor } = require('@srcs/maths/basic-functions.js')
 const { addFraction, multiplyFraction, divideFraction, modulusFraction } = require('@srcs/maths/fractions.js')
 const { checkNumeral, toNumeral, numeralFractionalParts } = require('@srcs/maths/utils.js')
 
@@ -183,11 +185,11 @@ class Numeral {
           i: 0
         })
       } else {
-        const power = abs(B.r)
+        const power = await abs([B.r])
 
         let value = A
 
-        for (let i = 1; i < power; i++) {
+        for (let i = 1; i < power.r; i++) {
           value = await Numeral.multiply(value, A)
         }
 
@@ -250,7 +252,7 @@ class Numeral {
         }
 
         if (this.i) {
-          printedString += Number.isInteger(imaginary) ? `${imaginary}i` : `(${abs(this.ni)} / ${this.di})i`
+          printedString += Number.isInteger(imaginary) ? `${imaginary}i` : `(${this.ni >= 0 ? this.ni : -this.ni} / ${this.di})i`
         }
       }
 
