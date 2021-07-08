@@ -242,7 +242,7 @@ class Numeral {
         }
       } else {
         if (this.r) {
-          printedString += Number.isInteger(real) ? real : `${this.nr}/${this.dr}`
+          printedString += Number.isInteger(real) ? real : `${this.nr} / ${this.dr}`
         }
 
         if (this.r && this.i) {
