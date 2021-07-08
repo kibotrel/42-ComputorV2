@@ -60,11 +60,20 @@ const printConstant = (c) => {
   }
 }
 
-const printLinear = (b, c) => {
-  const root = new Numeral(toNumeral(-c / b))
+const printLinear = async (b, c) => {
+  b = new Numeral(toNumeral(b))
+  c = new Numeral(toNumeral(c))
+  
+  const minusC = await Numeral.substract(0, c)
+  const root = await Numeral.divide(minusC, b)
+
+  console.log('\n\x1b[1;4mSolution:\x1b[0m\n')
 
   if (Config.equation.verbose) {
-    console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${b}, b = ${c}\n\n\tResolution:\n\n\t\tx = -a / b\n\t\tx = ${-c} / ${b}\n\t\t\x1b[4mx = ${root.print()}\n\x1b[0m`)
+    console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${b.print()}\x1b[2m, b = ${c.print()}\x1b[2m\n`)
+    console.log('\tResolution:\n\n\t\tx = -b / a')
+    console.log(`\t\tx = ${Config.number.fractionForm && !Number.isInteger(minusC.r) ? `(${minusC.print()}\x1b[2m)` : minusC.print()}\x1b[2m / ${Config.number.fractionForm && !Number.isInteger(b.r) ? `(${b.print()}\x1b[2m)` : b.print()}`)
+    console.log(`\t\t\x1b[4m\x1b[2mx = ${root.print()}\n\x1b[0m`)
   }
 
   console.log(`\tThe solution to this equation is \x1b[1;33m${root.print()}\x1b[0m.\n`)

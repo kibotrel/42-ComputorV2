@@ -46,7 +46,7 @@ module.exports = async (equation) => {
 
       switch (degree) {
         case 0: printConstant(c); break
-        case 1: printLinear(b, c); break
+        case 1: await printLinear(b, c); break
         case 2: await printQuadratic(a, b, c); break
       }
     }
