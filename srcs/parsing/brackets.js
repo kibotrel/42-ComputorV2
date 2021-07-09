@@ -77,7 +77,6 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
             if (factor.length === 1 && factor.match(/[+\-]/)) {
               factor = `${factor}1`
             }
-          
             infixStack.push('(', factor, '*', variableName, ')')
           } else {
             infixStack.push(variableName)

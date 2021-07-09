@@ -1,3 +1,5 @@
+const { isValidBuiltin } = require('@env/utils.js')
+
 const { leftBracket, rightBracket } = require('@srcs/parsing/brackets.js')
 const { number, decimal, variable } = require('@srcs/parsing/operands.js')
 const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck, updateFlags, isFunction, isNumber, isVariable, isSyntax, isComposite, compositeParts } = require('@srcs/parsing/utils.js')
@@ -15,7 +17,7 @@ const sanitizeStack = async (infixStack) => {
     for (const token of infixStack) {
       if (isSyntax(token)) {
         finalStack.push(token)
-      } else if (isNumber(token) || isVariable(token) || isFunction(token)) {
+      } else if (isNumber(token) || isVariable(token) || isFunction(token) || isValidBuiltin(token)) {
         if (finalStack[finalStack.length - 1] === ')') {
           finalStack.push('*')
         }
@@ -28,7 +30,7 @@ const sanitizeStack = async (infixStack) => {
           finalStack.push('*')
         }
 
-        if (isVariable(variableName) || isFunction(variableName)) {
+        if (isVariable(variableName) || isFunction(variableName) || isValidBuiltin(variableName)) {
           finalStack.push('(', factor, '*', variableName, ')')
         } else {
           throw { data: token, code: 'illegalTerm' }
