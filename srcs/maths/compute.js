@@ -67,6 +67,8 @@ const checkLastElement = async (token) => {
         return parseImaginary(token)
       } else if ((token.match(/^[+\-]?[a-z]+$/) || []).length > 0) {
         return await computeVariable(token, 'Variable')
+      } else if (isValidBuiltin(token)) {
+        return await builtinHandler(token)
       } else if (isFunction(token)) {
         return await computeVariable(token, 'Function')
       } else {

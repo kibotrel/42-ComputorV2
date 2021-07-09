@@ -35,6 +35,8 @@ module.exports = async (input) => {
         value = await ln(arguments); break
       case 'log':
         value = await log(arguments); break
+      default:
+        throw { data: { name, arguments }, code: 'unknownFunction' }
     }
 
     if (sign < 0) {

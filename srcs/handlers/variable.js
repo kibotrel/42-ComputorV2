@@ -1,7 +1,5 @@
 const { Variables } = global
 
-const builtinHandler = require('@handlers/built-in.js')
-
 const { isVariableRegistered, isValidBuiltin } = require('@env/utils.js')
 
 const { numeralValue } = require('@srcs/maths/compute.js')

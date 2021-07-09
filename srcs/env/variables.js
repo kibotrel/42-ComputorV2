@@ -1,4 +1,4 @@
-const { isVariableRegistered, sanitizeName } = require('@env/utils.js')
+const { isVariableRegistered, sanitizeName, isValidBuiltin } = require('@env/utils.js')
 
 const { numeralValue } = require('@srcs/maths/compute.js')
 
@@ -16,7 +16,11 @@ const computeVariable = async (token, type) => {
     const variable = isVariableRegistered(variableName)
 
     if (!variable) {
-      throw { data: variableName, code: `unknown${type}` }
+      if (type === 'Function' && isValidBuiltin(token)) {
+        return await builtinHandler(token)
+      } else {
+        throw { data: token, code: `unknown${type}` }
+      }
     }
 
     if (type === 'Variable' && variable.constructor.name !== 'Numeral' || type === 'Function' && variable.constructor.name !== 'Expression') {

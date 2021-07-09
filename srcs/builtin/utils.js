@@ -1,3 +1,5 @@
+const { isValidBuiltin } = require('@env/utils.js')
+
 const { numeralValue } = require('@srcs/maths/compute.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
 
@@ -11,7 +13,11 @@ const sanitizeArguments = async ({ arguments, name, amount }) => {
     
     for (const argument of arguments) {
       if (argument.constructor.name === 'String') {
-        sanitizedArguments.push(await numeralValue(argument))
+        if (isValidBuiltin(argument)) {
+          sanitizedArguments.push(await builtinHandler(argument))
+        } else {
+          sanitizedArguments.push(await numeralValue(argument))
+        }
       } else {
         sanitizedArguments.push(new Numeral(toNumeral(argument)))
       }

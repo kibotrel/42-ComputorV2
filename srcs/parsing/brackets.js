@@ -69,7 +69,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
 
           variableName = `${variableName}${functionArguments}`
 
-          if (!isFunction(variableName)) {
+          if (!isFunction(variableName) && !isValidBuiltin(variableName)) {
             throw { data: variableName, code: 'illegalFunction'}
           }
 
