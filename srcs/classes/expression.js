@@ -4,7 +4,7 @@ const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
-const { isFunction, isVariable, isComposite } = require('@srcs/parsing/utils.js')
+const { isFunction, isVariable, isComposite, compositeParts } = require('@srcs/parsing/utils.js')
 
 const computeBuiltin = async (token, expression, variables) => {
   try {
@@ -88,7 +88,7 @@ const computeNestedExpression = async (token, expression, variables) => {
 }
 
 const prettifyParameter = (parameter) => {
-  if (isFunction(parameter) || (isComposite(parameter) && !isVariable(parameter))) {
+  if (isFunction(parameter) || (isComposite(parameter) && !parameter.match(/^[+\-]?\d+(\.\d+)?[a-z]+$/))) {
     const name = parameter.substring(0, parameter.indexOf('('))
     const variables = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')).split(',')
     for (let i = 0; i < variables.length; i++) {
@@ -97,7 +97,22 @@ const prettifyParameter = (parameter) => {
 
     return `\x1b[32;1m${name}\x1b[0;1m(${variables.join(', ')}\x1b[0;1m)`
   } else {
-    return `\x1b[33m${parameter}\x1b[0;1m`
+    let factor = 0
+    let variableName = parameter
+    if (isComposite(parameter)) {
+      const parts = compositeParts(parameter)
+
+      factor = parts.factor
+      variableName = parts.variableName
+    }
+
+    if (factor) {
+      parameter = [factor, '*', variableName]
+    } else {
+      parameter = [variableName]
+    }
+
+    return `\x1b[33m${parameter.join('')}\x1b[0;1m`
   }
 }
 
