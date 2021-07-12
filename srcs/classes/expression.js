@@ -25,10 +25,10 @@ const computeBuiltin = async (token, expression, variables) => {
           } else if (variable.constructor.name === 'Numeral') {
             const { r: real, i: imaginary } = variable
 
-            argumentStack[i] = `${real ? real : ''}${imaginary ? imaginary > 0 ? `+${imaginary}i` : `${imaginary}i` : ''}`
+            argumentStack[j] = `${real ? real : ''}${imaginary ? imaginary > 0 ? `+${imaginary}i` : `${imaginary}i` : ''}`
 
-            if (!argumentStack[i].length) {
-              argumentStack[i] = '0'
+            if (!argumentStack[j].length) {
+              argumentStack[j] = '0'
             }
           } else {
             throw { data: variable, code: 'incorrectDataType' }
