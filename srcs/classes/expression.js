@@ -4,7 +4,7 @@ const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
-const { isFunction, isVariable } = require('@srcs/parsing/utils.js')
+const { isFunction, isVariable, isComposite } = require('@srcs/parsing/utils.js')
 
 const computeBuiltin = async (token, expression, variables) => {
   try {
@@ -62,12 +62,16 @@ const computeNestedExpression = async (token, expression, variables) => {
     const args = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
 
     for (let i = 0; i < args.length; i++) {
-      const variableIndex = expression.variables.indexOf(args[i])
-
-      if (variableIndex < 0 && !args[i].match(/^[+\-]?i$/) && isVariable(args[i])) {
-        throw { data: args[i], code: 'illegalParameter'}
-      } else if (variableIndex >= 0) {
-        args[i] = variables[variableIndex]
+      if (isFunction(args[i]) || (isComposite(args[i]) && !isVariable(args[i]))) {
+        args[i] = await computeNestedExpression(args[i], expression, variables)
+      } else {
+        const variableIndex = expression.variables.indexOf(args[i])
+        
+        if (variableIndex < 0 && !args[i].match(/^[+\-]?i$/) && isVariable(args[i])) {
+          throw { data: args[i], code: 'illegalParameter'}
+        } else if (variableIndex >= 0) {
+          args[i] = variables[variableIndex]
+        }
       }
     }
 
@@ -84,7 +88,7 @@ const computeNestedExpression = async (token, expression, variables) => {
 }
 
 const prettifyParameter = (parameter) => {
-  if (isFunction(parameter)) {
+  if (isFunction(parameter) || (isComposite(parameter) && !isVariable(parameter))) {
     const name = parameter.substring(0, parameter.indexOf('('))
     const variables = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')).split(',')
     for (let i = 0; i < variables.length; i++) {
@@ -114,7 +118,7 @@ class Expression {
 
         if (variableIndex >= 0) {
           infixStack.push(variables[variableIndex])
-        } else if (isFunction(definition[i])) {
+        } else if (isFunction(definition[i]) || isComposite(definition[i])) {
           const functionImage = await computeNestedExpression(definition[i], expression, variables)
 
           infixStack.push(functionImage)
@@ -141,7 +145,7 @@ class Expression {
     for (let i = 0; i < this.definition.length; i++) {
       if (!this.definition[i].match(/^[+\-\*\/%\^\(\)]$/) && this.definition[i].match(/^[+\-]?[a-z]+$|^[+\-]?[0-9\.]+$/)) {
         definitionStack.push(`\x1b[33m${this.definition[i]}\x1b[0;1m`)
-      } else if (isFunction(this.definition[i])) {
+      } else if (isFunction(this.definition[i]) || isComposite(this.definition[i])) {
         const name = this.definition[i].substring(0, this.definition[i].indexOf('('))
         const variables = this.definition[i].substring(this.definition[i].indexOf('(') + 1, this.definition[i].lastIndexOf(')')).split(',')
 

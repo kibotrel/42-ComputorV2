@@ -30,8 +30,15 @@ const sanitizeStack = async (infixStack) => {
           finalStack.push('*')
         }
 
-        if (isVariable(variableName) || isFunction(variableName) || isValidBuiltin(variableName)) {
-          finalStack.push('(', factor, '*', variableName, ')')
+        if (isVariable(variableName) || isFunction(variableName) || isValidBuiltin(variableName) || isComposite(variableName)) {
+          if (factor) {
+            if (factor.length === 1 && factor.match(/[+\-]/)) {
+              factor = `${factor}1`
+            }
+            finalStack.push('(', factor, '*', variableName, ')')
+          } else {
+            finalStack.push(variableName)
+          }
         } else {
           throw { data: token, code: 'illegalTerm' }
         }
