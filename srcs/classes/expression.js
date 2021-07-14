@@ -8,7 +8,7 @@ const { isFunction, isVariable, isComposite, compositeParts } = require('@srcs/p
 
 const computeBuiltin = async (token, expression, variables) => {
   try {
-    const name =  token.substring(0, token.indexOf('('))
+    const name = token.substring(0, token.indexOf('('))
     const args = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
 
     for (let i = 0; i < args.length; i++) {
@@ -88,7 +88,7 @@ const computeNestedExpression = async (token, expression, variables) => {
 }
 
 const prettifyParameter = (parameter) => {
-  if (isFunction(parameter) || (isComposite(parameter) && !parameter.match(/^[+\-]?\d+(\.\d+)?[a-z]+$/))) {
+  if (isFunction(parameter) || (isComposite(parameter) && !parameter.match(/^[+\-]?\d+(\.\d+)?[a-z]+$/) && !isVariable(parameter))) {
     const name = parameter.substring(0, parameter.indexOf('('))
     const variables = parameter.substring(parameter.indexOf('(') + 1, parameter.lastIndexOf(')')).split(',')
     for (let i = 0; i < variables.length; i++) {
@@ -107,13 +107,45 @@ const prettifyParameter = (parameter) => {
     }
 
     if (factor) {
-      parameter = [factor, '*', variableName]
+      return `\x1b[33m${factor}\x1b[0;1m * \x1b[33m ${variableName}\x1b[0;1m`
     } else {
-      parameter = [variableName]
+      return `${prettifyExpression(variableName.split(/([+\-*/%^])/g))}`
     }
-
-    return `\x1b[33m${parameter.join('')}\x1b[0;1m`
   }
+}
+
+const prettifyExpression = (expression) => {
+  const stack = []
+
+  for (let i = 0; i < expression.length; i++) {
+    if (!expression[i].match(/^[+\-\*\/%\^\(\)]$/) && expression[i].match(/^[+\-]?[a-z]+$|^[+\-]?[0-9\.]+$/)) {
+      stack.push(`\x1b[33m${expression[i]}\x1b[0;1m`)
+    } else if (isFunction(expression[i]) || isComposite(expression[i])) {
+      const name = expression[i].substring(0, expression[i].indexOf('('))
+      const variables = expression[i].substring(expression[i].indexOf('(') + 1, expression[i].lastIndexOf(')')).split(',')
+
+      for (let i = 0; i < variables.length; i++) {
+        variables[i] = prettifyParameter(variables[i])
+      }
+      
+      stack.push(`\x1b[32;1m${name}\x1b[0;1m(${variables.join(', ')}\x1b[0;1m)`)
+    } else {
+      stack.push(expression[i])
+    }
+  }
+
+  let prettyString = stack.join(' ')
+
+  // Removes space after left bracket and before right bracket to make the
+  // output prettier.
+
+  for (let i = 0; i < prettyString.length; i++) {
+    if (prettyString[i] === ' ' && (prettyString[i - 1] === '(' || prettyString[i + 1] === ')')) {
+      prettyString = prettyString.slice(0, i) + prettyString.slice(i + 1, prettyString.length)
+    }
+  }
+
+  return prettyString
 }
 
 class Expression {
@@ -152,38 +184,7 @@ class Expression {
   }
 
   print() {
-    const definitionStack = []
-
-    // Turns variables and numeral values in bold yellow and Expressions
-    // in bold green.
-
-    for (let i = 0; i < this.definition.length; i++) {
-      if (!this.definition[i].match(/^[+\-\*\/%\^\(\)]$/) && this.definition[i].match(/^[+\-]?[a-z]+$|^[+\-]?[0-9\.]+$/)) {
-        definitionStack.push(`\x1b[33m${this.definition[i]}\x1b[0;1m`)
-      } else if (isFunction(this.definition[i]) || isComposite(this.definition[i])) {
-        const name = this.definition[i].substring(0, this.definition[i].indexOf('('))
-        const variables = this.definition[i].substring(this.definition[i].indexOf('(') + 1, this.definition[i].lastIndexOf(')')).split(',')
-
-        for (let i = 0; i < variables.length; i++) {
-          variables[i] = prettifyParameter(variables[i])
-        }
-        
-        definitionStack.push(`\x1b[32;1m${name}\x1b[0;1m(${variables.join(', ')}\x1b[0;1m)`)
-      } else {
-        definitionStack.push(this.definition[i])
-      }
-    }
-  
-    let expression = definitionStack.join(' ')
-
-    // Removes space after left bracket and before right bracket to make the
-    // output prettier.
-
-    for (let i = 0; i < expression.length; i++) {
-      if (expression[i] === ' ' && (expression[i - 1] === '(' || expression[i + 1] === ')')) {
-        expression = expression.slice(0, i) + expression.slice(i + 1, expression.length)
-      }
-    }
+    const expression = prettifyExpression(this.definition)
 
     return `\x1b[32;1m${this.name}\x1b[0;1m(\x1b[33m${this.variables.join('\x1b[0;1m, \x1b[33m')}\x1b[0;1m) = ${expression}\x1b[0m`
   }
