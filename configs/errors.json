@@ -134,5 +134,9 @@
   {
     "code": "builtinNotHandledOperation",
     "message": ""
+  },
+  {
+    "code": "matrixWrongDimensions",
+    "message": ""
   }
 ]
