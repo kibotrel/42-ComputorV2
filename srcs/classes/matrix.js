@@ -57,6 +57,51 @@ class Matrix {
     }
   }
 
+  static async multiply(a, b) {
+    try {
+      const newArray = []
+
+      if (a.constructor.name !== b.constructor.name) {
+        const factor = (a.constructor.name === 'Matrix' ? b : a)
+        const matrix = (a.constructor.name === 'Matrix' ? a : b)
+        const { rows, columns } = (a.constructor.name === 'Matrix' ? a : b)
+
+        for (let i = 0; i < rows; i++) {
+          const newRow = []
+
+          for (let j = 0; j < columns; j++) {
+            newRow.push(await Numeral.multiply(factor, matrix.values[i][j]))
+          }
+
+          newArray.push(newRow)
+        }
+      } else {
+        if (a.columns !== b.rows) {
+          throw { data: { a, b }, code: 'matrixWrongDimensions' }
+        }
+
+        for (let i = 0; i < a.rows; i++) {
+          const newRow = []
+
+          for (let j = 0; j < b.columns; j++) {
+            let value = 0
+
+            for (let k = 0; k < b.rows; k++) {
+              value = await Numeral.add(value, await Numeral.multiply(a.values[i][k], b.values[k][j]))
+            }
+
+            newRow.push(value)
+          }
+          newArray.push(newRow)
+        }
+      }
+  
+      return new Matrix(newArray)
+    } catch (error) {
+      return Promise.reject(error)
+    }
+  }
+
   print() {
     const array = []
 
