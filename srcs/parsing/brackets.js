@@ -94,7 +94,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
     }
 
     if (i !== 0 && string[i - 1] === '.') {
-      throw { data: string, code: 'invalidLeftBracket', index: i }
+      throw new ComputorError({ data: { string, index: i }, code: 'invalidLeftBracket' })
     }
 
     infixStack.push('(')
@@ -110,7 +110,7 @@ const rightBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
     const lastElement = bracketStack.pop()
 
     if (lastElement === undefined || flags.operator || (i !== 0 && flags.decimal && string[i - 1] === '.')) {
-      throw { data: string, code: 'invalidRightBracket', index: i }
+      throw  new ComputorError({ data: { string, index: i }, code: 'invalidRightBracket' })
     } else if (!flags.number && !flags.complex && !flags.variable && string[i - 1] !== ')') {
       throw { data: string, code: 'bracketsNotUsed', index: i }
     } else if (flags.numberStart !== -1) {

@@ -11,12 +11,12 @@ const sanitizeOperand = async (operand) => {
         trueOperand = parseFloat(operand)
 
         if (trueOperand === Number.NEGATIVE_INFINITY || trueOperand === Number.POSITIVE_INFINITY) {
-          throw { data: operand, code: 'tooBigNumber' }
+          throw new ComputorError({ data: { operand }, code: 'tooBigNumber' })
         } else if (Number.isNaN(trueOperand)) {
           if (isValidBuiltin(operand)) {
             return await builtinHandler(operand)
           }
-          throw { data: operand, code: 'notNumber' }
+          throw new ComputorError({ data: { operand }, code: 'notNumber' })
         }
       }
     } else if (operand.constructor.name === 'Numeral') {

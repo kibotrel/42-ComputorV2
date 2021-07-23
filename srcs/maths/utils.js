@@ -1,16 +1,12 @@
 const { decimalToIntegerScaling, simplifyFraction } = require('@srcs/maths/fractions.js')
 
-const checkNumeral = async (numeral, operator) => {
+const checkNumeral = async (numeral) => {
   try {
-    if (numeral === undefined) {
-      throw { data: operator, code: 'invalidOperation' }
-    } else {
-      for (const property in numeral) {
-        if (numeral[property] === Number.NEGATIVE_INFINITY || numeral[property] === Number.POSITIVE_INFINITY) {
-          throw { data: { numeral, faultyProperty: property }, code: 'tooBigNumber' }
-        } else if (Number.isNaN(numeral[property])) {
-          throw { data: { numeral, faultyProperty: property }, code: 'notNumber' }
-        }
+    for (const property in numeral) {
+      if (numeral[property] === Number.NEGATIVE_INFINITY || numeral[property] === Number.POSITIVE_INFINITY) {
+        throw new ComputorError({ data: { operand: property }, code: 'tooBigNumber' })
+      } else if (Number.isNaN(numeral[property])) {
+        throw new ComputorError({ data: { operand: property }, code: 'notNumber' })
       }
     }
 

@@ -20,7 +20,7 @@ const decimal = async ({ string, i }, flags) => {
     if (flags.complex || flags.variable) {
       throw { data: string, code: 'illegalTerm', index: i }
     } else if (!flags.number || flags.decimal) {
-      throw { data: string, code: 'misformattedFloat', index: i }
+      throw new ComputorError({ data: { string, index: i }, code: 'misformattedFloat' })
     }
 
     flags.decimal = true

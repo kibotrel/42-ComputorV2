@@ -13,9 +13,9 @@ const isVariableBeforeOperator = ({string, i}, flags, infixStack) => {
 const operatorErrors = async ({ string, i }, flags) => {
   try {
     if (flags.operator || (string[i].match(/[*\/%^]/) && (i === 0 || flags.number))) {
-      throw { data: string, code: 'invalidOperatorPosition', index: i }
+      throw new ComputorError({ data: { string, index: i }, code: 'invalidOperatorPosition' })
     } else if (string[i].match(/[+\-*\/%^]/) && flags.decimal && !string[i - 1].match(/\d|i/)) {
-      throw { data: string, code: 'misformattedFloat', index: i - 1 }
+      throw new ComputorError({ data: { string, index: i - 1 }, code: 'misformattedFloat' })
     }
   } catch (error) {
     return Promise.reject(error)

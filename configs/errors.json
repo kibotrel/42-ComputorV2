@@ -1,47 +1,43 @@
  [
   {
     "code": "invalidLeftBracket",
-    "message": ""
+    "message": "\tIllegal left bracket found at index {{ index }} in '{{ string }}'.'"
   },
   {
     "code": "invalidRightBracket",
-    "message": ""
+    "message": "\tIllegal right bracket found at index {{ index }} in '{{ string }}'."
   },
   {
     "code": "invalidBracketEnclosure",
-    "message": ""
+    "message": "\tMissing bracket(s) detected in '{{ string }}'."
   },
   {
     "code": "invalidOperatorPosition",
-    "message": ""
+    "message": "\tIllegal operator found at index {{ index }} in '{{ string }}'."
   },
   {
     "code": "misformattedFloat",
-    "message": ""
+    "message": "\tIllegal character found during float parsing at index {{ index }} in '{{ string }}'"
   },
   {
     "code": "misformattedInteger",
-    "message": ""
+    "message": "\tIllegal character found during integer parsing at index {{ index }} in '{{ string }}'"
   },
   {
     "code": "tooBigNumber",
-    "message": ""
+    "message": "\tNumeric equivalent of '{{ operand }}' is too large to be handled by this program."
   },
   {
     "code": "notNumber",
-    "message": ""
-  },
-  {
-    "code": "invalidOperation",
-    "message": ""
+    "message": "\tNumeric equivalent of '{{ operand }}' is not computable."
   },
   {
     "code": "impossibleDivision",
-    "message": ""
+    "message": "\tFound an uncomputable division by {{ value }} during input evaluation."
   },
   {
     "code": "unsuportedOperation",
-    "message": ""
+    "message": "\tFound an unsupported operation during input evaluation.\n\tType '!help unsupportedOperation' for more details."
   },
   {
     "code": "badOperand",

@@ -25,11 +25,17 @@ global.Variables = []
 
 global.InputHistory = []
 
+// This class is used to record errors during program's
+// context.
+
+global.ComputorError = require('@classes/error.js')
+
 // Custom classes that are designated to handle math stuff
 // that is related to each one.
 
 global.Numeral = require('@classes/numeral.js')
 global.Expression = require('@classes/expression.js')
+global.Matrix = require('@classes/matrix.js')
 
 // Some usefull functions that are needed quite often.
 // Making them global helps to avoid circular dependencies
@@ -61,5 +67,4 @@ Client.on('line', async (payload) => {
   }
 
   Client.write('> ')
-}) 
-
+})

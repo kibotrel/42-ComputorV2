@@ -33,7 +33,7 @@ class Numeral {
         nr, dr, ni, di
       })
 
-      return await checkNumeral(result, '+')
+      return await checkNumeral(result)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -56,7 +56,7 @@ class Numeral {
         nr, dr, ni, di
       })
 
-      return await checkNumeral(result, '-')
+      return await checkNumeral(result)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -84,7 +84,7 @@ class Numeral {
         nr, dr, ni, di
       })
 
-      return await checkNumeral(result, '*')
+      return await checkNumeral(result)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -96,7 +96,7 @@ class Numeral {
       const B = toNumeral(b)
       
       if (B.r === 0 && B.i === 0) {
-        throw { data: { A, B, operator: '/' }, code: 'impossibleDivision' }
+        throw new ComputorError({ data: { value: 0 }, code: 'impossibleDivision' })
       }
 
       const { re: re1, im: im1 } = numeralFractionalParts(A)
@@ -125,7 +125,7 @@ class Numeral {
         nr, dr, ni, di
       })
 
-      return await checkNumeral(result, '/')
+      return await checkNumeral(result)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -160,7 +160,7 @@ class Numeral {
         nr, dr, ni, di
       })
 
-      return await checkNumeral(result, '%')
+      return await checkNumeral(result)
     } catch (error) {
       return Promise.reject(error)
     }
@@ -173,10 +173,8 @@ class Numeral {
       const A = toNumeral(a)
       const B = toNumeral(b)
 
-      // Will be implemented soon.
-
       if (B.i || Math.trunc(B.r) !== B.r) {
-        throw { data: { A, B, operator: '^' }, code: 'unsuportedOperation' }
+        throw new ComputorError({ code: 'unsuportedOperation' })
       }
 
       if (A.r === 0 && A.i === 0) {
@@ -205,7 +203,7 @@ class Numeral {
         })
       }
 
-      return await checkNumeral(result, '^')
+      return await checkNumeral(result)
     } catch (error) {
       return Promise.reject(error)
     }

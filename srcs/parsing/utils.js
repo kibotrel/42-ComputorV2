@@ -18,9 +18,9 @@ const updateFlags = ({ power, number, operator, decimal, sign, numberStart, comp
 const bracketsCheck = async (string, bracketStack) => {
   try {
     if (bracketStack.length > 0) {
-      throw { data: string, code: 'invalidBracketEnclosure', index : string.length - 1 }
+      throw new ComputorError({ data: { string }, code: 'invalidBracketEnclosure' })
     } else if (!string[string.length - 1].match(/\d/) && string.length > 1 && string[string.length - 2] === '.') {
-      throw { data: string, code: 'misformattedFloat', index: string.length - 1 }
+      throw new ComputorError({ data: { string, index: string.length - 1 }, code: 'misformattedFloat' })
     }
   } catch (error) {
     return Promise.reject(error)
@@ -52,9 +52,9 @@ const imaginaryCheck = async ({ string, flags }, infixStack) => {
 const formatCheck = async (string) => {
   try {
     if (string[string.length - 1] === '.') {
-      throw { data: string, code: 'misformattedFloat', index: string.length - 1 }
+      throw new ComputorError({ data: { string, index: string.length - 1 }, code: 'misformattedFloat' })
     } else if (string[string.length - 1].match(/[\-+*%\/^]/)) {
-      throw { data: string, code: 'invalidOperatorPosition', index: string.length - 1 }
+      throw new ComputorError({ data: { string, index: string.length - 1 }, code: 'invalidOperatorPosition' })
     }
   } catch (error) {
     return Promise.reject(error)
@@ -65,7 +65,7 @@ const digitsCheck = async ({ string, flags }, infixStack) => {
   try {
     if (string[string.length - 1].match(/\d/)) {
       if (string.length > 1 && infixStack[infixStack.length - 1] === ')') {
-        throw { data: string, code: 'misformattedInteger', index: string.length - 1 }
+        throw new ComputorError({ data: { string, index: string.length - 1 }, code: 'misformattedInteger' })
       }
 
       if (flags.numberStart > -1) {
