@@ -17,13 +17,13 @@ module.exports = (argumentsList) => {
     const [ setting, value ] = argumentsList
 
     if (Config.env.protectedSettings.indexOf(setting) >= 0) {
-      throw { data: setting, code: 'protectedSetting' }
+      throw new ComputorError({ data: { setting }, code: 'protectedSetting' })
     }
 
     const [ section, property ] = setting.split('.')
 
     if (section === undefined || property === undefined) {
-      throw { data: setting, code: 'unknownSetting' }
+      throw new ComputorError({ data: { setting }, code: 'unknownSetting' })
     }
 
     for (const configSection of Object.keys(Config)) {
@@ -40,7 +40,7 @@ module.exports = (argumentsList) => {
                 
                 return
               } else {
-                throw { data: { setting, value }, code: 'inccorectSettingType' }
+                throw new ComputorError({ data: { setting }, code: 'incorrectSettingType' })
               }
             } else if (dataType === 'boolean') {
               if (isValidBoolean(value)) {
@@ -50,7 +50,7 @@ module.exports = (argumentsList) => {
                 
                 return
               } else {
-                throw { data: { setting, value }, code: 'inccorectSettingType' }
+                throw new ComputorError({ data: { setting }, code: 'incorrectSettingType' })
               }
             }
           }
@@ -58,7 +58,7 @@ module.exports = (argumentsList) => {
       }
     }
 
-    throw { data: value, code: 'unknownSetting' }
+    throw new ComputorError({ data: { setting: value }, code: 'unknownSetting' })
   } catch (error) {
     return Promise.reject(error)
   }

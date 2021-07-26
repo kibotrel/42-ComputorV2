@@ -23,8 +23,10 @@ const computeVariable = async (token, type) => {
       }
     }
 
-    if (type === 'Variable' && variable.constructor.name !== 'Numeral' || type === 'Function' && variable.constructor.name !== 'Expression') {
-      throw { data: token, code: 'incorrectDataType' }
+    if (type === 'Variable' && variable.constructor.name !== 'Numeral') {
+      throw new ComputorError({ data: { variable: variableName, expected: 'Numeral', found: variable.constructor.name }, code: 'incorrectDataType' })
+    } else if (type === 'Function' && variable.constructor.name !== 'Expression') {
+      throw new ComputorError({ data: { variable: variableName, expected: 'Expression', found: variable.constructor.name }, code: 'incorrectDataType' })
     }
 
     // Add Matrix constructor later
@@ -45,9 +47,9 @@ const computeVariable = async (token, type) => {
       }
 
       if (!arguments.length) {
-        throw { data: variable.name, code: 'EmptyFunction' }
+        throw new ComputorError({ code: 'EmptyExpression' })
       } else if (arguments.length !== func.variables.length) {
-        throw { data: { found: arguments.length, expected: func.variables.length }, code: 'missingParameters' }
+        throw new ComputorError({ data: { name: func.name, found: arguments.length, expected: func.variables.length }, code: 'incorrectParameterAmount' })
       }
 
       for (const argument of arguments) {

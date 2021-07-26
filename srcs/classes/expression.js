@@ -1,4 +1,4 @@
-const { isVariableRegistered, isValidBuiltin } = require('@env/utils.js')
+const { isVariableRegistered, isValidBuiltin, sanitizeName } = require('@env/utils.js')
 
 const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
@@ -31,7 +31,7 @@ const computeBuiltin = async (token, expression, variables) => {
               argumentStack[j] = '0'
             }
           } else {
-            throw { data: variable, code: 'incorrectDataType' }
+            throw new ComputorError({ data: { variable: name, expected: ['Builtin', 'Numeral'], found: variable.constructor.name }, code: 'incorrectDataType' })
           }
         }
       }
@@ -49,12 +49,13 @@ const computeBuiltin = async (token, expression, variables) => {
 const computeNestedExpression = async (token, expression, variables) => {
   try {
     const func = isVariableRegistered(token)
+    const name = sanitizeName(token)
 
     if (!func || func.constructor.name !== 'Expression') {
       if (isValidBuiltin(token)) {
         return await computeBuiltin(token, expression, variables)
       } else {
-        throw { data: token, code: 'unknownFunction' }
+        throw new ComputorError({ data: { name }, code: 'unknownFunction' })
       }
     }
 
@@ -68,7 +69,7 @@ const computeNestedExpression = async (token, expression, variables) => {
         const variableIndex = expression.variables.indexOf(args[i])
         
         if (variableIndex < 0 && !args[i].match(/^[+\-]?i$/) && isVariable(args[i])) {
-          throw { data: args[i], code: 'illegalParameter'}
+          throw new ComputorError({ data: { parameter: args[i] }, code: 'illegalParameter' })
         } else if (variableIndex >= 0) {
           args[i] = variables[variableIndex]
         }

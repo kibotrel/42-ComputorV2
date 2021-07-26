@@ -21,7 +21,7 @@ const radian = async (arguments) => {
     const { [0]: x } = await sanitizeArguments({ arguments, name: 'rad', amount: 1 })
 
     if (x.i) {
-      throw { data: x, code: 'builtinNotHandledOperation' }
+      throw new ComputorError({ code: 'builtinNotHandledOperator' })
     } else {
       x.r %= 360
     }
@@ -39,7 +39,7 @@ const degree = async (arguments) => {
     const { [0]: x } = await sanitizeArguments({ arguments, name: 'deg', amount: 1 })
 
     if (x.i) {
-      throw { data: x, code: 'builtinNotHandledOperation' }
+      throw new ComputorError({ code: 'builtinNotHandledOperator' })
     } else {
       x.r %= (Math.PI * 2)
     }
@@ -61,7 +61,7 @@ const factorial = async (arguments) => {
     // More details => https://bit.ly/3hnuAml
 
     if (x.r < 0 || x.i || !Number.isInteger(x.r)) {
-      throw { data: x, code: 'builtinNotHandledOperation' }
+      throw new ComputorError({ code: 'builtinNotHandledOperator' })
     }
 
     // y = 1 * 2 * ... * x
@@ -87,7 +87,7 @@ const sqrt = async (arguments) => {
     const { [0]: x } = await sanitizeArguments({ arguments, name: 'sqrt', amount: 1 })
 
     if (x.i) {
-      throw { data: x, code: 'builtinNotHandledOperation' }
+      throw new ComputorError({ code: 'builtinNotHandledOperator' })
     }
 
     let y = 1

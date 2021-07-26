@@ -1,5 +1,3 @@
-const Numeral = require("./numeral")
-
 class Matrix {
   constructor(array) {
     this.values = array
@@ -10,7 +8,7 @@ class Matrix {
   static async add(a, b) {
     try {
       if (a.rows !== b.rows || a.columns !== b.columns) {
-        throw { data: { a, b }, code: 'matrixWrongDimensions' }
+        throw new ComputorError({ code: 'matrixWrongDimensions' })
       }
 
       const { rows, columns } = a
@@ -35,7 +33,7 @@ class Matrix {
   static async substract(a, b) {
     try {
       if (a.rows !== b.rows || a.columns !== b.columns) {
-        throw { data: { a, b }, code: 'matrixWrongDimensions' }
+        throw new ComputorError({ code: 'matrixWrongDimensions' })
       }
 
       const { rows, columns } = a
@@ -77,7 +75,7 @@ class Matrix {
         }
       } else {
         if (a.columns !== b.rows) {
-          throw { data: { a, b }, code: 'matrixWrongDimensions' }
+          throw new ComputorError({ code: 'matrixWrongDimensions' })
         }
 
         for (let i = 0; i < a.rows; i++) {

@@ -6,7 +6,7 @@ const { toNumeral } = require('@srcs/maths/utils.js')
 const sanitizeArguments = async ({ arguments, name, amount }) => {
   try {
     if (arguments.length !== amount) {
-      throw { data: { name, arguments }, code: 'missingParameters' }
+      throw new ComputorError({ data: { name, found: arguments.length, expected: amount }, code: 'incorrectParameterAmount' })
     }
 
     const sanitizedArguments = []

@@ -93,46 +93,46 @@
   },
   {
     "code": "unknownFunction",
-    "message": ""
+    "message": "Expression '{{ name }}' cannot be found within the program's context."
   },
   {
     "code": "incorrectDataType",
-    "message": ""
+    "message": "Invalid type requested for variable '{{ variable }}', expected {{ expected }} and found {{ found }}."
   },
   {
-    "code": "missingParameters",
-    "message": ""
+    "code": "incorrectParameterAmount",
+    "message": "\tDid not found the right amount of parameters for expression '{{ name }}', expected {{ expected }} and found {{ found }}. "
   },
   {
     "code": "illegalParameter",
-    "message": ""
+    "message": "\tExpression parameter '{{ parameter }}' is not handled by this program."
   },
   {
-    "code": "illegalFunction",
-    "message": ""
+    "code": "illegalExpression",
+    "message": "Expression '{{ expression }}' is not handled by this program."
   },
   {
-    "code": "emptyFunction",
-    "message": ""
+    "code": "emptyExpression",
+    "message": "\tFound an empty Expression during input evaluation."
   },
   {
     "code": "protectedSetting",
-    "message": ""
+    "message": "Tried to modify protected setting '{{ setting }}'.\n\tType '!help protectedSetting' for more details."
   },
   {
     "code": "unknownSetting",
-    "message": ""
+    "message": "\tSetting '{{ setting }}' not found in configuration.\n\tType '!config' to see available options."
   },
   {
-    "code": "inccorectSettingType",
-    "message": ""
+    "code": "incorrectSettingType",
+    "message": "\tIncorrect value type for setting '{{ setting }}'.\n\tType '!help incorrectSettingType' for more details."
   },
   {
-    "code": "builtinNotHandledOperation",
-    "message": ""
+    "code": "builtinNotHandledOperator",
+    "message": "\tCan't process built-in function with given input(s).\n\tType '!help builtinNotHandledOperator' for more details."
   },
   {
     "code": "matrixWrongDimensions",
-    "message": ""
+    "message": "\tMatrix dimensions do not fit operation requirements.\n\tType '!help matrixWrongDimensions' for more details."
   }
 ]

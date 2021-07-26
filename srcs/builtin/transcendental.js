@@ -105,7 +105,7 @@ const ln = async (arguments) => {
     const { [0]: x } = await sanitizeArguments({ arguments, name: 'ln', amount: 1 })
 
     if (x.i || x.r < 0) {
-      throw { data: x, code: 'builtinNotHandledOperation' }
+      throw new ComputorError({ code: 'builtinNotHandledOperator' })
     }
 
     const ratio = await Numeral.divide(await Numeral.substract(x, 1), await Numeral.add(x, 1))
@@ -133,7 +133,7 @@ const log = async (arguments) => {
     const { [0]: x } = await sanitizeArguments({ arguments, name: 'log', amount: 1 })
 
     if (x.i || x.r < 0) {
-      throw { data: x, code: 'builtinNotHandledOperation' }
+      throw new ComputorError({ code: 'builtinNotHandledOperator' })
     }
 
     let tmp = x

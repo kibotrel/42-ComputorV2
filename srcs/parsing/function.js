@@ -32,7 +32,9 @@ module.exports = async (prototype, definition) => {
         }
       } else if (isFunction(token)) {
         if (!isValidBuiltin(token) && !isVariableRegistered(token)) {
-          throw { data: token, code: 'unknownFunction' }
+          const name = sanitizeName(token)
+
+          throw new ComputorError({ data: { name }, code: 'unknownFunction' })
         } else if (sanitizeName(token) === functionName) {
           throw { data: functionName, code: 'cyclicDeclaration' }
         }
