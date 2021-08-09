@@ -1,7 +1,7 @@
  [
   {
     "code": "invalidLeftBracket",
-    "message": "\tIllegal left bracket found at index {{ index }} in '{{ string }}'.'"
+    "message": "\tIllegal left bracket found at index {{ index }} in '{{ string }}'."
   },
   {
     "code": "invalidRightBracket",
@@ -12,16 +12,28 @@
     "message": "\tMissing bracket(s) detected in '{{ string }}'."
   },
   {
+    "code": "bracketsNotUsed",
+    "message": "\tUnused set of brackets foundd at index {{ index }} in '{{ string }}'."
+  },
+  {
     "code": "invalidOperatorPosition",
     "message": "\tIllegal operator found at index {{ index }} in '{{ string }}'."
   },
   {
+    "code": "badInputFormat",
+    "message": "\tInput '{{ string }}' does not follow set format.\n\tType '!help badInputFormat' for more details."
+  },
+  {
+    "code": "badOperand",
+    "message": "\t'{{ operand }}' is not a valid operand."
+  },
+  {
     "code": "misformattedFloat",
-    "message": "\tIllegal character found during float parsing at index {{ index }} in '{{ string }}'"
+    "message": "\tIllegal character found during float parsing at index {{ index }} in '{{ string }}'."
   },
   {
     "code": "misformattedInteger",
-    "message": "\tIllegal character found during integer parsing at index {{ index }} in '{{ string }}'"
+    "message": "\tIllegal character found during integer parsing at index {{ index }} in '{{ string }}'."
   },
   {
     "code": "tooBigNumber",
@@ -32,64 +44,44 @@
     "message": "\tNumeric equivalent of '{{ operand }}' is not computable."
   },
   {
-    "code": "impossibleDivision",
-    "message": "\tFound an uncomputable division by {{ value }} during input evaluation."
-  },
-  {
-    "code": "unsuportedOperation",
+    "code": "unsupportedOperation",
     "message": "\tFound an unsupported operation during input evaluation.\n\tType '!help unsupportedOperation' for more details."
   },
   {
-    "code": "badOperand",
-    "message": ""
-  },
-  {
     "code": "illegalImaginary",
-    "message": ""
-  },
-  {
-    "code": "bracketsNotUsed",
-    "message": ""
-  },
-  {
-    "code": "impossibleModulo",
-    "message": ""
+    "message": "\tIllegal complex number found at index {{ index }} in '{{ string }}'."
   },
   {
     "code": "unrecognizedCommand",
-    "message": ""
+    "message": "\tCommand '{{ command }}' not handled by this program."
   },
   {
     "code": "unknownVariable",
-    "message": ""
-  },
-  {
-    "code": "badInputFormat",
-    "message": ""
+    "message": "\tVariable '{{ variable }}' not found within stored data."
   },
   {
     "code": "forbiddenVariableName",
-    "message": ""
+    "message": "\tVariable name '{{ name }}' is protected and not usable.\n\tType '!help forbiddenVariableName' for more details."
   },
   {
     "code": "invalidVariableFormat",
-    "message": ""
+    "message": "\tVariable name '{{ name }}' does not fit set format.\n\tType '!help invalidVariableFormat' for more details."
   },
   {
     "code": "repeatedVariableName",
-    "message": ""
+    "message": "\tExpression parameter '{{ variable }}' used more than once in prototype."
   },
   {
     "code": "notEquation",
-    "message": ""
+    "message": "\t'{{ equation }}' is not a valid equation.\n\tType '!help notEquation' for more details."
   },
   {
     "code": "forbiddenCharacters",
-    "message": ""
+    "message": "\tEquation '{{ equation }}' contains unallowed not permitted character(s).\n\tType '!help forbiddenCharacters' for more details."
   },
   {
     "code": "badPolynomList",
-    "message": ""
+    "message": "\tGiven list of polynom '{{ list }}' is not well formatted.\n\tType '!help badPolynomList' for more details."
   },
   {
     "code": "unknownFunction",
@@ -101,7 +93,7 @@
   },
   {
     "code": "incorrectParameterAmount",
-    "message": "\tDid not found the right amount of parameters for expression '{{ name }}', expected {{ expected }} and found {{ found }}. "
+    "message": "\tDid not found the right amount of parameters for Expression '{{ name }}', expected {{ expected }} and found {{ found }}. "
   },
   {
     "code": "illegalParameter",
@@ -129,7 +121,7 @@
   },
   {
     "code": "builtinNotHandledOperator",
-    "message": "\tCan't process built-in function with given input(s).\n\tType '!help builtinNotHandledOperator' for more details."
+    "message": "\tCannot process built-in function with given input(s).\n\tType '!help builtinNotHandledOperator' for more details."
   },
   {
     "code": "matrixWrongDimensions",

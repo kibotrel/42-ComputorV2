@@ -42,7 +42,7 @@ const imaginaryCheck = async ({ string, flags }, infixStack) => {
         infixStack.push(`${imaginaryFactor}i`)
       }
     } else if (flags.complex) {
-      throw { data: string, code : 'illegalImaginary', index: string.length - 1 }
+      throw new ComputorError({ data: { string, index: string.length - 1 }, code : 'illegalImaginary' })
     }
   } catch (error) {
     return Promise.reject(error)

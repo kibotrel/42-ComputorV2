@@ -13,11 +13,11 @@ module.exports = async (prototype, definition) => {
 
     for (const argument of argumentList) {
       if (!argument.match(/^[a-z]+$/) || argument === 'i') {
-        throw { data: prototype, code: 'badInputFormat' }
+        throw new ComputorError({ data: { string: prototype }, code: 'badInputFormat' })
       }
 
       if (seenArguments.indexOf(argument) > -1) {
-        throw { data: prototype, code: 'repeatedVariableName' }
+        throw new ComputorError({ data: { variable: argument }, code: 'repeatedVariableName' })
       } else {
         seenArguments.push(argument)
       }
@@ -28,7 +28,7 @@ module.exports = async (prototype, definition) => {
     for (const token of infixExpression) {
       if ((token.length === 1 && token.match(/[a-z]/) && token[0] !== 'i') || (token.length > 1 && token.match(/^[a-z]+$/))) {
         if (argumentList.indexOf(token) === -1) {
-          throw { data: token, code: 'unknownVariable' }
+          throw new ComputorError({ data: { variable: token }, code: 'unknownVariable' })
         }
       } else if (isFunction(token)) {
         if (!isValidBuiltin(token) && !isVariableRegistered(token)) {

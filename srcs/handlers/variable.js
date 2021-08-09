@@ -17,7 +17,7 @@ const addToVariableList = (id, value) => {
 const resolveVariable = async (request, type) => {
   try {
     if (request.length === 0) {
-      throw { data: '=?', code: 'badInputFormat' }
+      throw new ComputorError({ data: { string: '=?' }, code: 'badInputFormat' })
     }
 
     const variable = isVariableRegistered(request)

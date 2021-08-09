@@ -96,7 +96,7 @@ class Numeral {
       const B = toNumeral(b)
       
       if (B.r === 0 && B.i === 0) {
-        throw new ComputorError({ data: { value: 0 }, code: 'impossibleDivision' })
+        throw new ComputorError({ code: 'unsupportedOperation' })
       }
 
       const { re: re1, im: im1 } = numeralFractionalParts(A)
@@ -137,7 +137,7 @@ class Numeral {
       const B = toNumeral(b)
 
       if ((B.r === 0 && B.i === 0) || floor(B.r) !== B.r || floor(B.i) !== B.i) {
-        throw { data: { A, B, operator: '%' }, code: 'impossibleModulo' }
+        throw new ComputorError({ code: 'unsupportedOperation' })
       }
 
       // Compute division quotient of two Gaussian number in order to
@@ -174,7 +174,7 @@ class Numeral {
       const B = toNumeral(b)
 
       if (B.i || Math.trunc(B.r) !== B.r) {
-        throw new ComputorError({ code: 'unsuportedOperation' })
+        throw new ComputorError({ code: 'unsupportedOperation' })
       }
 
       if (A.r === 0 && A.i === 0) {

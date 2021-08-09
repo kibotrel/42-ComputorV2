@@ -13,7 +13,7 @@ module.exports = async (inputLine) => {
     const commandArguments = commandParts.slice(1, commandParts.length)
 
     if (commands.indexOf(commandName) < 0) {
-      throw { data: commandParts.join(' '), code: 'unrecognizedCommand' }
+      throw new ComputorError({ data: { command: commandParts.join(' ') }, code: 'unrecognizedCommand' })
     }
 
     switch (commandName) {

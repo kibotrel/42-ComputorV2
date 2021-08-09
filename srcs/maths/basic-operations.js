@@ -34,10 +34,13 @@ const checkOperands = async ({ firstOperand, secondOperand }) => {
     const a = await sanitizeOperand(firstOperand)
     const b = await sanitizeOperand(secondOperand)
 
-    if (a === undefined || b === undefined ) {
-      throw { data: {firstOperand, secondOperand, a, b }, code: 'badOperand' }
-    } else
+    if (a === undefined) {
+      throw new ComputorError({ data: { operand: firstOperand }, code: 'badOperand' })
+    } else if (b === undefined) {
+      throw new ComputorError({ data: { operand: secondOperand }, code: 'badOperand' })
+    } else {
       return { a, b }
+    }
   } catch (error) {
     return Promise.reject(error)
   }

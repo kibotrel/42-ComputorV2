@@ -45,7 +45,7 @@ const parsePolynomList = async (equation) => {
       const polynomString = side.match(/^(?:[+\-]?(?:(?:(?:\d+(?:\.\d+)?)(?:\*?x(?:\^\d+)?)?)|x(?:\^\d+)?))(?:[+\-](?:(?:(?:\d+(?:\.\d+)?)(?:\*?x(?:\^\d+)?)?)|x(?:\^\d+)?))*$/)
       
       if (!polynomString) {
-        throw { data: polynomString, code: 'badPolynomList' }
+        throw new ComputorError({ data: { list: side }, code: 'badPolynomList' })
       }
 
       const termList = side.split(/(?=[\-+])/)
@@ -66,9 +66,9 @@ const parsePolynomList = async (equation) => {
 module.exports = async (equation) => {
   try {
     if (!equation.includes('=') || (equation.match(/=/g) || []).length !== 1) {
-      throw { data: equation, code: 'notEquation' }
+      throw new ComputorError({ data: { equation }, code: 'notEquation' })
     } else if (!equation.match(/^[+-=*0-9x^]+$/)) {
-      throw { data: equation, code: 'forbiddenCharacters' }
+      throw new ComputorError({ data: { equation }, code: 'forbiddenCharacters' })
     }
 
     return await parsePolynomList(equation)

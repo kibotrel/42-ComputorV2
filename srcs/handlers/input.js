@@ -15,22 +15,22 @@ const storeVariable = async (inputLine) => {
     const { [0]: id, [1]: inputValue } = inputLine.split('=')
 
     if (!id || !inputValue) {
-      throw { data: inputLine, code: 'badInputFormat' }
+      throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
     } else if (isFunction(id)) {
       const value = await createFunction(id, inputValue)
       const realId = id.substring(0, id.indexOf('('))
       
       if (forbiddenVariables.indexOf(realId) !== -1) {
-        throw { data: realId, code: 'forbiddenVariableName' }
+        throw new ComputorError({ data: { name: realId }, code: 'forbiddenVariableName' })
       }
 
       addToVariableList(realId, value)
 
       return { value, type: 'expression' }
     } else if (!id.match(/^[a-z]+$/)) {
-      throw { data: id, code: 'invalidVariableFormat' }
+      throw new ComputorError({ data: { name: id }, code: 'invalidVariableFormat' })
     } else if (forbiddenVariables.indexOf(id) !== -1) {
-      throw { data: id, code: 'forbiddenVariableName' }
+      throw new ComputorError({ data: { name: id }, code: 'forbiddenVariableName' })
     } else {
       const value = await numeralValue(inputValue)
 
@@ -80,7 +80,7 @@ module.exports = async (payload) => {
     inputLine = inputLine.replace(/ /g, '')
 
     if (!inputLine.match(/^[0-9a-z+\-*\/%^()\[\]=!?.,]+$/)) {
-      throw { data: inputLine, code: 'badInputFormat' }
+      throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
     }
 
     if (inputLine.endsWith('=?')) {
@@ -88,7 +88,7 @@ module.exports = async (payload) => {
     } else if ((inputLine.match(/=/g) || []).length === 1) {
       return await storeVariable(inputLine)
     } else {
-      throw { data: inputLine, code: 'badInputFormat' }
+      throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
     }
   } catch (error) {
     return Promise.reject(error)
