@@ -57,7 +57,7 @@
   },
   {
     "code": "unknownVariable",
-    "message": "\tVariable '{{ variable }}' not found within stored data."
+    "message": "\tVariable '{{ name }}' not found within stored data."
   },
   {
     "code": "forbiddenVariableName",
@@ -85,7 +85,7 @@
   },
   {
     "code": "unknownFunction",
-    "message": "Expression '{{ name }}' cannot be found within the program's context."
+    "message": "Expression '{{ name }}' not found within stored data."
   },
   {
     "code": "incorrectDataType",

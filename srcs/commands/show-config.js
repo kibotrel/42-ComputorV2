@@ -3,7 +3,7 @@ const { Config } = global
 module.exports = (argumentsList) => {
   try {
     if (argumentsList.length) {
-      throw { data: argumentsList.join(' '), code: 'invalidArgument' }
+      throw new ComputorError({ data: { name: '!config', found: argumentsList.length, expected: 0 }, code: 'incorrectParameterAmount' })
     }
 
     console.log(`\x1b[1mCurrent context's\x1b[32m Settings\x1b[0;1m!\x1b[0m\n`)

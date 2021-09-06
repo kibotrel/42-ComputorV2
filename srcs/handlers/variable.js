@@ -57,7 +57,7 @@ const resolveVariable = async (request, type) => {
       }
 
       if (!arguments.length) {
-        throw new ComputorError({ code: 'EmptyExpression' })
+        throw new ComputorError({ code: 'emptyExpression' })
       } else if (arguments.length !== func.variables.length) {
         throw new ComputorError({ data: { name: func.name, found: arguments.length, expected: func.variables.length }, code: 'incorrectParameterAmount' })
       }

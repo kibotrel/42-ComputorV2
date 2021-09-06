@@ -53,8 +53,6 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
 
         const variable = await isVariableRegistered(variableName)
 
-        // Need to rework this part when built-in will be added.
-
         if (variable.constructor.name === 'Numeral') {
           if (factor) {
             infixStack.push('(', factor, '*', variableName, ')')
@@ -84,7 +82,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
 
           return i + functionArguments.length - 1
         } else {
-          throw new ComputorError({ data: { variable: variableName }, code: 'unknownVariable' })
+          throw new ComputorError({ data: { name: variableName }, code: 'unknownVariable' })
         }
       }
 

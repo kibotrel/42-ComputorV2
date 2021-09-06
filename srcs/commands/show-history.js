@@ -5,7 +5,7 @@ const { countDigits, fillDigits } = require('@env/utils.js')
 module.exports = (argumentsList) => {
   try {
     if (argumentsList.length) {
-      throw { data: argumentsList.join(' '), code: 'invalidArgument' }
+      throw new ComputorError({ data: { name: '!history', found: argumentsList.length, expected: 0 }, code: 'incorrectParameterAmount' })
     }
 
     const promptedHistory = []

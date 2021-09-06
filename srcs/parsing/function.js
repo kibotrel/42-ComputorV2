@@ -28,7 +28,7 @@ module.exports = async (prototype, definition) => {
     for (const token of infixExpression) {
       if ((token.length === 1 && token.match(/[a-z]/) && token[0] !== 'i') || (token.length > 1 && token.match(/^[a-z]+$/))) {
         if (argumentList.indexOf(token) === -1) {
-          throw new ComputorError({ data: { variable: token }, code: 'unknownVariable' })
+          throw new ComputorError({ data: { name: token }, code: 'unknownVariable' })
         }
       } else if (isFunction(token)) {
         if (!isValidBuiltin(token) && !isVariableRegistered(token)) {

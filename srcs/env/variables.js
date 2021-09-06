@@ -19,7 +19,7 @@ const computeVariable = async (token, type) => {
       if (type === 'Function' && isValidBuiltin(token)) {
         return await builtinHandler(token)
       } else {
-        throw { data: token, code: `unknown${type}` }
+        throw new ComputorError({ data: { name: token } , code: `unknown${type}` })
       }
     }
 
@@ -47,7 +47,7 @@ const computeVariable = async (token, type) => {
       }
 
       if (!arguments.length) {
-        throw new ComputorError({ code: 'EmptyExpression' })
+        throw new ComputorError({ code: 'emptyExpression' })
       } else if (arguments.length !== func.variables.length) {
         throw new ComputorError({ data: { name: func.name, found: arguments.length, expected: func.variables.length }, code: 'incorrectParameterAmount' })
       }

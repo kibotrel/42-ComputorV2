@@ -73,7 +73,7 @@ module.exports = async (string) => {
 
   try {
     if (!string) {
-      throw new ComputorError({ code: 'EmptyExpression' })
+      throw new ComputorError({ code: 'emptyExpression' })
     }
 
     for (let i = 0; i < string.length; i++) {
