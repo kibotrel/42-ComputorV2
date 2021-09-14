@@ -121,6 +121,10 @@ const computePostfix = async (postfixNotation) => {
 const numeralValue = async (inputLine) => {
   try {
     const infixNotation = await parseLine(inputLine)
+
+    if (!infixNotation.length) {
+      throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
+    }
     const postfixNotation = infixToPosfix(infixNotation)
 
     return await computePostfix(postfixNotation)
