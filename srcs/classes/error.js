@@ -39,7 +39,7 @@ class ComputorError extends Error {
     const { message } = Errors.find(error => { return error.code === this.code })
     const details = fillTemplate(message, this.data)
 
-    console.log(`\x1b[31;1mError:\x1b[0;1m ${this.code}\x1b[0m\n\n${details}`)
+    console.log(`\n\x1b[31;1mError:\x1b[0;1m ${this.code}\x1b[0m\n\n${details}\n`)
   }
 }
 
