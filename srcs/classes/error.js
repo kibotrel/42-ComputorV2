@@ -9,6 +9,20 @@ const fillTemplate = (template, data) => {
       return `\x1b[33m${data[value]}\x1b[0;1m`
   })
 
+  for(let i = 0; i < output.length; i++) {
+    if (output[i] === '\'') {
+      const closure = output.indexOf('\'', i + 1)
+      let data = output.substring(i + 1, closure)
+      const oldDataLength = data.length
+
+      data = `\x1b[32m${data}\x1b[0;1m`
+
+      const offset = data.length - oldDataLength
+      
+      output = `${output.substring(0, i)}'${data}'${output.substring(closure + 1, output.length)}`
+      i = closure + offset
+    }
+  }
   return `\x1b[1m${output}\x1b[0m`
 }
 
