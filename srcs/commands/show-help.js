@@ -1,5 +1,31 @@
 const HelpEntries = require('@configs//help.json')
 
+const fillTemplate = (template, data) => {
+  let output = template.replace(/{{\s?([^{}\s]+)\s?}}/g, (str, value) => {
+
+    if (data[value].constructor.name === 'String') {
+      return `\x1b[32m${data[value]}\x1b[0;1m`
+    } else if (data[value].constructor.name === 'Number')
+      return `\x1b[33m${data[value]}\x1b[0;1m`
+  })
+
+  for(let i = 0; i < output.length; i++) {
+    if (output[i] === '\'') {
+      const closure = output.indexOf('\'', i + 1)
+      let data = output.substring(i + 1, closure)
+      const oldDataLength = data.length
+
+      data = `\x1b[32m${data}\x1b[0;1m`
+
+      const offset = data.length - oldDataLength
+      
+      output = `${output.substring(0, i)}'${data}'${output.substring(closure + 1, output.length)}`
+      i = closure + offset
+    }
+  }
+  return `\x1b[1m${output}\x1b[0m`
+}
+
 module.exports = (argumentsList) => {
   try {
     if (argumentsList.length > 1) {
@@ -14,10 +40,12 @@ module.exports = (argumentsList) => {
       console.log('\nFor more information on a particular code, use \'\x1b[32m!help <Error>\'\x1b[0;1m.\x1b[0m\n')
     } else {
       const [ code ] = argumentsList
-      const data = HelpEntries.find(el => el.code.toLowerCase() === code)
+      const entry = HelpEntries.find(el => el.code.toLowerCase() === code)
 
-      if (!data) {
+      if (!entry) {
         throw new ComputorError({ data: { command: `!help ${code}` }, code: 'unrecognizedCommand' })
+      } else {
+        console.log(fillTemplate(entry.message, entry.data))
       }
     }
   } catch (error) {

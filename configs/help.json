@@ -1,7 +1,14 @@
 [
   {
     "code": "badInputFormat",
-    "message": ""
+    "message": "\tThis error is triggered when your input does not fit one of the following format or condition:\n\n\tFormats:\n\n\t\t- '{{ variableExample }}' (Variable assignment).\n\t\t- '{{ expressionExample }}' (Expression assigment).\n\t\t- '{{ matrixExample }}' (Matrix assignment).\n\t\t- '{{ commandExample }}' (Command resolving).\n\t\t- '{{ computationExample }}' (Computation)\n",
+    "data": {
+      "variableExample": "variable = 1 - 2 * (3 - 4)",
+      "expressionExample": "function(parameter1, parameter2) = parameter1 / parameter2",
+      "matrixExample": "matrix = [ [ value1, value2 ]; [ value3, value4 ] ]",
+      "commandExample": "!command argument1 argument2",
+      "computationExample": "1 - 2 / 3 * 4"
+    }
   },
   {
     "code": "builtinNotHandledOperator",
