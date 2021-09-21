@@ -26,7 +26,7 @@ const resolveVariable = async (request, type) => {
       if (type === 'Function' && isValidBuiltin(request)) {
         return await builtinHandler(request)
       } else {
-        throw { data: request, code: `unknown${type}` }
+        throw new ComputorError({ data: { name: request }, code: `unknown${type}` })
       }
     }
 

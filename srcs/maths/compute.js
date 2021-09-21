@@ -22,7 +22,7 @@ const computeVariable = async (token, type) => {
       if (isValidBuiltin(token)) {
         return token
       } else {
-        throw { data: variableName, code: `unknown${type}` }
+        throw new ComputorError({ data: { name: variableName }, code: `unknown${type}` })
       }
     }
 
