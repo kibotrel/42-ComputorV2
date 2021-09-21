@@ -1,7 +1,7 @@
 const Errors = require('@configs/errors.json')
 
 const fillTemplate = (template, data) => {
-  let output = template.replace(/{{\s?([^{}\s]+)\s?}}/g, (str, value, i) => {
+  let output = template.replace(/{{\s?([^{}\s]+)\s?}}/g, (str, value) => {
 
     if (data[value].constructor.name === 'String') {
       return `\x1b[32m${data[value]}\x1b[0;1m`
