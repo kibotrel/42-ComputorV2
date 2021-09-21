@@ -1,25 +1,5 @@
  [
   {
-    "code": "invalidLeftBracket",
-    "message": "\tIllegal left bracket found at index {{ index }} in '{{ string }}'."
-  },
-  {
-    "code": "invalidRightBracket",
-    "message": "\tIllegal right bracket found at index {{ index }} in '{{ string }}'."
-  },
-  {
-    "code": "invalidBracketEnclosure",
-    "message": "\tMissing bracket(s) detected in '{{ string }}'."
-  },
-  {
-    "code": "bracketsNotUsed",
-    "message": "\tUnused set of brackets foundd at index {{ index }} in '{{ string }}'."
-  },
-  {
-    "code": "invalidOperatorPosition",
-    "message": "\tIllegal operator found at index {{ index }} in '{{ string }}'."
-  },
-  {
     "code": "badInputFormat",
     "message": "\tInput '{{ string }}' does not follow set format.\n\tType '!help badInputFormat' for more details."
   },
@@ -28,64 +8,28 @@
     "message": "\t'{{ operand }}' is not a valid operand."
   },
   {
-    "code": "misformattedFloat",
-    "message": "\tIllegal character found during float parsing at index {{ index }} in '{{ string }}'."
+    "code": "badPolynomList",
+    "message": "\tGiven list of polynom '{{ list }}' is not well formatted.\n\tType '!help badPolynomList' for more details."
   },
   {
-    "code": "misformattedInteger",
-    "message": "\tIllegal character found during integer parsing at index {{ index }} in '{{ string }}'."
+    "code": "bracketsNotUsed",
+    "message": "\tUnused set of brackets foundd at index {{ index }} in '{{ string }}'."
   },
   {
-    "code": "tooBigNumber",
-    "message": "\tNumeric equivalent of '{{ operand }}' is too large to be handled by this program."
+    "code": "builtinNotHandledOperator",
+    "message": "\tCannot process built-in function with given input(s).\n\tType '!help builtinNotHandledOperator' for more details."
   },
   {
-    "code": "notNumber",
-    "message": "\tNumeric equivalent of '{{ operand }}' is not computable."
-  },
-  {
-    "code": "unsupportedOperation",
-    "message": "\tFound an unsupported operation during input evaluation.\n\tType '!help unsupportedOperation' for more details."
-  },
-  {
-    "code": "illegalImaginary",
-    "message": "\tIllegal complex number found at index {{ index }} in '{{ string }}'."
-  },
-  {
-    "code": "unrecognizedCommand",
-    "message": "\tCommand '{{ command }}' not handled by this program."
-  },
-  {
-    "code": "unknownVariable",
-    "message": "\tVariable '{{ name }}' not found within stored data."
-  },
-  {
-    "code": "forbiddenVariableName",
-    "message": "\tVariable name '{{ name }}' is protected and not usable.\n\tType '!help forbiddenVariableName' for more details."
-  },
-  {
-    "code": "invalidVariableFormat",
-    "message": "\tVariable name '{{ name }}' does not fit set format.\n\tType '!help invalidVariableFormat' for more details."
-  },
-  {
-    "code": "repeatedVariableName",
-    "message": "\tExpression parameter '{{ variable }}' used more than once in prototype."
-  },
-  {
-    "code": "notEquation",
-    "message": "\t'{{ equation }}' is not a valid equation.\n\tType '!help notEquation' for more details."
+    "code": "emptyExpression",
+    "message": "\tFound an empty Expression during input evaluation."
   },
   {
     "code": "forbiddenCharacters",
     "message": "\tEquation '{{ equation }}' contains unallowed not permitted character(s).\n\tType '!help forbiddenCharacters' for more details."
   },
   {
-    "code": "badPolynomList",
-    "message": "\tGiven list of polynom '{{ list }}' is not well formatted.\n\tType '!help badPolynomList' for more details."
-  },
-  {
-    "code": "unknownFunction",
-    "message": "Expression '{{ name }}' not found within stored data."
+    "code": "forbiddenVariableName",
+    "message": "\tVariable name '{{ name }}' is protected and not usable.\n\tType '!help forbiddenVariableName' for more details."
   },
   {
     "code": "incorrectDataType",
@@ -96,35 +40,91 @@
     "message": "\tDid not found the right amount of parameters for Expression '{{ name }}', expected {{ expected }} and found {{ found }}. "
   },
   {
-    "code": "illegalParameter",
-    "message": "\tExpression parameter '{{ parameter }}' is not handled by this program."
+    "code": "incorrectSettingType",
+    "message": "\tIncorrect value type for setting '{{ setting }}'.\n\tType '!help incorrectSettingType' for more details."
   },
   {
     "code": "illegalExpression",
     "message": "Expression '{{ expression }}' is not handled by this program."
   },
   {
-    "code": "emptyExpression",
-    "message": "\tFound an empty Expression during input evaluation."
+    "code": "illegalImaginary",
+    "message": "\tIllegal complex number found at index {{ index }} in '{{ string }}'."
+  },
+  {
+    "code": "illegalParameter",
+    "message": "\tExpression parameter '{{ parameter }}' is not handled by this program."
+  },
+  {
+    "code": "invalidBracketEnclosure",
+    "message": "\tMissing bracket(s) detected in '{{ string }}'."
+  },
+  {
+    "code": "invalidLeftBracket",
+    "message": "\tIllegal left bracket found at index {{ index }} in '{{ string }}'."
+  },
+  {
+    "code": "invalidOperatorPosition",
+    "message": "\tIllegal operator found at index {{ index }} in '{{ string }}'."
+  },
+  {
+    "code": "invalidRightBracket",
+    "message": "\tIllegal right bracket found at index {{ index }} in '{{ string }}'."
+  },
+  {
+    "code": "invalidVariableFormat",
+    "message": "\tVariable name '{{ name }}' does not fit set format.\n\tType '!help invalidVariableFormat' for more details."
+  },
+  {
+    "code": "matrixWrongDimensions",
+    "message": "\tMatrix dimensions do not fit operation requirements.\n\tType '!help matrixWrongDimensions' for more details."
+  },
+  {
+    "code": "misformattedFloat",
+    "message": "\tIllegal character found during float parsing at index {{ index }} in '{{ string }}'."
+  },
+  {
+    "code": "misformattedInteger",
+    "message": "\tIllegal character found during integer parsing at index {{ index }} in '{{ string }}'."
+  },
+  {
+    "code": "notEquation",
+    "message": "\t'{{ equation }}' is not a valid equation.\n\tType '!help notEquation' for more details."
+  },
+  {
+    "code": "notNumber",
+    "message": "\tNumeric equivalent of '{{ operand }}' is not computable."
   },
   {
     "code": "protectedSetting",
     "message": "Tried to modify protected setting '{{ setting }}'.\n\tType '!help protectedSetting' for more details."
   },
   {
+    "code": "repeatedVariableName",
+    "message": "\tExpression parameter '{{ variable }}' used more than once in prototype."
+  },
+  {
+    "code": "tooBigNumber",
+    "message": "\tNumeric equivalent of '{{ operand }}' is too large to be handled by this program."
+  },
+  {
+    "code": "unknownFunction",
+    "message": "Expression '{{ name }}' not found within stored data."
+  },
+  {
     "code": "unknownSetting",
     "message": "\tSetting '{{ setting }}' not found in configuration.\n\tType '!config' to see available options."
   },
   {
-    "code": "incorrectSettingType",
-    "message": "\tIncorrect value type for setting '{{ setting }}'.\n\tType '!help incorrectSettingType' for more details."
+    "code": "unknownVariable",
+    "message": "\tVariable '{{ name }}' not found within stored data."
   },
   {
-    "code": "builtinNotHandledOperator",
-    "message": "\tCannot process built-in function with given input(s).\n\tType '!help builtinNotHandledOperator' for more details."
+    "code": "unrecognizedCommand",
+    "message": "\tCommand '{{ command }}' not handled by this program."
   },
   {
-    "code": "matrixWrongDimensions",
-    "message": "\tMatrix dimensions do not fit operation requirements.\n\tType '!help matrixWrongDimensions' for more details."
+    "code": "unsupportedOperation",
+    "message": "\tFound an unsupported operation during input evaluation.\n\tType '!help unsupportedOperation' for more details."
   }
 ]
