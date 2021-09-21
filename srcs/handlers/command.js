@@ -5,6 +5,7 @@ const showVariables = require('@commands/show-variables.js')
 const showHistory = require('@commands/show-history.js')
 const showConfig = require('@commands/show-config.js')
 const updateSetting = require('@commands/update-setting.js')
+const showHelp = require('@commands/show-help.js')
 
 module.exports = async (inputLine) => {
   try {
@@ -31,6 +32,8 @@ module.exports = async (inputLine) => {
         await updateSetting(commandArguments); break
       case '!config':
         await showConfig(commandArguments); break
+      case '!help':
+        await showHelp(commandArguments); break
     }
 
     return { value: commandName, type: 'command' }

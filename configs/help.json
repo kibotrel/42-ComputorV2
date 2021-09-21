@@ -1,0 +1,42 @@
+[
+  {
+    "code": "badInputFormat",
+    "message": ""
+  },
+  {
+    "code": "builtinNotHandledOperator",
+    "message": ""
+  },
+  {
+    "code": "forbiddenCharacters",
+    "message": ""
+  },
+  {
+    "code": "forbiddenVariableName",
+    "message": ""
+  },
+  {
+    "code": "incorrectSettingType",
+    "message": ""
+  },
+  {
+    "code": "invalidVariableFormat",
+    "message": ""
+  },
+  {
+    "code": "matrixWrongDimensions",
+    "message": ""
+  },
+  {
+    "code": "notEquation",
+    "message": ""
+  },
+  {
+    "code": "protectedSetting",
+    "message": ""
+  },
+  {
+    "code": "unsuportedOperations",
+    "message": ""
+  }
+]
