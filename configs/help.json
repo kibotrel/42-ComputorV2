@@ -1,49 +1,55 @@
 [
   {
     "code": "badInputFormat",
-    "message": "\tThis error is triggered when your input does not fit one of the following format or condition:\n\n\tFormats:\n\n\t\t- '{{ variableExample }}' (Variable assignment).\n\t\t- '{{ expressionExample }}' (Expression assigment).\n\t\t- '{{ matrixExample }}' (Matrix assignment).\n\t\t- '{{ commandExample }}' (Command resolving).\n\t\t- '{{ computationExample }}' (Computation)\n",
+    "message": "\tThis error is triggered when your input does not fit one of the following format or condition:\n\n\tFormats:\n\n\t\t- '{{ variableExample }}' (Variable assignment).\n\t\t- '{{ expressionExample }}' (Expression assignment).\n\t\t- '{{ matrixExample }}' (Matrix assignment).\n\t\t- '{{ commandExample }}' (Command resolving).\n\t\t- '{{ computationExample }}' (Computation)\n\n\tConditions:\n\n\t\t- Variable, expression and matrix names only contains alphabetical characters.\n\t\t- Each open bracket must be appaired with a closing one.\n\t\t- Every set of brackets written must be used (they cannot be empty).\n\t\t- 'i' cannot be a parameter in expression prototypes.\n",
     "data": {
       "variableExample": "variable = 1 - 2 * (3 - 4)",
       "expressionExample": "function(parameter1, parameter2) = parameter1 / parameter2",
-      "matrixExample": "matrix = [ [ value1, value2 ]; [ value3, value4 ] ]",
-      "commandExample": "!command argument1 argument2",
-      "computationExample": "1 - 2 / 3 * 4"
+      "matrixExample": "matrix = [ [ 0, 2 ]; [ 2, -3 ] ]",
+      "commandExample": "!set env.errorStackTrace true",
+      "computationExample": "1 - 2 / 3 * 4 =?"
     }
   },
   {
     "code": "builtinNotHandledOperator",
-    "message": ""
+    "message": "\tThis error is triggered when you input incoherent values to some builtin functions.\n\n\tRestrictions:\n\n\t\t- 'rad()', 'deg()' and 'sqrt()' only support real numbers.\n\t\t- 'ln()' and 'log()' only support positive real numbers.\n\t\t- 'fact()' only support positive integers and {{ zero }}.\n",
+    "data": {
+      "zero": 0
+    }
   },
   {
     "code": "forbiddenCharacters",
-    "message": ""
+    "message": "\tThis error is triggered by the equation solver because the given string contains\n\tunsupported characters.It only supports numbers (integer and decimal), add,\n\tsubstract, multiply, power and equal signs along with 'X'."
   },
   {
     "code": "forbiddenVariableName",
-    "message": ""
+    "message": "\tThis error is triggered when you try to use a protected name. Most of these names\n\tare used for builtin functions.\n\n\tProtected names:\n\n\t\t- 'abs'.\n\t\t- 'cos'.\n\t\t- 'cosh'.\n\t\t- 'deg'.\n\t\t- 'exp'.\n\t\t- 'fact'.\n\t\t- 'i'.\n\t\t- 'ln'.\n\t\t- 'log'.\n\t\t- 'rad'.\n\t\t- 'sin'.\n\t\t- 'sinh'.\n\t\t- 'sqqrt'.\n"
   },
   {
     "code": "incorrectSettingType",
-    "message": ""
+    "message": "\tThis error is triggered when you try to update a setting with an incorrect value type.\n\n\tAvailable settings with their data types:\n\n\t\t- 'number.fractionForm': Boolean.\n\t\t- 'nummber.precision': Number.\n\t\t- 'function.expensionCount': Number.\n\t\t- 'equation.graph': Boolean.\n\t\t- 'equation.verbose': Boolean.\n\t\t- 'env.errorStackTrace': Boolean.\n\t\t- 'env.historySize': Number.\n"
   },
   {
     "code": "invalidVariableFormat",
-    "message": ""
+    "message": "\tThis error is triggered when you try to register either a variable\n\tor an expression that does not fit set format.\n\n\t\t- Variable names are only composed of letters.\n\t\t- Expression prototypes must follow the same rule as variable names\n\t\t  followed by a coma separated list of parameters within brackets\n\t\t  and then the definition.\n"
   },
   {
     "code": "matrixWrongDimensions",
-    "message": ""
+    "message": "\tThis error is triggered when you use matrix operations with incorrect input.\n\n\tRules:\n\n\t\t- Matrix addition and substraction needs two matrix with the same amount\n\t\t  sof rows and columns.\n\t\t- Matrix multiplication needs that the columns of the first matrix equal\n\t\t  the rows of the second.\n"
   },
   {
     "code": "notEquation",
-    "message": ""
+    "message": "\tThis error is triggered when you provide a bad input to the equation solver.\n\n\tAvailable formats:\n\n\t\t- '5 * X^0 + 2.1 * X^3 = -7 * X^1'.\n\t\t- '5X^0 + 2.1X^3 = -7X^1'.\n\t\t- '5 + 2.1X^3 = -7X'.\n\n\tYou can mix all the formats as long as each term in the equation follows one\n\tof the above.\n"
   },
   {
     "code": "protectedSetting",
-    "message": ""
+    "message": "\tThis error is triggered when you try to update forbidden variables through\n\t'!set' command.\n\n\tProtected settings:\n\n\t\t- 'env.builtinfunctions'.\n\t\t- 'env.commands'.\n\t\t- 'env.forbiddenvariables'.\n\t\t- 'env.helpentries'.\n\t\t- 'env.protectedsettings'.\n"
   },
   {
     "code": "unsuportedOperations",
-    "message": ""
+    "message": "\tThis error is triggered when input is not computable either due to\n\tthe laws of mathematics or because it is outside of the project scope.\n\n\tNot supported:\n\n\t\t- Power operation with complex or decimal exponent.\n\t\t- Modulus operation with {{ zero }}, complex or decimal modulus.\n\t\t- Division by {{ zero }}.\n",
+    "data": {
+      "zero": 0
+    }
   }
 ]

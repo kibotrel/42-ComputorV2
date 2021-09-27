@@ -45,7 +45,7 @@ module.exports = (argumentsList) => {
       if (!entry) {
         throw new ComputorError({ data: { command: `!help ${code}` }, code: 'unrecognizedCommand' })
       } else {
-        console.log(fillTemplate(entry.message, entry.data))
+        console.log(`\n\x1b[31;1m${entry.code}\x1b[0m:\n\n${fillTemplate(entry.message, entry.data)}`)
       }
     }
   } catch (error) {
