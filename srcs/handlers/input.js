@@ -57,6 +57,8 @@ const computeInput = async (inputLine) => {
 
     if (isFunction(realInput)) {
       value = await resolveVariable(realInput, 'Function')
+    } else if (isMatrix(realInput)) {
+      value = await createMatrix(realInput)
     } else {
       value = await numeralValue(realInput)
     }

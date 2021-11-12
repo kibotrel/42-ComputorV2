@@ -90,6 +90,7 @@ class Matrix {
 
             newRow.push(value)
           }
+
           newArray.push(newRow)
         }
       }
@@ -98,6 +99,22 @@ class Matrix {
     } catch (error) {
       return Promise.reject(error)
     }
+  }
+
+  static opposite(matrix) {
+    const newArray = []
+    const { rows, columns } = matrix
+
+    for (let i = 0; i < rows; i++) {
+      const newRow = []
+
+      for (let j = 0; j < columns; j++) {
+        newRow.push(Numeral.opposite(matrix.values[i][j]))
+      }
+
+      newArray.push(newRow)
+    }
+    return new Matrix(newArray)
   }
 
   print() {

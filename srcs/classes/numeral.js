@@ -209,6 +209,21 @@ class Numeral {
     }
   }
 
+  static opposite(number) {
+    const newNumeral = {}
+
+    for (const key in number) {
+      if (key !== 'dr' && key !== 'di') {
+        newNumeral[key] = -1 * number[key]
+      } else {
+        newNumeral[key] = number[key]
+      }
+    }
+    
+
+    return new Numeral(newNumeral)
+  }
+
   print() {
     if (!this.r && !this.i) {
       return '\x1b[33;1m0\x1b[0m'

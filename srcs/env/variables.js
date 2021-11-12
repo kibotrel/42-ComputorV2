@@ -32,11 +32,7 @@ const computeVariable = async (token, type) => {
     // Add Matrix constructor later
 
     if (variable.constructor.name === 'Numeral') {
-      if (sign < 0) {
-        return await Numeral.substract(0, variable)
-      } else {
-        return variable
-      }
+      return (sign < 0 ? Numeral.opposite(variable) : variable)
     } else if (variable.constructor.name === 'Expression') {
       const func = variable
       const arguments = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
@@ -60,11 +56,7 @@ const computeVariable = async (token, type) => {
 
       const value = await Expression.evaluate(func, argumentList)
 
-      if (sign < 0) {
-        return await Nummeral.substract(0, value)
-      } else {
-        return value
-      }
+      return (sign < 0 ? Numeral.opposite(value) : value)
     }
   } catch (error) {
     return Promise.reject(error)

@@ -78,11 +78,7 @@ const computeNestedExpression = async (token, expression, variables) => {
 
     const value = await Expression.evaluate(func, args)
 
-    if (sign < 0) {
-      return await Numeral.substract(0, value)
-    } else {
-      return value
-    }
+    return (sign < 0 ? Numeral.opposite(value) : value)
   } catch (error) {
     return Promise.reject(error)
   }

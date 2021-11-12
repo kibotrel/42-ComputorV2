@@ -39,11 +39,7 @@ module.exports = async (input) => {
         throw new ComputorError({ data: { name }, code: 'unknownFunction' })
     }
 
-    if (sign < 0) {
-      return await Numeral.substract(0, value)
-    } else {
-      return value
-    }
+    return (sign < 0 ? Numeral.opposite(value) : value)
   } catch (error) {
     return Promise.reject(error)
   }
