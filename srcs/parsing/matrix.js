@@ -1,26 +1,37 @@
 const { numeralValue } = require('@srcs/maths/compute.js')
-const Matrix = require('../classes/matrix')
 
 module.exports = async (string) => {
-  const trimmedString = string.slice(1, -1)
-  const stringArrayRows = trimmedString.split(';')
-  
-  const matrixArray = []
+  try {
+    const trimmedString = string.slice(1, -1)
+    const stringArrayRows = trimmedString.split(';')
+    
+    const matrixArray = []
 
-  for (const row of stringArrayRows) {
-    const matrixRow = []
+    for (const row of stringArrayRows) {
+      const matrixRow = []
 
-    const trimmedRow = row.slice(1, -1)
-    const stringArrayColumns = trimmedRow.split(',')
+      const trimmedRow = row.slice(1, -1)
+      const stringArrayColumns = trimmedRow.split(',')
 
-    for (const column of stringArrayColumns) {
-      const value = await numeralValue(column)
+      for (const column of stringArrayColumns) {
+        const value = await numeralValue(column)
 
-      matrixRow.push(value)
+        matrixRow.push(value)
+      }
+
+      matrixArray.push(matrixRow)
     }
 
-    matrixArray.push(matrixRow)
-  }
+    let rowSize = matrixArray[0].length
 
-  return new Matrix(matrixArray)
+    for (const row of matrixArray) {
+      if (row.length != rowSize) {
+        throw new ComputorError({ code: 'notMatrix' })
+      }
+    }
+
+    return new Matrix(matrixArray)
+  } catch (error) {
+    return Promise.reject(error)
+  }
 }

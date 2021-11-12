@@ -126,5 +126,9 @@
   {
     "code": "unsupportedOperation",
     "message": "\tFound an unsupported operation during input evaluation.\n\tType '!help unsupportedOperation' for more details."
+  },
+  {
+    "code": "wrongMatrixRowSize",
+    "message": "\tMatrix rows are not of the same length."
   }
 ]
