@@ -31,11 +31,17 @@
   },
   {
     "code": "invalidVariableFormat",
-    "message": "\tThis error is triggered when you try to register either a variable\n\tor an expression that does not fit set format.\n\n\t\t- Variable names are only composed of letters.\n\t\t- Expression prototypes must follow the same rule as variable names\n\t\t  followed by a coma separated list of parameters within brackets\n\t\t  and then the definition.\n"
+    "message": "\tThis error is triggered when you try to register either a variable\n\tor an {{ type1 }} that does not fit set format.\n\n\t\t- Variable names are only composed of letters.\n\t\t- {{ type1 }} prototypes must follow the same rule as variable names\n\t\t  followed by a coma separated list of parameters within brackets\n\t\t  and then the definition.\n",
+    "data": {
+      "type1": "Expression"
+    }
   },
   {
     "code": "matrixWrongDimensions",
-    "message": "\tThis error is triggered when you use matrix operations with incorrect input.\n\n\tRules:\n\n\t\t- Matrix addition and substraction needs two matrix with the same amount\n\t\t  sof rows and columns.\n\t\t- Matrix multiplication needs that the columns of the first matrix equal\n\t\t  the rows of the second.\n"
+    "message": "\tThis error is triggered when you use {{ type1 }} operations with incorrect input.\n\n\tRules:\n\n\t\t- {{ type1 }} addition and substraction needs two {{ type1 }} with the same amount\n\t\t  of rows and columns.\n\t\t- {{ type1 }} multiplication needs that the columns of the first matrix equal\n\t\t  the rows of the second.\n",
+    "data": {
+      "type1": "Matrix"
+    }
   },
   {
     "code": "notEquation",
@@ -46,10 +52,12 @@
     "message": "\tThis error is triggered when you try to update forbidden variables through\n\t'!set' command.\n\n\tProtected settings:\n\n\t\t- 'env.builtinfunctions'.\n\t\t- 'env.commands'.\n\t\t- 'env.forbiddenvariables'.\n\t\t- 'env.helpentries'.\n\t\t- 'env.protectedsettings'.\n"
   },
   {
-    "code": "unsuportedOperations",
-    "message": "\tThis error is triggered when input is not computable either due to\n\tthe laws of mathematics or because it is outside of the project scope.\n\n\tNot supported:\n\n\t\t- Power operation with complex or decimal exponent.\n\t\t- Modulus operation with {{ zero }}, complex or decimal modulus.\n\t\t- Division by {{ zero }}.\n",
+    "code": "unsupportedOperation",
+    "message": "\tThis error is triggered when input is not computable either due to\n\tthe laws of mathematics or because it is outside of the project scope.\n\n\tNot supported:\n\n\t\t- Power operation with complex or decimal exponent.\n\t\t- Modulus operation with {{ zero }}, complex or decimal modulus.\n\t\t- Division by {{ zero }}.\n\t\t- Addition and substraction between a {{ type1 }} and a {{ type2 }}.\n\t\t- Division, power and modulus operations on {{ type2 }}.\n",
     "data": {
-      "zero": 0
+      "zero": 0,
+      "type1": "Numeral",
+      "type2": "Matrix"
     }
   }
 ]

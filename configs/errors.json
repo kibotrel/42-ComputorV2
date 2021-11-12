@@ -117,7 +117,7 @@
   },
   {
     "code": "unknownVariable",
-    "message": "\tVariable '{{ name }}' not found within stored data."
+    "message": "\tVariable or Matrix '{{ name }}' not found within stored data."
   },
   {
     "code": "unrecognizedCommand",
