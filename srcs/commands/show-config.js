@@ -14,7 +14,7 @@ module.exports = (argumentsList) => {
       for (const property of Object.keys(Config[section])) {
         const dataType = typeof Config[section][property]
 
-        if (dataType != 'object') {
+        if (dataType !== 'object') {
           console.log(`\t\t\x1b[32;1m${property}\x1b[0;1m: ${dataType === 'number' ? '\x1b[33m' : '\x1b[36m'}${Config[section][property]}\x1b[0m`)
         }
       }

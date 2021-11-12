@@ -29,10 +29,10 @@ const computeVariable = async (token, type) => {
       throw new ComputorError({ data: { variable: variableName, expected: 'Expression', found: variable.constructor.name }, code: 'incorrectDataType' })
     }
 
-    // Add Matrix constructor later
-
     if (variable.constructor.name === 'Numeral') {
       return (sign < 0 ? Numeral.opposite(variable) : variable)
+    } else if (variable.constructor.name === 'Matrix') {
+      return (sign < 0 ? Matrix.opposite(variable) : variable)
     } else if (variable.constructor.name === 'Expression') {
       const func = variable
       const arguments = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
@@ -55,8 +55,9 @@ const computeVariable = async (token, type) => {
       }
 
       const value = await Expression.evaluate(func, argumentList)
+      const constructor = value.constructor.name === 'Matrix' ? Matrix : Numeral
 
-      return (sign < 0 ? Numeral.opposite(value) : value)
+      return (sign < 0 ? constructor.opposite(value) : value)
     }
   } catch (error) {
     return Promise.reject(error)

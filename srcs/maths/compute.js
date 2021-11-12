@@ -45,7 +45,7 @@ const computeVariable = async (token, type) => {
     } else if (variable.constructor.name === 'Matrix') {
       return (sign < 0 ? Matrix.opposite(variable) : variable)
     } else {
-      throw new ComputorError({ code: 'IDK' })
+      throw new ComputorError({ data: { name: variableName }, code: `unknown${type}` })
     }
   } catch (error) {
     return Promise.reject(error)

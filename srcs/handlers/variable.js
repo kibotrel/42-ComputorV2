@@ -40,6 +40,8 @@ const resolveVariable = async (request, type) => {
     
     if (variable.constructor.name === 'Numeral') {
       return (sign < 0 ? Numeral.opposite(variable) : variable)
+    } else if (variable.constructor.name === 'Matrix') {
+      return (sign < 0 ? Matrix.opposite(variable) : variable)
     } else if (variable.constructor.name === 'Expression') {
       const arguments = request.substring(request.indexOf('(') + 1, request.lastIndexOf(')')).split(',')
       const argumentList = []
