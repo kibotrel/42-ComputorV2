@@ -12,7 +12,7 @@ const simplifyFraction = ({ numerator, denominator }) => {
 const decimalToIntegerScaling = ({ number, shift }) => {
   // Quick fix for imprecision for some floating point values
   // by calculating the length of the truncated digits after
-  // the dot in the string representation of the number
+  // the dot in the string representation of the number.
 
   let numberString = parseFloat(number.toPrecision(Config.number.precision)).toString()
   const floatIndex = numberString.indexOf('.')
@@ -26,7 +26,7 @@ const decimalToIntegerScaling = ({ number, shift }) => {
       number *= 10
     }
 
-    // Once again a trick to correct precision error from javascript
+    // Once again a trick to correct precision error from javascript.
 
     number = parseFloat(number.toPrecision(Config.number.precision))
 

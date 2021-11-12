@@ -27,7 +27,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {
     // Check if we need to add a multiply sign between the bracket
     // and the token before it. This is happening if the last token
-    // is either a number or a custom variable that isn't a function
+    // is either a number or a custom variable that isn't a function.
 
     if (flags.numberStart !== -1) {
       let multiplySign = false

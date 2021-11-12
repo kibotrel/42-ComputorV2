@@ -44,7 +44,7 @@ const degree = async (arguments) => {
       x.r %= (Math.PI * 2)
     }
     
-    // y = x * 180 / π 
+    // y = x * 180 / π
 
     return new Numeral(toNumeral(x.r * 180 / Math.PI))
   } catch (error) {
@@ -58,7 +58,7 @@ const factorial = async (arguments) => {
 
     // A potential good candidate to handle complex and decimal value
     // would be the Gamma function where factorial(x) = Gamma(x + 1).
-    // More details => https://bit.ly/3hnuAml
+    // More details => https://bit.ly/3hnuAml.
 
     if (x.r < 0 || x.i || !Number.isInteger(x.r)) {
       throw new ComputorError({ code: 'builtinNotHandledOperator' })
@@ -117,7 +117,7 @@ const sqrt = async (arguments) => {
 
 // Implementation of Taylor series that approximates
 // functions through infinite expansion process.
-// More info => https://bit.ly/2UeTaMT
+// More info => https://bit.ly/2UeTaMT.
 
 const exp = async (arguments) => {
   try {

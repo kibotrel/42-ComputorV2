@@ -4,7 +4,7 @@ const { remainder, floor } = require('@srcs/maths/basic-functions.js')
 const { addFraction, multiplyFraction, divideFraction, modulusFraction } = require('@srcs/maths/fractions.js')
 const { checkNumeral, toNumeral, numeralFractionalParts } = require('@srcs/maths/utils.js')
 
-// r stands for real, i for imaginary, n for numerator and d for denominator
+// r stands for real, i for imaginary, n for numerator and d for denominator.
 
 class Numeral {
   constructor({ r, i, nr, ni, dr, di }) {
@@ -215,8 +215,8 @@ class Numeral {
     } else {
       // Used the parseFloat(x.toPrecision(15)) to correct small floating point
       // errors that happen sometimes due to the lack of precision in Javascript
-      // since we don't really need that much decimal digits. more informations on
-      // https://bit.ly/2OT0qLO
+      // since we don't really need that much decimal digits. more informations
+      // on https://bit.ly/2OT0qLO.
 
       const real = parseFloat(this.r.toPrecision(Config.number.precision))
       const separatorSign = this.i < 0 ? '-' : '+'

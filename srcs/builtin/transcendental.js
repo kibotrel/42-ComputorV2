@@ -6,7 +6,7 @@ const { toNumeral } = require('@srcs/maths/utils.js')
 
 // Implementation of Taylor series that approximates
 // functions through infinite expansion process.
-// More info => https://bit.ly/2UeTaMT
+// More info => https://bit.ly/2UeTaMT.
 
 const sin = async (arguments) => {
   try {
