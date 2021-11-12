@@ -37,7 +37,7 @@ module.exports = (argumentsList) => {
         console.log(`\t- \x1b[32m${help.code}\x1b[0;1m`)
       }
 
-      console.log('\nFor more information on a particular code, use \'\x1b[32m!help <Error>\'\x1b[0;1m.\x1b[0m\n')
+      console.log('\nFor more information on a particular code, use \'\x1b[32m!help <Error>\x1b[0;1m\'. You also have access to a bunch\nof commands to help you use the software. Type \'\x1b[32m!commands\x1b[0;1m\' to see them.\x1b[0m\n')
     } else {
       const [ code ] = argumentsList
       const entry = HelpEntries.find(el => el.code.toLowerCase() === code)
