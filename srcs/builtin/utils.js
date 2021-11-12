@@ -16,10 +16,17 @@ const sanitizeArguments = async ({ arguments, name, amount }) => {
         if (isValidBuiltin(argument)) {
           sanitizedArguments.push(await builtinHandler(argument))
         } else {
-          sanitizedArguments.push(await numeralValue(argument))
+          const value = await numeralValue(argument)
+
+          if (value.constructor.name === 'Matrix') {
+            throw new ComputorError({ code: 'builtinNotHandledOperator' })
+          }
+          sanitizedArguments.push(value)
         }
-      } else {
+      } else if (argument.constructor.name === 'Numeral') {
         sanitizedArguments.push(new Numeral(toNumeral(argument)))
+      } else {
+        throw new ComputorError({ code: 'builtinNotHandledOperator' })
       }
     }
 
