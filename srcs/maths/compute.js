@@ -26,8 +26,6 @@ const computeVariable = async (token, type) => {
       }
     }
 
-    // Add Matrix constructor later
-
     if (variable.constructor.name === 'Numeral') {
       return (sign < 0 ? Numeral.opposite(variable) : variable)
     } else if (variable.constructor.name === 'Expression') {
@@ -56,7 +54,7 @@ const computeVariable = async (token, type) => {
 
 const checkLastElement = async (token) => {
   try {
-    if (token.constructor.name === 'Numeral') {
+    if (token.constructor.name === 'Numeral' || token.constructor.name === 'Matrix') {
       return token
     } else if (token.constructor.name === 'String') {
       if ((token.match(/[a-z]/g) || []).length === 1 && (token.match(/i/g) || []).length === 1) {

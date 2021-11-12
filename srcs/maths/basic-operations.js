@@ -19,7 +19,7 @@ const sanitizeOperand = async (operand) => {
           throw new ComputorError({ data: { operand }, code: 'notNumber' })
         }
       }
-    } else if (operand.constructor.name === 'Numeral') {
+    } else if (operand.constructor.name === 'Numeral' || operand.constructor.name === 'Matrix') {
       trueOperand = operand
     }
 
@@ -50,10 +50,19 @@ module.exports = async ({ firstOperand, operator, secondOperand }) => {
   try {
     const { a, b } = await checkOperands({ firstOperand, secondOperand })
 
+    const operandTypes = [a.constructor.name, b.constructor.name]
+    const constructor = operandTypes.includes('Matrix') ? Matrix : Numeral
+
+    if (operator.match(/^[\/%^]$/) && constructor.name === 'Matrix') {
+      throw new ComputorError({ code: 'unsupportedOperation' })
+    } else if (operator.match(/^[+\-]$/) && operandTypes.filter(name => name === 'Matrix').length === 1) {
+      throw new ComputorError({ code: 'unsupportedOperation' })
+    }
+
     switch (operator) {
-      case '+': return await Numeral.add(a, b)
-      case '-': return await Numeral.substract(a, b)
-      case '*': return await Numeral.multiply(a, b)
+      case '+': return await constructor.add(a, b)
+      case '-': return await constructor.substract(a, b)
+      case '*': return await constructor.multiply(a, b)
       case '/': return await Numeral.divide(a, b)
       case '%': return await Numeral.modulus(a, b)
       case '^': return await Numeral.power(a, b)
