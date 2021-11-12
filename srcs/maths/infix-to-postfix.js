@@ -12,6 +12,8 @@ const checkLastElement = async (token) => {
       const { nr: ni, dr: di } = toNumeral(token.i)
 
       return new Numeral({ r: token.r, i: token.i, nr, ni, dr, di })
+    } else if (token.constructor.name === 'Matrix') {
+      return token
     } else if (token.constructor.name === 'String') {
       if ((token.match(/[a-z]/g) || []).length === 1 && (token.match(/i/g) || []).length === 1) {
         return parseImaginary(token)
