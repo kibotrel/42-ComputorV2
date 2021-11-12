@@ -3,6 +3,7 @@ const { Variables } = global
 module.exports = (argumentsList, type) => {
   try {
     const showList = []
+
     if (argumentsList.length) {
       throw { data: argumentsList.join(' '), code: 'invalidArgument' }
     }
@@ -11,6 +12,12 @@ module.exports = (argumentsList, type) => {
       if (element.value.constructor.name === type) {
         if (type === 'Expression') {
           showList.push(`${element.value.print()}`)
+        } else if (type === 'Matrix') {
+          // Needed to align matrix rows (name + two spaces + equal sign).
+
+          const padding = element.id.length + 3
+
+          showList.push(`\x1b[32;1m${element.id}\x1b[0;1m = ${element.value.print().split('\n\t').join(`\n\t${' '.repeat(padding)}`)}`)
         } else {
           showList.push(`\x1b[32;1m${element.id}\x1b[0;1m = ${element.value.print()}`)
         }

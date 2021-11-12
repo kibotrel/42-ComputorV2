@@ -113,7 +113,7 @@ class Matrix {
       array.push(`[ ${row.join(', ')} ]`)
     }
 
-    console.log(array.join('\n'))
+    return array.join('\n\t')
   }
 }
 

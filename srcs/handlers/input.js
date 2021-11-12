@@ -8,7 +8,8 @@ const { addToVariableList, resolveVariable } = require('@handlers/variable.js')
 const { numeralValue } = require('@srcs/maths/compute.js')
 
 const createFunction = require('@srcs/parsing/function.js')
-const { isFunction } = require('@srcs/parsing/utils.js')
+const createMatrix = require('@srcs/parsing/matrix.js')
+const { isFunction, isMatrix } = require('@srcs/parsing/utils.js')
 
 const storeVariable = async (inputLine) => {
   try {
@@ -31,6 +32,12 @@ const storeVariable = async (inputLine) => {
       throw new ComputorError({ data: { name: id }, code: 'invalidVariableFormat' })
     } else if (forbiddenVariables.indexOf(id) !== -1) {
       throw new ComputorError({ data: { name: id }, code: 'forbiddenVariableName' })
+    } else if (isMatrix(inputValue)) {
+      const value = await createMatrix(inputValue)
+
+      addToVariableList(id, value)
+
+      return { value, type: 'matrix' }
     } else {
       const value = await numeralValue(inputValue)
 
@@ -79,7 +86,7 @@ module.exports = async (payload) => {
 
     inputLine = inputLine.replace(/ /g, '')
 
-    if (!inputLine.match(/^[0-9a-z+\-*\/%^()\[\]=!?.,]+$/)) {
+    if (!inputLine.match(/^[0-9a-z+\-*\/%^()\[\]=!?.,;\[\]]+$/)) {
       throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
     }
 

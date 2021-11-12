@@ -38,7 +38,7 @@ global.Expression = require('@classes/expression.js')
 global.Matrix = require('@classes/matrix.js')
 
 // Some usefull functions that are needed quite often.
-// Making them global helps to avoid circular dependencies
+// Making them global helps to avoid circular dependencies.
 
 global.builtinHandler = require('@handlers/built-in.js')
 
@@ -55,7 +55,7 @@ Client.on('line', async (payload) => {
 
     if (type === 'computation') {
       console.log(`\n\x1b[1mComputation result:\x1b[0m\n\n\t${value.print()}\n`)
-    } else if (type.match(/^(expression|numeral)$/)) {
+    } else if (type.match(/^(expression|numeral|matrix)$/)) {
       console.log(`\n\x1b[1mNew \x1b[32m${value.constructor.name}\x1b[0;1m stored!\x1b[0m\n\n\t${value.print()}\n`)
     }
     
