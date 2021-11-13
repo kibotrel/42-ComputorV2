@@ -1,0 +1,92 @@
+[
+  {
+    "code": "config",
+    "message" : "\tDisplays current context configuration.",
+    "params": [],
+    "usage": "!config"
+  },
+  {
+    "code": "functions",
+    "message" : "\tDisplays all {{ type1 }} currently stored.",
+    "params": [],
+    "usage": "!functions",
+    "data": {
+      "type1": "Expression"
+    }
+  },
+  {
+    "code": "help",
+    "message" : "\tDisplays a list of documented errors that gives you some precision\n\t\tabout this software behaviour and limitations.",
+    "usage": "!help unsupportedOperation",
+    "params": [
+      {
+        "name": "errorCode",
+        "type": "String",
+        "required": false
+      }
+    ]
+  },
+  {
+    "code": "history",
+    "message": "\tDisplays the lasts {{ amount }} registered inputs by default. It can be\n\t\tshortened or lengthened via the '{{ command }}' command.",
+    "usage": "!history",
+    "data": {
+      "command": "!set env.historySize",
+      "amount": 25
+    }
+  },
+  {
+    "code": "matrices",
+    "message" : "\tDisplays all {{ type1 }} currently stored.",
+    "usage": "!matrices",
+    "data": {
+      "type1": "Matrix"
+    }
+  },
+  {
+    "code": "set",
+    "message" : "\tUpdate any authorized setting to your liking. All available\n\t\tsettings can be shown by '{{ configCommand }}'. Each setting is accessible\n\t\tthrough its section like so: '{{ settingExample }}'.",
+    "usage": "!set env.errorStackTrace true",
+    "params": [
+      {
+        "name": "setting",
+        "type": "String",
+        "required": true
+      },
+      {
+        "name": "newValue",
+        "type": "String, Number or Boolean",
+        "required": true
+      }
+    ],
+    "data": {
+      "configCommand": "!config",
+      "settingExample": "function.expensionCount"
+    }
+  },
+  {
+    "code": "solve",
+    "message": "\tAllows you to solve equations up to quadratic ones. More\n\t\tinformation about the process can be shown by tweaking\n\t\t'{{ verbose }}' setting and a graph can be printed if\n\t\t'{{ graph }}' is set.",
+    "usage": "!solve 8x^2 - 7 + 9 = 0.8x - 4",
+    "data": {
+      "verbose": "equation.verbose",
+      "graph": "equation.graph"
+    },
+    "params": [
+      {
+        "name": "equation",
+        "type": "String",
+        "required": true
+      }
+    ]
+  },
+  {
+    "code": "variables",
+    "message" : "\tDisplays all {{ type1 }} currently stored.",
+    "params": [],
+    "usage": "!variables",
+    "data": {
+      "type1": "Numeral"
+    }
+  }
+]

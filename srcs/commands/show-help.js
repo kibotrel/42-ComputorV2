@@ -1,4 +1,4 @@
-const HelpEntries = require('@configs/help.json')
+const HelpEntries = require('@docs/help.json')
 
 const fillTemplate = (template, data) => {
   let output = template.replace(/{{\s?([^{}\s]+)\s?}}/g, (str, value) => {

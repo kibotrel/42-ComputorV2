@@ -1,4 +1,4 @@
-const Errors = require('@configs/errors.json')
+const Errors = require('@docs/errors.json')
 
 const fillTemplate = (template, data) => {
   let output = template.replace(/{{\s?([^{}\s]+)\s?}}/g, (str, value) => {
