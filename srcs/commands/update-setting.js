@@ -11,7 +11,7 @@ const isValidBoolean = (string) => {
 module.exports = (argumentsList) => {
   try {
     if (argumentsList.length !== 2) {
-      throw { data: argumentsList.join(' '), code: 'invalidArgument' }
+      throw new ComputorError({ data: { name: '!set', found: argumentsList.length, expected: 2 }, code: 'incorrectParameterAmount' })
     }
 
     const [ setting, value ] = argumentsList

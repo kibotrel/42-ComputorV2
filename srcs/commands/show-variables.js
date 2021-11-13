@@ -5,7 +5,9 @@ module.exports = (argumentsList, type) => {
     const showList = []
 
     if (argumentsList.length) {
-      throw { data: argumentsList.join(' '), code: 'invalidArgument' }
+      const name = (type === 'Numeral' ? '!variables': type === 'Matrix' ? '!matrices' : '!functions')
+
+      throw new ComputorError({ data: { name, found: argumentsList.length, expected: 0 }, code: 'incorrectParameterAmount' })
     }
 
     for (const element of Variables) {

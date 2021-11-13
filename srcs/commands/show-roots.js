@@ -13,7 +13,7 @@ const parseArguments = async (argumentsList) => {
       if (isEquationToken(argument)) {
         params.push(argument)
       } else {
-        throw { data: argumentsList.join(' '), code: 'invalidArgument'}
+        throw new ComputorError({ data: { equation: argumentsList.join(' ') }, code: 'notEquation' })
       }
     }
     

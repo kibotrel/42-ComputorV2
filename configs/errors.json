@@ -13,11 +13,15 @@
   },
   {
     "code": "bracketsNotUsed",
-    "message": "\tUnused set of brackets foundd at index {{ index }} in '{{ string }}'."
+    "message": "\tUnused set of brackets found at index {{ index }} in '{{ string }}'."
   },
   {
     "code": "builtinNotHandledOperator",
     "message": "\tCannot process built-in function with given input(s).\n\tType '!help builtinNotHandledOperator' for more details."
+  },
+  { 
+    "code": "cyclicDeclaration",
+    "message": "\tExpression {{ expression }} cannot be used within itself."
   },
   {
     "code": "emptyExpression",
@@ -33,7 +37,7 @@
   },
   {
     "code": "incorrectDataType",
-    "message": "Invalid type requested for variable '{{ variable }}', expected {{ expected }} and found {{ found }}."
+    "message": "\tInvalid type requested for variable '{{ variable }}', expected {{ expected }} and found {{ found }}."
   },
   {
     "code": "incorrectParameterAmount",
@@ -44,8 +48,12 @@
     "message": "\tIncorrect value type for setting '{{ setting }}'.\n\tType '!help incorrectSettingType' for more details."
   },
   {
+    "code": "illegalCharacter",
+    "message": "\tIllegal character or whole term found during input parsing."
+  },
+  {
     "code": "illegalExpression",
-    "message": "Expression '{{ expression }}' is not handled by this program."
+    "message": "\tExpression '{{ expression }}' is not handled by this program."
   },
   {
     "code": "illegalImaginary",
@@ -97,7 +105,7 @@
   },
   {
     "code": "protectedSetting",
-    "message": "Tried to modify protected setting '{{ setting }}'.\n\tType '!help protectedSetting' for more details."
+    "message": "\tTried to modify protected setting '{{ setting }}'.\n\tType '!help protectedSetting' for more details."
   },
   {
     "code": "repeatedVariableName",
@@ -109,7 +117,7 @@
   },
   {
     "code": "unknownFunction",
-    "message": "Expression '{{ name }}' not found within stored data."
+    "message": "\tExpression '{{ name }}' not found within stored data."
   },
   {
     "code": "unknownSetting",

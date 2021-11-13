@@ -6,7 +6,7 @@ module.exports = (argumentsList) => {
       throw new ComputorError({ data: { name: '!config', found: argumentsList.length, expected: 0 }, code: 'incorrectParameterAmount' })
     }
 
-    console.log(`\x1b[1mCurrent context's\x1b[32m Settings\x1b[0;1m!\x1b[0m\n`)
+    console.log(`\x1b[1mCurrent context\x1b[32m Settings\x1b[0;1m!\x1b[0m\n`)
 
     for (const section of Object.keys(Config)) {
       console.log(`\t\x1b[32;1m${section[0].toLocaleUpperCase() + section.substring(1)}\x1b[0;1m:\x1b[0m\n`)

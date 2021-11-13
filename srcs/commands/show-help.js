@@ -1,4 +1,4 @@
-const HelpEntries = require('@configs//help.json')
+const HelpEntries = require('@configs/help.json')
 
 const fillTemplate = (template, data) => {
   let output = template.replace(/{{\s?([^{}\s]+)\s?}}/g, (str, value) => {
@@ -31,7 +31,7 @@ module.exports = (argumentsList) => {
     if (argumentsList.length > 1) {
       throw new ComputorError({ data: { name: '!help', found: argumentsList.length, expected: 'at most 1' }, code: 'incorrectParameterAmount' })
     } else if (!argumentsList.length) {
-      console.log('\n\x1b[1mThis program provide several details on some error codes. Here is the list of documented errors:\n')
+      console.log('\n\x1b[1mThis program provides several details on some error codes. Here is the list of documented errors:\n')
       
       for (const help of HelpEntries) {
         console.log(`\t- \x1b[32m${help.code}\x1b[0;1m`)

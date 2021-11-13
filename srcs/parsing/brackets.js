@@ -68,7 +68,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
           variableName = `${variableName}${functionArguments}`
 
           if (!isFunction(variableName) && !isComposite(variableName) && !isValidBuiltin(variableName)) {
-            throw { data: { expression: variableName }, code: 'illegalExpression'}
+            throw new ComputorError({ data: { expression: variableName }, code: 'illegalExpression' })
           }
 
           if (factor) {

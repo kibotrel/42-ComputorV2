@@ -36,7 +36,7 @@ module.exports = async (prototype, definition) => {
 
           throw new ComputorError({ data: { name }, code: 'unknownFunction' })
         } else if (sanitizeName(token) === functionName) {
-          throw { data: functionName, code: 'cyclicDeclaration' }
+          throw new ComputorError({ data: { expression: functionName }, code: 'cyclicDeclaration' })
         }
       }
     }

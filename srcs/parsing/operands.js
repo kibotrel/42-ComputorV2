@@ -1,7 +1,7 @@
 const number = ({ string, i }, flags) => {
   try {
     if (flags.complex || flags.variable) {
-      throw { data: string, code: 'illegalTerm', index: i }
+      throw new ComputorError({ code: 'illegalCharacter' })
     }
 
     if (!flags.number && !flags.sign) {
@@ -18,7 +18,7 @@ const number = ({ string, i }, flags) => {
 const decimal = async ({ string, i }, flags) => {
   try {
     if (flags.complex || flags.variable) {
-      throw { data: string, code: 'illegalTerm', index: i }
+      throw new ComputorError({ data: { index: i }, code: 'illegalCharacter' })
     } else if (!flags.number || flags.decimal) {
       throw new ComputorError({ data: { string, index: i }, code: 'misformattedFloat' })
     }

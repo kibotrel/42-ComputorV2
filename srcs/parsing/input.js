@@ -40,10 +40,10 @@ const sanitizeStack = async (infixStack) => {
             finalStack.push(variableName)
           }
         } else {
-          throw { data: token, code: 'illegalTerm' }
+          throw new ComputorError({ code: 'illegalCharacter' })
         }
       } else {
-        throw { data: token, code: 'illegalTerm' }
+        throw new ComputorError({ code: 'illegalCharacter' })
       }
     }
 
