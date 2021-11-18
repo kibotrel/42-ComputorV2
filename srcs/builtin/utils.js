@@ -23,7 +23,7 @@ const sanitizeArguments = async ({ arguments, name, amount }) => {
           }
           sanitizedArguments.push(value)
         }
-      } else if (argument.constructor.name === 'Numeral') {
+      } else if (argument.constructor.name === 'Numeral' || argument.constructor.name === 'Number') {
         sanitizedArguments.push(new Numeral(toNumeral(argument)))
       } else {
         throw new ComputorError({ code: 'builtinNotHandledOperator' })
