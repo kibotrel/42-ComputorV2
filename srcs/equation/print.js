@@ -51,12 +51,14 @@ const printEquationType = (degree) => {
 }
 
 const printConstant = (c) => {
-  console.log('\n\x1b[1;4mSolution(s):\x1b[0m\n')
+  if (!Config.env.silentMode) {
+    console.log('\n\x1b[1;4mSolution(s):\x1b[0m\n')
 
-  if (c === 0) {
-    console.log('\t\x1b[33;1mℝ\x1b[0m, the set of real number is the solution to this equation.\n')
-  } else {
-    console.log('\tThis equation does not have any solution.\n')
+    if (c === 0) {
+      console.log('\t\x1b[33;1mℝ\x1b[0m, the set of real number is the solution to this equation.\n')
+    } else {
+      console.log('\tThis equation does not have any solution.\n')
+    }
   }
 }
 
@@ -67,16 +69,18 @@ const printLinear = async (b, c) => {
   const minusC = await Numeral.substract(0, c)
   const root = await Numeral.divide(minusC, b)
 
-  console.log('\n\x1b[1;4mSolution:\x1b[0m\n')
+  if (!Config.env.silentMode) {
+    console.log('\n\x1b[1;4mSolution:\x1b[0m\n')
 
-  if (Config.equation.verbose) {
-    console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${b.print()}\x1b[2m, b = ${c.print()}\x1b[2m\n`)
-    console.log('\tResolution:\n\n\t\tx = -b / a')
-    console.log(`\t\tx = ${Config.number.fractionForm && !Number.isInteger(minusC.r) ? `(${minusC.print()}\x1b[2m)` : minusC.print()}\x1b[2m / ${Config.number.fractionForm && !Number.isInteger(b.r) ? `(${b.print()}\x1b[2m)` : b.print()}`)
-    console.log(`\t\t\x1b[4m\x1b[2mx = ${root.print()}\n\x1b[0m`)
+    if (Config.equation.verbose) {
+      console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${b.print()}\x1b[2m, b = ${c.print()}\x1b[2m\n`)
+      console.log('\tResolution:\n\n\t\tx = -b / a')
+      console.log(`\t\tx = ${Config.number.fractionForm && !Number.isInteger(minusC.r) ? `(${minusC.print()}\x1b[2m)` : minusC.print()}\x1b[2m / ${Config.number.fractionForm && !Number.isInteger(b.r) ? `(${b.print()}\x1b[2m)` : b.print()}`)
+      console.log(`\t\t\x1b[4m\x1b[2mx = ${root.print()}\n\x1b[0m`)
+    }
+
+    console.log(`\tThe solution to this equation is \x1b[1;33m${root.print()}\x1b[0m.\n`)
   }
-
-  console.log(`\tThe solution to this equation is \x1b[1;33m${root.print()}\x1b[0m.\n`)
 }
 
 const printQuadratic = async (a, b, c) => {
@@ -90,10 +94,12 @@ const printQuadratic = async (a, b, c) => {
     const minusB = await Numeral.substract(0, b)
     const twoA = await Numeral.multiply(2, a)
 
-    console.log('\n\x1b[1;4mSolution(s):\x1b[0m\n')
+    if (!Config.env.silentMode) {
+      console.log('\n\x1b[1;4mSolution(s):\x1b[0m\n')
 
-    if (Config.equation.verbose) {
-      console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${a.print()}\x1b[2m, b = ${b.print()}\x1b[2m, c = ${c.print()}\x1b[2m, Δ = ${discriminant.print()}\x1b[0m\n`)
+      if (Config.equation.verbose) {
+        console.log(`\t\x1b[2mVariables:\n\n\t\ta = ${a.print()}\x1b[2m, b = ${b.print()}\x1b[2m, c = ${c.print()}\x1b[2m, Δ = ${discriminant.print()}\x1b[0m\n`)
+      }
     }
 
     if (discriminant.r > 0) {
@@ -101,26 +107,30 @@ const printQuadratic = async (a, b, c) => {
       const positiveRoot = await Numeral.divide(await Numeral.add(minusB, sqrtDiscriminant), twoA)
       const negativeRoot = await Numeral.divide(await Numeral.substract(minusB, sqrtDiscriminant), twoA)
 
-      if (Config.equation.verbose) {
-        console.log('\t\x1b[2mResolution:\n\n\t\tx\'= (-b + √Δ) / 2a')
-        console.log(`\t\tx'= (${minusB.print()}\x1b[2m + ${sqrtDiscriminant.print()}\x1b[2m) / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
-        console.log(`\t\t\x1b[2;4mx'= ${positiveRoot.print()}\x1b[0;2m\n`)
-        console.log('\n\t\tx"= (-b - √Δ) / 2a')
-        console.log(`\t\tx"= (${minusB.print()}\x1b[2m - ${sqrtDiscriminant.print()}\x1b[2m) / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
-        console.log(`\t\t\x1b[2;4mx"= ${negativeRoot.print()}\x1b[0m\n`)
-      }
+      if (!Config.env.silentMode) {
+        if (Config.equation.verbose) {
+          console.log('\t\x1b[2mResolution:\n\n\t\tx\'= (-b + √Δ) / 2a')
+          console.log(`\t\tx'= (${minusB.print()}\x1b[2m + ${sqrtDiscriminant.print()}\x1b[2m) / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
+          console.log(`\t\t\x1b[2;4mx'= ${positiveRoot.print()}\x1b[0;2m\n`)
+          console.log('\n\t\tx"= (-b - √Δ) / 2a')
+          console.log(`\t\tx"= (${minusB.print()}\x1b[2m - ${sqrtDiscriminant.print()}\x1b[2m) / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
+          console.log(`\t\t\x1b[2;4mx"= ${negativeRoot.print()}\x1b[0m\n`)
+        }
 
-      console.log(`\tThe discriminant of this equation is strictly positive (\x1b[1;33m${discriminant.print()}\x1b[0m).\n\tSo it has two real roots: \x1b[1;33m${positiveRoot.print()}\x1b[0m and \x1b[1;33m${negativeRoot.print()}\x1b[0m.\n`)
+        console.log(`\tThe discriminant of this equation is strictly positive (\x1b[1;33m${discriminant.print()}\x1b[0m).\n\tSo it has two real roots: \x1b[1;33m${positiveRoot.print()}\x1b[0m and \x1b[1;33m${negativeRoot.print()}\x1b[0m.\n`)
+      }
     } else if (discriminant.r === 0) {
       const zeroRoot = await Numeral.divide(minusB, twoA)
 
-      if (Config.equation.verbose) {
-        console.log('\t\x1b[2mResolution:\n\n\t\tx = -b / 2a')
-        console.log(`\t\tx = ${Config.number.fractionForm && !Number.isInteger(minusB.r) ? `(${minusB.print()}\x1b[2m)` : minusB.print()}\x1b[2m / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
-        console.log(`\t\t\x1b[4m\x1b[2mx = ${zeroRoot.print()}\x1b[0m\n`)
-      }
+      if (!Config.env.silentMode) {
+        if (Config.equation.verbose) {
+          console.log('\t\x1b[2mResolution:\n\n\t\tx = -b / 2a')
+          console.log(`\t\tx = ${Config.number.fractionForm && !Number.isInteger(minusB.r) ? `(${minusB.print()}\x1b[2m)` : minusB.print()}\x1b[2m / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
+          console.log(`\t\t\x1b[4m\x1b[2mx = ${zeroRoot.print()}\x1b[0m\n`)
+        }
 
-      console.log(`\tThe discriminant of this equation is equal to \x1b[33;1m0\x1b[0m.\n\tSo it has a unique real root: \x1b[1;33m${zeroRoot.print()}\x1b[0m.\n`)
+        console.log(`\tThe discriminant of this equation is equal to \x1b[33;1m0\x1b[0m.\n\tSo it has a unique real root: \x1b[1;33m${zeroRoot.print()}\x1b[0m.\n`)
+      }
     } else {
       const absoluteDiscriminant = await sqrt([await abs([discriminant.r])])
 
@@ -129,16 +139,18 @@ const printQuadratic = async (a, b, c) => {
       const positiveComplexRoot = await Numeral.divide(positiveComplex, twoA)
       const negativeComplexRoot = await Numeral.divide(negativeComplex, twoA)
 
-      if (Config.equation.verbose) {
-        console.log('\t\x1b[2mResolution:\n\n\t\tz\' = (-b - √|Δ| * i) / 2a')
-        console.log(`\t\t\z' = (${negativeComplex.print()}\x1b[2m) / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
-        console.log(`\t\t\x1b[4m\x1b[2mz' = ${negativeComplexRoot.print()}\x1b[0;2m\n`)
-        console.log('\t\tz" = (-b + √|Δ| * i) / 2a\n')
-        console.log(`\t\tz" = (${positiveComplex.print()}\x1b[2m) / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
-        console.log(`\t\t\x1b[4m\x1b[2mz" = ${positiveComplexRoot.print()}\x1b[0m\n`)
-      }
+      if (!Config.env.silentMode) {
+        if (Config.equation.verbose) {
+          console.log('\t\x1b[2mResolution:\n\n\t\tz\' = (-b - √|Δ| * i) / 2a')
+          console.log(`\t\t\z' = (${negativeComplex.print()}\x1b[2m) / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
+          console.log(`\t\t\x1b[4m\x1b[2mz' = ${negativeComplexRoot.print()}\x1b[0;2m\n`)
+          console.log('\t\tz" = (-b + √|Δ| * i) / 2a\n')
+          console.log(`\t\tz" = (${positiveComplex.print()}\x1b[2m) / ${Config.number.fractionForm && !Number.isInteger(twoA.r) ? `(${twoA.print()}\x1b[2m)` : twoA.print()}`)
+          console.log(`\t\t\x1b[4m\x1b[2mz" = ${positiveComplexRoot.print()}\x1b[0m\n`)
+        }
 
-      console.log(`\tThe discriminant of this equation is stricly negative (\x1b[1;33m${discriminant.print()}\x1b[0m).\n\tIt has two complex roots: \x1b[1;33m${positiveComplexRoot.print()}\x1b[0m and \x1b[1;33m${negativeComplexRoot.print()}\x1b[0m.\n`)
+        console.log(`\tThe discriminant of this equation is stricly negative (\x1b[1;33m${discriminant.print()}\x1b[0m).\n\tIt has two complex roots: \x1b[1;33m${positiveComplexRoot.print()}\x1b[0m and \x1b[1;33m${negativeComplexRoot.print()}\x1b[0m.\n`)
+      }
     }
   } catch (error) {
     return Promise.reject(error)

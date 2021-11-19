@@ -50,13 +50,16 @@ const fillTemplate = (template, data) => {
       if (argumentsList.length > 1) {
         throw new ComputorError({ data: { name: '!commands', found: argumentsList.length, expected: 'at most 1' }, code: 'incorrectParameterAmount' })
       } else if (!argumentsList.length) {
-        console.log('\n\x1b[1mThis program has few commands you can use to interact with it. Here is the list of documented commands:\n')
-        
-        for (const command of CommandEntries) {
-          console.log(`\t- \x1b[32m${command.code}\x1b[0;1m`)
+        if (!Config.env.silentMode) {
+          console.log('\n\x1b[1mThis program has few commands you can use to interact with it. Here is the list of documented commands:\n')
+          
+          for (const command of CommandEntries) {
+            console.log(`\t- \x1b[32m${command.code}\x1b[0;1m`)
+          }
+    
+          console.log('\nFor more information on a particular command, use \'\x1b[32m!commands <Command>\x1b[0;1m\'. To use a particular command\nsimply type \'\x1b[32m!<Command> [optionnalParameter1 ... optionnalParameterN]\x1b[0;1m\'.\x1b[0m\n')
         }
-  
-        console.log('\nFor more information on a particular command, use \'\x1b[32m!commands <Command>\x1b[0;1m\'. To use a particular command\nsimply type \'\x1b[32m!<Command> [optionnalParameter1 ... optionnalParameterN]\x1b[0;1m\'.\x1b[0m\n')
+        
         return CommandEntries.map(entry => entry.code)
       } else {
         const [ code ] = argumentsList
@@ -64,7 +67,7 @@ const fillTemplate = (template, data) => {
   
         if (!entry) {
           throw new ComputorError({ data: { command: `!commands ${code}` }, code: 'unrecognizedCommand' })
-        } else {
+        } else if (!Config.env.silentMode) {
           console.log(`\n\x1b[32;1m${entry.code}\x1b[0;1m:\n\n\tDescription:\n\n\t${fillTemplate(entry.message, entry.data)}\n\n\t\x1b[1mExample:\n\n\t\t'\x1b[32m${entry.usage}\x1b[0;1m'.\x1b[0m\n`)
         
           if (entry.params) {

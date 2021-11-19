@@ -10,12 +10,9 @@ const Reader = require('readline')
 const Client = Reader.createInterface({ input: process.stdin, output: process.stdout })
 
 // This variable holds the configuration of the program. It
-// can be read and modified everywhere else. fs and Object
-// are used to work around shitty Javascript behaviour
-// when you try to reset variable to file content.
+// can be read and modified everywhere else.
 
-const fs = require('fs')
-global.Config = new Object(JSON.parse(fs.readFileSync('configs/env.json')))
+global.Config = require('@configs/env.json')
 
 // This variable holds every single registered variable
 // during the program context and can be read and modified

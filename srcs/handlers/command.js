@@ -1,5 +1,3 @@
-const { env: { commands } } = Config
-
 const showRoots = require('@commands/show-roots.js')
 const showVariables = require('@commands/show-variables.js')
 const showHistory = require('@commands/show-history.js')
@@ -13,9 +11,9 @@ module.exports = async (inputLine) => {
   try {
     const commandParts = inputLine.split(/\s+/)
     const commandName = commandParts[0]
-    const commandArguments = commandParts.slice(1, commandParts.length)
+    const argumentsList = commandParts.slice(1, commandParts.length)
 
-    if (commands.indexOf(commandName) < 0) {
+    if (Config.env.commands.indexOf(commandName) < 0) {
       throw new ComputorError({ data: { command: commandParts.join(' ') }, code: 'unrecognizedCommand' })
     }
 
@@ -23,25 +21,25 @@ module.exports = async (inputLine) => {
 
     switch (commandName) {
       case '!variables':
-        value = await showVariables(commandArguments, 'Numeral'); break
+        value = await showVariables(argumentsList, 'Numeral'); break
       case '!matrices':
-        value = await showVariables(commandArguments, 'Matrix'); break
+        value = await showVariables(argumentsList, 'Matrix'); break
       case '!functions':
-        value = await showVariables(commandArguments, 'Expression'); break
+        value = await showVariables(argumentsList, 'Expression'); break
       case '!solve':
-        value = await showRoots(commandArguments); break
+        value = await showRoots(argumentsList); break
       case '!history':
-        value = await showHistory(commandArguments); break
+        value = await showHistory(argumentsList); break
       case '!set':
-        value = await updateSetting(commandArguments); break
+        value = await updateSetting(argumentsList); break
       case '!config':
-        value = await showConfig(commandArguments); break
+        value = await showConfig(argumentsList); break
       case '!help':
-        value = await showHelp(commandArguments); break
+        value = await showHelp(argumentsList); break
       case '!commands':
-        value = await showCommands(commandArguments); break
+        value = await showCommands(argumentsList); break
       case '!reset':
-        value = await resetEnv(commandArguments); break
+        value = await resetEnv(argumentsList); break
     }
 
     return { value, type: 'command' }

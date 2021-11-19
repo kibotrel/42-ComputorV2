@@ -1,6 +1,4 @@
-const { Variables } = global
-
-module.exports = async (argumentsList, type) => {
+module.exports = async (argumentsList, type, silentMode = false) => {
   try {
     const showList = []
     const rawList = []
@@ -28,11 +26,13 @@ module.exports = async (argumentsList, type) => {
       }
     }
 
-    if (!showList.length) {
-      console.log(`\n\x1b[1mNo \x1b[32m${type}\x1b[0;1m recorded yet!\x1b[0m\n`)
-    } else {
-      console.log(`\n\x1b[1mFound \x1b[33m${showList.length} \x1b[32m${type}\x1b[0;1m element(s):\x1b[0m\n`)
-      console.log(`\t${showList.join('\n\t')}\n`)
+    if (!Config.env.silentMode && !silentMode) {
+      if (!showList.length) {
+        console.log(`\n\x1b[1mNo \x1b[32m${type}\x1b[0;1m recorded yet!\x1b[0m\n`)
+      } else {
+        console.log(`\n\x1b[1mFound \x1b[33m${showList.length} \x1b[32m${type}\x1b[0;1m element(s):\x1b[0m\n`)
+        console.log(`\t${showList.join('\n\t')}\n`)
+      }
     }
 
     return rawList

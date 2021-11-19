@@ -32,8 +32,10 @@ module.exports = async (equation) => {
     const reducedList = reduceEquation(polynomList)
     const degree = equationDegree(reducedList)
 
-    printReducedEquation(reducedList)
-    printEquationType(degree)
+    if (!Config.env.silentMode) {
+      printReducedEquation(reducedList)
+      printEquationType(degree)
+    }
 
     if (degree <= 2) {
       const foundA = reducedList.filter((element) => {return element.power === 2})[0]

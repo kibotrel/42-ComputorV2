@@ -41,13 +41,15 @@ module.exports = (argumentsList) => {
     if (argumentsList.length > 1) {
       throw new ComputorError({ data: { name: '!help', found: argumentsList.length, expected: 'at most 1' }, code: 'incorrectParameterAmount' })
     } else if (!argumentsList.length) {
-      console.log('\n\x1b[1mThis program provides several details on some error codes. Here is the list of documented errors:\n')
-      
-      for (const help of HelpEntries) {
-        console.log(`\t- \x1b[32m${help.code}\x1b[0;1m`)
-      }
+      if (!Config.env.silentMode) {
+        console.log('\n\x1b[1mThis program provides several details on some error codes. Here is the list of documented errors:\n')
+        
+        for (const help of HelpEntries) {
+          console.log(`\t- \x1b[32m${help.code}\x1b[0;1m`)
+        }
 
-      console.log('\nFor more information on a particular code, use \'\x1b[32m!help <Error>\x1b[0;1m\'. You also have access to a bunch\nof commands to help you use the software. Type \'\x1b[32m!commands\x1b[0;1m\' to see them.\x1b[0m\n')
+        console.log('\nFor more information on a particular code, use \'\x1b[32m!help <Error>\x1b[0;1m\'. You also have access to a bunch\nof commands to help you use the software. Type \'\x1b[32m!commands\x1b[0;1m\' to see them.\x1b[0m\n')
+      }
 
       return HelpEntries.map(entry => entry.code)
     } else {
@@ -56,7 +58,7 @@ module.exports = (argumentsList) => {
 
       if (!entry) {
         throw new ComputorError({ data: { command: `!help ${code}` }, code: 'unrecognizedCommand' })
-      } else {
+      } else if (!Config.env.silentMode) {
         console.log(`\n\x1b[31;1m${entry.code}\x1b[0m:\n\n${fillTemplate(entry.message, entry.data)}`)
       }
       
