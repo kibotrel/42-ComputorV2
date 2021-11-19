@@ -1,12 +1,12 @@
 const { Variables } = global
 
-module.exports = (argumentsList, type) => {
+module.exports = async (argumentsList, type) => {
   try {
     const showList = []
     const rawList = []
 
     if (argumentsList.length) {
-      const name = (type === 'Numeral' ? '!variables': type === 'Matrix' ? '!matrices' : '!functions')
+      const name = (type === 'Numeral' ? '!variables' : type === 'Matrix' ? '!matrices' : '!functions')
 
       throw new ComputorError({ data: { name, found: argumentsList.length, expected: 0 }, code: 'incorrectParameterAmount' })
     }

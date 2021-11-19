@@ -7,6 +7,7 @@ const showConfig = require('@commands/show-config.js')
 const updateSetting = require('@commands/update-setting.js')
 const showHelp = require('@commands/show-help.js')
 const showCommands = require('@commands/show-commands.js')
+const resetEnv = require('@commands/reset-env.js')
 
 module.exports = async (inputLine) => {
   try {
@@ -39,6 +40,8 @@ module.exports = async (inputLine) => {
         value = await showHelp(commandArguments); break
       case '!commands':
         value = await showCommands(commandArguments); break
+      case '!reset':
+        value = await resetEnv(commandArguments); break
     }
 
     return { value, type: 'command' }

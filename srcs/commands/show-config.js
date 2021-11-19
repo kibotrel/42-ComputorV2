@@ -1,5 +1,3 @@
-const { Config } = global
-
 module.exports = (argumentsList) => {
   try {
     if (argumentsList.length) {

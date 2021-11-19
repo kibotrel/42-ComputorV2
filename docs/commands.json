@@ -44,6 +44,11 @@
     }
   },
   {
+    "code": "reset",
+    "message": "\tWipe out input history, all stored variables and revert context configuration to default. ",
+    "usage": "!reset"
+  },
+  {
     "code": "set",
     "message" : "\tUpdate any authorized setting to your liking. All available\n\t\tsettings can be shown by '{{ configCommand }}'. Each setting is accessible\n\t\tthrough its section like so: '{{ settingExample }}'.",
     "usage": "!set env.errorStackTrace true",
