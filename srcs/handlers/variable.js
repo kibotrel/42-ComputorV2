@@ -1,5 +1,3 @@
-const { Variables } = global
-
 const { isVariableRegistered, isValidBuiltin, sanitizeName } = require('@env/utils.js')
 
 const { numeralValue } = require('@srcs/maths/compute.js')

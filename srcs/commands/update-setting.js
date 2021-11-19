@@ -1,5 +1,3 @@
-const { Config } = global
-
 const isValidNumber = (string) => {
   return string.match(/^\d+$/)
 } 

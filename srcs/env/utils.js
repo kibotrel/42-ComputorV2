@@ -1,5 +1,3 @@
-const { Config } = global
-
 const isVariableRegistered = (token) => {
   const name = sanitizeName(token)
 
