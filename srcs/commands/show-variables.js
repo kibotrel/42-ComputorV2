@@ -3,6 +3,7 @@ const { Variables } = global
 module.exports = (argumentsList, type) => {
   try {
     const showList = []
+    const rawList = []
 
     if (argumentsList.length) {
       const name = (type === 'Numeral' ? '!variables': type === 'Matrix' ? '!matrices' : '!functions')
@@ -12,6 +13,7 @@ module.exports = (argumentsList, type) => {
 
     for (const element of Variables) {
       if (element.value.constructor.name === type) {
+        rawList.push(element.value)
         if (type === 'Expression') {
           showList.push(`${element.value.print()}`)
         } else if (type === 'Matrix') {
@@ -32,6 +34,8 @@ module.exports = (argumentsList, type) => {
       console.log(`\n\x1b[1mFound \x1b[33m${showList.length} \x1b[32m${type}\x1b[0;1m element(s):\x1b[0m\n`)
       console.log(`\t${showList.join('\n\t')}\n`)
     }
+
+    return rawList
   } catch (error) {
     return Promise.reject(error)
   }

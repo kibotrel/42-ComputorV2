@@ -18,28 +18,30 @@ module.exports = async (inputLine) => {
       throw new ComputorError({ data: { command: commandParts.join(' ') }, code: 'unrecognizedCommand' })
     }
 
+    let value
+
     switch (commandName) {
       case '!variables':
-        await showVariables(commandArguments, 'Numeral'); break
+        value = await showVariables(commandArguments, 'Numeral'); break
       case '!matrices':
-        await showVariables(commandArguments, 'Matrix'); break
+        value = await showVariables(commandArguments, 'Matrix'); break
       case '!functions':
-        await showVariables(commandArguments, 'Expression'); break
+        value = await showVariables(commandArguments, 'Expression'); break
       case '!solve':
-        await showRoots(commandArguments); break
+        value = await showRoots(commandArguments); break
       case '!history':
-        await showHistory(commandArguments); break
+        value = await showHistory(commandArguments); break
       case '!set':
-        await updateSetting(commandArguments); break
+        value = await updateSetting(commandArguments); break
       case '!config':
-        await showConfig(commandArguments); break
+        value = await showConfig(commandArguments); break
       case '!help':
-        await showHelp(commandArguments); break
+        value = await showHelp(commandArguments); break
       case '!commands':
-        await showCommands(commandArguments); break
+        value = await showCommands(commandArguments); break
     }
 
-    return { value: commandName, type: 'command' }
+    return { value, type: 'command' }
   } catch (error) {
     return Promise.reject(error)  
   }

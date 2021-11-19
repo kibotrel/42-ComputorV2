@@ -9,6 +9,7 @@ module.exports = (argumentsList) => {
     console.log(`\x1b[1mCurrent context\x1b[32m Settings\x1b[0;1m!\x1b[0m\n`)
 
     for (const section of Object.keys(Config)) {
+
       console.log(`\t\x1b[32;1m${section[0].toLocaleUpperCase() + section.substring(1)}\x1b[0;1m:\x1b[0m\n`)
       
       for (const property of Object.keys(Config[section])) {
@@ -21,6 +22,8 @@ module.exports = (argumentsList) => {
 
       console.log('')
     }
+    
+    return Config
   } catch (error) {
     return Promise.reject(error)
   }

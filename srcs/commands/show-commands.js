@@ -47,6 +47,7 @@ const fillTemplate = (template, data) => {
         }
   
         console.log('\nFor more information on a particular command, use \'\x1b[32m!commands <Command>\x1b[0;1m\'. To use a particular command\nsimply type \'\x1b[32m!<Command> [optionnalParameter1 ... optionnalParameterN]\x1b[0;1m\'.\x1b[0m\n')
+        return CommandEntries.map(entry => entry.code)
       } else {
         const [ code ] = argumentsList
         const entry = CommandEntries.find(el => el.code.toLowerCase() === code)
@@ -68,6 +69,8 @@ const fillTemplate = (template, data) => {
             console.log('\x1b[0m\n')
           }
         }
+
+        return entry
       }
     } catch (error) {
       return Promise.reject(error)

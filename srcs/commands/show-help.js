@@ -38,6 +38,8 @@ module.exports = (argumentsList) => {
       }
 
       console.log('\nFor more information on a particular code, use \'\x1b[32m!help <Error>\x1b[0;1m\'. You also have access to a bunch\nof commands to help you use the software. Type \'\x1b[32m!commands\x1b[0;1m\' to see them.\x1b[0m\n')
+
+      return HelpEntries.map(entry => entry.code)
     } else {
       const [ code ] = argumentsList
       const entry = HelpEntries.find(el => el.code.toLowerCase() === code)
@@ -47,6 +49,8 @@ module.exports = (argumentsList) => {
       } else {
         console.log(`\n\x1b[31;1m${entry.code}\x1b[0m:\n\n${fillTemplate(entry.message, entry.data)}`)
       }
+      
+      return entry
     }
   } catch (error) {
     return Promise.reject(error)

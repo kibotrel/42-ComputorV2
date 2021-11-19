@@ -31,6 +31,7 @@ module.exports = async (argumentsList) => {
     if (Config.equation.graph) {
       await plotEquation(equation)
     }
+    return equation
   } catch (error) {
     return Promise.reject(error)
   }

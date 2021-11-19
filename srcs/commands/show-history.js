@@ -17,6 +17,8 @@ module.exports = (argumentsList) => {
     }
 
     console.log(`\n\x1b[1mRegistered \x1b[33;1m${InputHistory.length}\x1b[0;1m inputs !\x1b[0m\n\n${promptedHistory.join('\n')}`)
+
+    return InputHistory
   } catch (error) {
     return Promise.reject(error)
   }
