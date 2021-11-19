@@ -1,5 +1,3 @@
-const { env: { historySize } } = Config
-
 const { countDigits, fillDigits } = require('@env/utils.js')
 
 module.exports = (argumentsList) => {
@@ -9,8 +7,8 @@ module.exports = (argumentsList) => {
     }
 
     const promptedHistory = []
+    const startIndex = Config.env.historySize > 0 ? Math.max(0, InputHistory.length - Config.env.historySize) : 0
     const indexSize = countDigits(InputHistory.length - 1)
-    const startIndex = historySize ? Math.max(0, InputHistory.length - historySize) : 0
 
     for (let i = startIndex; i < InputHistory.length; i++) {
       promptedHistory.push(`\t\x1b[33;1m${fillDigits(i, indexSize)}\x1b[32;1m: ${InputHistory[i]}\x1b[0m`)
