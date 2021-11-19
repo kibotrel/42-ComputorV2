@@ -1,8 +1,6 @@
-const { env: { forbiddenVariables } } = Config
-
 const { registerHistory } = require('@env/history.js')
 
-const commmandHandler = require('@handlers/command.js')
+const commandHandler = require('@handlers/command.js')
 const { addToVariableList, resolveVariable } = require('@handlers/variable.js')
 
 const { numeralValue } = require('@srcs/maths/compute.js')
@@ -21,7 +19,7 @@ const storeVariable = async (inputLine) => {
       const value = await createFunction(id, inputValue)
       const realId = id.substring(0, id.indexOf('('))
       
-      if (forbiddenVariables.indexOf(realId) !== -1) {
+      if (Config.env.forbiddenVariables.indexOf(realId) !== -1) {
         throw new ComputorError({ data: { name: realId }, code: 'forbiddenVariableName' })
       }
 
@@ -30,7 +28,7 @@ const storeVariable = async (inputLine) => {
       return { value, type: 'expression' }
     } else if (!id.match(/^[a-z]+$/)) {
       throw new ComputorError({ data: { name: id }, code: 'invalidVariableFormat' })
-    } else if (forbiddenVariables.indexOf(id) !== -1) {
+    } else if (Config.env.forbiddenVariables.indexOf(id) !== -1) {
       throw new ComputorError({ data: { name: id }, code: 'forbiddenVariableName' })
     } else if (isMatrix(inputValue)) {
       const value = await createMatrix(inputValue)
@@ -83,7 +81,7 @@ module.exports = async (payload) => {
     } 
     
     if (inputLine.startsWith('!')) {
-      return await commmandHandler(inputLine)
+      return await commandHandler(inputLine)
     }
 
     inputLine = inputLine.replace(/ /g, '')
