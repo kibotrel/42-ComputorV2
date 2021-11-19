@@ -1,6 +1,6 @@
 module.exports = (error) => {
   if (error.constructor.name === 'ComputorError') {
-    error.print()
+    console.log(error.print())
 
     if (Config.env.errorStackTrace) {
       console.log(error.stack)
