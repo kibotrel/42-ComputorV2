@@ -16,7 +16,7 @@ const fillTemplate = (template, data) => {
 
   const pairsArray = Object.entries(data || {})
 
-  if (!pairsArray.filter(([ key, value ]) => value.includes('\'')).length) {
+  if (!pairsArray.filter(([ key, value ]) => value.toString().includes('\'')).length) {
     for(let i = 0; i < output.length; i++) {
       if (output[i] === '\'') {
         const closure = output.indexOf('\'', i + 1)
