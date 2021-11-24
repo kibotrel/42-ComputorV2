@@ -163,7 +163,7 @@ class Expression {
 
         if (variableIndex >= 0) {
           infixStack.push(variables[variableIndex])
-        } else if (isFunction(definition[i]) || isComposite(definition[i])) {
+        } else if (definition[i] !== 'i' && (isFunction(definition[i]) || isComposite(definition[i]))) {
           const functionImage = await computeNestedExpression(definition[i], expression, variables)
 
           infixStack.push(functionImage)
