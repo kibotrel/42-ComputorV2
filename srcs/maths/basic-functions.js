@@ -32,7 +32,7 @@ const remainder = ({ dividend, divisor }) => {
 }
 
 const floor = (number) => {
-	if (Number.isInteger(numberString)) {
+	if (Number.isInteger(number)) {
   	return number
   } else {
   	const flooredValue = parseInt(number)

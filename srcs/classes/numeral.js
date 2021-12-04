@@ -145,7 +145,7 @@ class Numeral {
       // https://bit.ly/3t1RdzJ for integer numbers.
 
       const divResult = await Numeral.divide(a, b)
-      const r = remainder({ a: A.r, b: B.r })
+      const r = remainder({ dividend: A.r, divisor: B.r })
 
       const q = {
         r: parseInt(Math.round(divResult.r).toString()),
@@ -153,7 +153,6 @@ class Numeral {
       }
 
       const { nr, dr, ni, di } = modulusFraction(A, B, q,  r)
-
       const result = new Numeral({
         r: (A.i || B.i ? A.r - q.r * B.r + q.i * B.i : r),
         i: (A.i || B.i ? A.i - q.r * B.i - q.i * B.r : 0),
