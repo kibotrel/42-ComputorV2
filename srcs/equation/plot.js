@@ -1,4 +1,4 @@
-const { plot } = require('@plot/plotter.js')
+const { plot } = require('plotter')
 
  const timeStamp = () => {
   const now = new Date()

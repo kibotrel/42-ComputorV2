@@ -4,14 +4,13 @@
   "description": "An advanced calculator.",
   "main": "computor.js",
   "dependencies": {
-    "module-alias": "^2.2.2"
+    "module-alias": "^2.2.2",
+    "plotter": "github:richardeoin/nodejs-plotter"
   },
-
   "devDependencies": {
     "eslint": "^7.18.0",
     "nodemon": "^2.0.7"
   },
-
   "_moduleAliases": {
     "@root": ".",
     "@configs": "configs",
@@ -20,26 +19,20 @@
     "@commands": "srcs/commands",
     "@env": "srcs/env",
     "@handlers": "srcs/handlers",
-    "@plot": "nodejs-plotter",
     "@builtin": "srcs/builtin",
     "@docs": "docs"
   },
-
   "scripts": {
     "start": "nodemon --config configs/nodemon.json"
   },
-
   "repository": {
     "type": "git",
     "url": "git+https://github.com/kibotrel/42-ComputorV2.git"
   },
-
   "author": "BOTREL Kilian",
   "license": "MIT",
-
   "bugs": {
     "url": "https://github.com/kibotrel/42-ComputorV2/issues"
   },
-
   "homepage": "https://github.com/kibotrel/42-ComputorV2#readme"
 }
