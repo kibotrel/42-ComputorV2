@@ -18,8 +18,8 @@ class Numeral {
 
   static async add(a, b) {
     try {
-      const A = toNumeral(a)
-      const B = toNumeral(b)
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
 
       const { re: re1, im: im1 } = numeralFractionalParts(A)
       const { re: re2, im: im2 } = numeralFractionalParts(B)
@@ -41,8 +41,8 @@ class Numeral {
 
   static async substract(a, b) {
     try {
-      const A = toNumeral(a)
-      const B = toNumeral(b)
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
 
       const { re: re1, im: im1 } = numeralFractionalParts(A)
       const { re: re2, im: im2 } = numeralFractionalParts(B)
@@ -64,8 +64,8 @@ class Numeral {
 
   static async multiply(a, b) {
     try {
-      const A = toNumeral(a)
-      const B = toNumeral(b)
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
       
       const { re: re1, im: im1 } = numeralFractionalParts(A)
       const { re: re2, im: im2 } = numeralFractionalParts(B)
@@ -92,8 +92,8 @@ class Numeral {
 
   static async divide(a, b) {
     try {
-      const A = toNumeral(a)
-      const B = toNumeral(b)
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
       
       if (B.r === 0 && B.i === 0) {
         throw new ComputorError({ code: 'unsupportedOperation' })
@@ -133,8 +133,8 @@ class Numeral {
 
   static async modulus(a, b) {
     try {
-      const A = toNumeral(a)
-      const B = toNumeral(b)
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
 
       if ((B.r === 0 && B.i === 0) || floor(B.r) !== B.r || floor(B.i) !== B.i) {
         throw new ComputorError({ code: 'unsupportedOperation' })
@@ -169,8 +169,8 @@ class Numeral {
     let result
 
     try {
-      const A = toNumeral(a)
-      const B = toNumeral(b)
+      const A = await toNumeral(a)
+      const B = await toNumeral(b)
 
       if (B.i || Math.trunc(B.r) !== B.r) {
         throw new ComputorError({ code: 'unsupportedOperation' })

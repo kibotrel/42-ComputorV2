@@ -7,7 +7,7 @@ const abs = async (arguments) => {
     const { [0]: x } = await sanitizeArguments({ arguments, name: 'abs', amount: 1 })
 
     if (!x.i) {
-      return x.r > 0 ? x : new Numeral(toNumeral(-x.r))
+      return x.r > 0 ? x : new Numeral(await toNumeral(-x.r))
     } else {
       return await sqrt([x.r * x.r + x.i * x.i])
     }
@@ -28,7 +28,7 @@ const radian = async (arguments) => {
     
     // y = x * π / 180
 
-    return new Numeral(toNumeral(x.r * Math.PI / 180))
+    return new Numeral(await toNumeral(x.r * Math.PI / 180))
   } catch (error) {
     return Promise.reject(error)
   }
@@ -46,7 +46,7 @@ const degree = async (arguments) => {
     
     // y = x * 180 / π
 
-    return new Numeral(toNumeral(x.r * 180 / Math.PI))
+    return new Numeral(await toNumeral(x.r * 180 / Math.PI))
   } catch (error) {
     return Promise.reject(error)
   }
@@ -67,7 +67,7 @@ const factorial = async (arguments) => {
     // y = 1 * 2 * ... * x
 
     if (x.r <= 1) {
-      return new Numeral(toNumeral(1))
+      return new Numeral(await toNumeral(1))
     } else {
       let y = 2
 
@@ -75,7 +75,7 @@ const factorial = async (arguments) => {
         y *= i
       }
 
-      return new Numeral(toNumeral(y))
+      return new Numeral(await toNumeral(y))
     }
   } catch (error) {
     return Promise.reject(error)
@@ -109,7 +109,7 @@ const sqrt = async (arguments) => {
       y = await Numeral.multiply(0.5, await Numeral.add(y, await Numeral.divide(x, y)))
     }
 
-    return new Numeral(toNumeral(y))
+    return new Numeral(await toNumeral(y))
   } catch (error) {
     return Promise.reject(error)
   }
@@ -131,7 +131,7 @@ const exp = async (arguments) => {
       y = await Numeral.add(y, await Numeral.divide(await Numeral.power(x, n), await factorial([n])))
     }
 
-    return new Numeral(toNumeral(y))
+    return new Numeral(await toNumeral(y))
   } catch (error) {
     return Promise.reject(error)
   }

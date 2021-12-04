@@ -63,8 +63,8 @@ const printConstant = (c) => {
 }
 
 const printLinear = async (b, c) => {
-  b = new Numeral(toNumeral(b))
-  c = new Numeral(toNumeral(c))
+  b = new Numeral(await toNumeral(b))
+  c = new Numeral(await toNumeral(c))
   
   const minusC = await Numeral.substract(0, c)
   const root = await Numeral.divide(minusC, b)
@@ -85,9 +85,9 @@ const printLinear = async (b, c) => {
 
 const printQuadratic = async (a, b, c) => {
   try {
-    a = new Numeral(toNumeral(a))
-    b = new Numeral(toNumeral(b))
-    c = new Numeral(toNumeral(c))
+    a = new Numeral(await toNumeral(a))
+    b = new Numeral(await toNumeral(b))
+    c = new Numeral(await toNumeral(c))
 
     const discriminant = await Numeral.substract(await Numeral.power(b, 2), await Numeral.multiply(4, await Numeral.multiply(a, c)))
 

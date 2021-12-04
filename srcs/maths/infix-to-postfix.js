@@ -8,8 +8,8 @@ const { parseImaginary, isFunction } = require('@srcs/parsing/utils.js')
 const checkLastElement = async (token) => {
   try {
     if (token.constructor.name === 'Numeral') {
-      const { nr, dr } = toNumeral(token.r)
-      const { nr: ni, dr: di } = toNumeral(token.i)
+      const { nr, dr } = await toNumeral(token.r)
+      const { nr: ni, dr: di } = await toNumeral(token.i)
 
       return new Numeral({ r: token.r, i: token.i, nr, ni, dr, di })
     } else if (token.constructor.name === 'Matrix') {
@@ -22,7 +22,7 @@ const checkLastElement = async (token) => {
       } else if (isFunction(token)) {
         return await computeVariable(token, 'Function')
       } else {
-        return new Numeral(toNumeral(parseFloat(token)))
+        return new Numeral(await toNumeral(parseFloat(token)))
       }
     }
   } catch (error) {

@@ -16,18 +16,24 @@ const checkNumeral = async (numeral) => {
   }
 }
 
-const toNumeral = (value) => {
-  if (value.constructor.name === 'Numeral') {
-    return value
-  } else if (value.constructor.name === 'Number') {
-    const { n: numerator, d: denominator } = decimalToIntegerScaling({ number: value })
-    const { n: nr, d: dr } = simplifyFraction({ numerator, denominator })
+const toNumeral = async (value) => {
+  try {
+    if (value === Number.NEGATIVE_INFINITY || value === Number.POSITIVE_INFINITY) {
+      throw new ComputorError({ data: { operand: value }, code: 'tooBigNumber' })
+    } else if (value.constructor.name === 'Numeral') {
+      return value
+    } else if (value.constructor.name === 'Number') {
+      const { n: numerator, d: denominator } = decimalToIntegerScaling({ number: value })
+      const { n: nr, d: dr } = simplifyFraction({ numerator, denominator })
 
-    return { r: value, i: 0, nr, dr, ni: 0, di: 1 }
-  } else {
-    const { r, i , nr, dr, ni, di } = value
+      return { r: value, i: 0, nr, dr, ni: 0, di: 1 }
+    } else {
+      const { r, i , nr, dr, ni, di } = value
 
-    return { r, i, nr, dr, ni, di }
+      return { r, i, nr, dr, ni, di }
+    }
+  } catch (error) {
+    return Promise.reject(error)
   }
 }
 

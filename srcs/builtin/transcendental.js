@@ -30,7 +30,7 @@ const sin = async (arguments) => {
       }
     }
 
-    return new Numeral(toNumeral(y))
+    return new Numeral(await toNumeral(y))
   } catch (error) {
     return Promise.reject(error)
   }
@@ -58,7 +58,7 @@ const cos = async (arguments) => {
       }
     }
 
-    return new Numeral(toNumeral(y))
+    return new Numeral(await toNumeral(y))
   } catch (error) {
     return Promise.reject(error)
   }
@@ -76,7 +76,7 @@ const cosh = async (arguments) => {
       y = await Numeral.add(y, await Numeral.divide(await Numeral.power(x, n * 2), await factorial([n * 2])))
     }
 
-    return new Numeral(toNumeral(y))
+    return new Numeral(await toNumeral(y))
   } catch (error) {
     return Promise.reject(error)
   }
@@ -94,7 +94,7 @@ const sinh = async (arguments) => {
       y = await Numeral.add(y, await Numeral.divide(await Numeral.power(x, n * 2 + 1), await factorial([n * 2 + 1])))
     }
 
-    return new Numeral(toNumeral(y))
+    return new Numeral(await toNumeral(y))
   } catch (error) {
     return Promise.reject(error)
   }
@@ -159,7 +159,7 @@ const log = async (arguments) => {
       y += divCount.toString()
     }
 
-    return new Numeral(toNumeral(parseFloat(y)))
+    return new Numeral(await toNumeral(parseFloat(y)))
   } catch (error) {
     return Promise.reject(error)
   }

@@ -66,7 +66,7 @@ const checkLastElement = async (token) => {
       } else if (isFunction(token) || isComposite(token)) {
         return await computeVariable(token, 'Function')
       } else {
-        return new Numeral(toNumeral(parseFloat(token)))
+        return new Numeral(await toNumeral(parseFloat(token)))
       }
     }
   } catch (error) {
