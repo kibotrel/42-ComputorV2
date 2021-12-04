@@ -4,6 +4,9 @@
   "description": "An advanced calculator.",
   "main": "computor.js",
   "dependencies": {
+    "chai": "^4.3.4",
+    "chai-as-promised": "^7.1.1",
+    "mocha": "^9.1.3",
     "module-alias": "^2.2.2",
     "plotter": "github:richardeoin/nodejs-plotter"
   },
@@ -23,7 +26,8 @@
     "@docs": "docs"
   },
   "scripts": {
-    "start": "nodemon --config configs/nodemon.json"
+    "start": "nodemon --config configs/nodemon.json",
+    "tests": "mocha tests/index.js"
   },
   "repository": {
     "type": "git",
