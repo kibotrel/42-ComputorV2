@@ -53,7 +53,7 @@
   },
   {
     "code": "unsupportedOperation",
-    "message": "\tThis error is triggered when input is not computable either due to\n\tthe laws of mathematics or because it is outside of the project scope.\n\n\tNot supported:\n\n\t\t- Power operation with complex or decimal exponent.\n\t\t- Modulus operation with {{ zero }}, complex or decimal modulus.\n\t\t- Division by {{ zero }}.\n\t\t- Addition and substraction between a {{ type1 }} and a {{ type2 }}.\n\t\t- Division, power and modulus operations on {{ type2 }}.\n",
+    "message": "\tThis error is triggered when input is not computable either due to\n\tthe laws of mathematics or because it is outside of the project scope.\n\n\tNot supported:\n\n\t\t- Power operation with complex or decimal exponent.\n\t\t- Modulus operation with {{ zero }} or decimal modulus.\n\t\t- Division by {{ zero }}.\n\t\t- Addition and substraction between a {{ type1 }} and a {{ type2 }}.\n\t\t- Division, power and modulus operations on {{ type2 }}.\n",
     "data": {
       "zero": 0,
       "type1": "Numeral",
