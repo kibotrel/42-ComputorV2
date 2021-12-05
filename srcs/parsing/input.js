@@ -74,6 +74,8 @@ module.exports = async (string) => {
   try {
     if (!string) {
       throw new ComputorError({ code: 'emptyExpression' })
+    } else if (string.match(/\[|\]|;/g)) {
+      throw new ComputorError({ data: { string }, code: 'badInputFormat'})
     }
 
     for (let i = 0; i < string.length; i++) {
