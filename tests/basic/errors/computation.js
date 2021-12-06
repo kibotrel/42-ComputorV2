@@ -1,4 +1,19 @@
 module.exports = () => {
+  it('Empty input', async () => {
+    try {
+      await processInput('')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'badInputFormat')
+    }
+  })
+
   it('Missing evaluation symbol', async () => {
     try {
       await processInput('1 + 1')
@@ -12,6 +27,21 @@ module.exports = () => {
       assert.equal(error.constructor.name, 'ComputorError')
       assert.equal(error.code, 'badInputFormat')
     }
+  })
+
+  it('Nothing but evaluation symbol', async () => {
+    try {
+      await processInput('=?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'emptyExpression')
+    }    
   })
 
   it('Invalid character in input', async () => {

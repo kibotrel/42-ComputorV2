@@ -33,4 +33,5 @@ chai.use(chaiAsPromised)
 global.expect = chai.expect
 global.assert = assert
 
-describe('Basic', require('./basics/index.js'))
+describe('Basic', require('./basic/index.js'))
+describe('Advanced', require('./advanced/index.js'))
