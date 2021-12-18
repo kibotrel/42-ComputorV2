@@ -4,7 +4,7 @@ const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
-const { isFunction, isVariable, isComposite, compositeParts } = require('@srcs/parsing/utils.js')
+const { isFunction, isVariable, isComposite, compositeParts, isMatrix } = require('@srcs/parsing/utils.js')
 
 const computeBuiltin = async (token, expression, variables) => {
   try {
@@ -129,6 +129,53 @@ const prettifyExpression = (expression) => {
       }
       
       stack.push(`\x1b[32;1m${name}\x1b[0;1m(${variables.join(', ')}\x1b[0;1m)`)
+    } else if (isMatrix(expression[i])) {
+      const matrixStack = []
+      const str = expression[i]
+      
+      let buffer = ''
+
+      // f(x) = 4 * [[-2 / 4 - (8.2i * 3), 4 - 7 + 43.1 % 3]; [2 / 4 + (8.2i * 3), 4 - 7 + 43.1 % 3]]
+      // f(x) = x * [[3-25i,-0.25,4i];[+5,i,-i];[0.5+i, 2, +5i]]
+      // [ -2 - 98.4i, 4.4 ]
+      // [ 2 + 98.4i, 4.4 ]
+
+      for (let j = 0; j < str.length; j++) {
+        if (str[j].match(/[+\-]/)) {
+          if (buffer) {
+            matrixStack.push(buffer, ' ', str[j], ' ')
+            buffer = ''
+          } else {
+            buffer += str[j]
+          }
+        } else if (str[j] === ',') {
+          matrixStack.push(buffer, ',', ' ')
+          buffer = ''
+        } else if (str[j].match(/[\d\.i]/)) {
+          buffer += str[j]
+        } else if (str[j].match(/[\];]/)) {
+          if (buffer) {
+            matrixStack.push(buffer, ' ', str[j])
+            buffer = ''
+          } else {
+            matrixStack.push(str[j], ' ')
+          }
+        } else if (str[j] === '[') {
+          if ((matrixStack[matrixStack.length - 1] || '').match(/[\[ ]/)) {
+            matrixStack.push('[', ' ')
+          } else {
+            matrixStack.push('[')
+          }
+        } 
+      }
+
+      for (let i = 0; i < matrixStack.length; i++) {
+        if (matrixStack[i].match(/^[+\-]?((\d+((\.\d+i?)?||i?)?)||i)$/)) {
+          matrixStack[i] = `\x1b[33;1m${matrixStack[i]}\x1b[0;1m`
+        }
+      }
+  
+      stack.push(`\x1b[1m${matrixStack.join('')}\x1b[0m`)
     } else {
       stack.push(expression[i])
     }

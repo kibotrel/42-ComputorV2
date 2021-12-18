@@ -132,6 +132,22 @@ class Matrix {
 
     return array.join('\n\t')
   }
+
+  toString() {
+    const array = []
+
+    for (let i = 0; i < this.rows; i++) {
+      const row = []
+
+      for (let j = 0; j < this.columns; j++) {
+        row.push(this.values[i][j].toString())
+      }
+
+      array.push(`[${row.join(',')}]`)
+    }
+
+    return `[${array.join(';')}]`
+  }
 }
 
 module.exports = Matrix

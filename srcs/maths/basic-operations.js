@@ -1,5 +1,8 @@
 const { isValidBuiltin } = require('@env/utils.js')
 
+const createMatrix = require('@srcs/parsing/matrix.js')
+const { isMatrix } = require('@srcs/parsing/utils.js')
+
 const sanitizeOperand = async (operand) => {
   let trueOperand
 
@@ -7,6 +10,8 @@ const sanitizeOperand = async (operand) => {
     if (operand.constructor.name === 'String') {
       if (operand === 'i') {
         trueOperand = new Numeral({ r: 0, i: 1 })
+      } else if (isMatrix(operand)) {
+        trueOperand = await createMatrix(operand)
       } else {
         trueOperand = parseFloat(operand)
 

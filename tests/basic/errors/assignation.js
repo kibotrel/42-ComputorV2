@@ -107,8 +107,7 @@ module.exports = () => {
 
   it('Misformated Matrix', async () => {
     try {
-      const { type } = await processInput('test = [[2')
-      console.log(type)
+      await processInput('test = [[2')
       assert.fail('FalsePositiveTest')
     } catch (error) {
       if (error instanceof AssertionError) {

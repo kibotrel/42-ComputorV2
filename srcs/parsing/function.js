@@ -3,7 +3,8 @@ const { isVariableRegistered, isValidBuiltin, sanitizeName } = require('@env/uti
 const { resolveVariable } = require('@handlers/variable.js')
 
 const parseLine = require('@srcs/parsing/input.js')
-const { isFunction } = require('@srcs/parsing/utils.js')
+const createMatrix = require('@srcs/parsing/matrix.js')
+const { isFunction, isMatrix } = require('@srcs/parsing/utils.js')
 
 module.exports = async (prototype, definition) => {
   try {
@@ -27,7 +28,7 @@ module.exports = async (prototype, definition) => {
   
     for (const token of infixExpression) {
       const index = infixExpression.indexOf(token)
-  
+
       if ((token.length === 1 && token.match(/[a-z]/) && token[0] !== 'i') || (token.length > 1 && token.match(/^[a-z]+$/))) {
         if (argumentList.indexOf(token) === -1) {
           const numeral = await numeralValue(token)
@@ -48,6 +49,10 @@ module.exports = async (prototype, definition) => {
           
           infixExpression[index] = result.toString()
         }
+      } else if (isMatrix(token)) {
+        const matrix = await createMatrix(token)
+        
+        infixExpression[index] = matrix.toString().replace(/ /g, '').trim()
       }
     }
 
