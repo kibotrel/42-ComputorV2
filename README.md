@@ -14,19 +14,19 @@ First, you'll need to get yourself [node.js](https://nodejs.org/en/download/) v1
 - Linux, use your distribution packets manager:
 
   ```shell
-    $> sudo apt-get install gnuplot ghostscript
+  $> sudo apt-get install gnuplot ghostscript
   ```
 
 - macOS, use [Homebrew](https://brew.sh/):
 
   ```shell
-    $> brew install gnuplot ghostscript
+  $> brew install gnuplot ghostscript
   ```
 
 Then all you have to do is installing package dependencies:
 
 ```shell
-  $> npm install
+$> npm install
 ```
 
 ## :computer: Usage
@@ -34,13 +34,13 @@ Then all you have to do is installing package dependencies:
 Run the interpeter with:
 
 ```shell
-  $> node computor.js
+$> node computor.js
 ```
 
 Run test suites with:
 
 ```shell
-  $> npm run tests
+$> npm run tests
 ```
 
 ### Features
@@ -50,25 +50,25 @@ Run test suites with:
   Handles simple expression with addition, substraction, multiplication, division, power and modulus operators with brakect priorities.
 
   ```
-    > 2 + 23 * (8.23 / (2 - 7)) = ?
+  > 2 + 23 * (8.23 / (2 - 7)) = ?
   ```
 
   It also supports complex numbers and unary operators.
 
   ```
-    > -2.23 + (-2.1) / 3.08i = ?
+  > -2.23 + (-2.1) / 3.08i = ?
   ```
 
   This evaluation algorithm also support variables which are explained bellow, both **Numeral** and **Matrix** variables are used in the same way, call its name and it will be evaluated before the whole input.
 
   ```
-    > 57 + x / 723.2 = ?
+  > 57 + x / 723.2 = ?
   ```
 
   For **Expression** variables, you get to give them the right amount of parameters to evaluate their images.
 
   ```
-    > 2.8211 * f(23) = ?
+  > 2.8211 * f(23) = ?
   ```
 
   > All of the variable types supports unary operator which means you can get the opposite of any variable by putting a minus sign before in your input.
@@ -78,7 +78,7 @@ Run test suites with:
   This program allows you to compute and keep three different types of variables. First, **Numeral**, basically representing numbers from integers to complex ones.
 
   ```
-    > x = -7.5 + 82i
+  > x = -7.5 + 82i
   ```
 
   > It computes the result of the left term and then assign it to the requested variable.
@@ -86,7 +86,7 @@ Run test suites with:
   Then we have **Matrix** type that holds 2D Matrix only.
 
   ```
-    > m = [[ 2, 0, -3 ]; [ 7, 0.82, -12 ]]
+  > m = [[ 2, 0, -3 ]; [ 7, 0.82, -12 ]]
   ```
 
   > Supports other Numerals and Expression images as well (described bellow) in each term of the matrix.
@@ -94,7 +94,7 @@ Run test suites with:
   Finally, **Expression** which are simply functions that take variables.
 
   ```
-    > f(x, y, z) = x - 6.2 / y + 2 * z
+  > f(x, y, z) = x - 6.2 / y + 2 * z
   ```
 
   > You can create Expression with arbitrary number of variables, no limit.
