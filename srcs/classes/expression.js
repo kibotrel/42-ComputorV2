@@ -1,6 +1,7 @@
 const { isVariableRegistered, isValidBuiltin, sanitizeName } = require('@env/utils.js')
 
 const computePostfix = require('@srcs/maths/infix-to-postfix.js')
+const { numeralValue } = require('@srcs/maths/compute.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
@@ -118,6 +119,8 @@ const prettifyExpression = (expression) => {
   for (let i = 0; i < expression.length; i++) {
     if (!expression[i].match(/^[+\-\*\/%\^\(\)]$/) && expression[i].match(/^[+\-]?[a-z]+$|^[+\-]?[0-9\.]+$/)) {
       stack.push(`\x1b[33m${expression[i]}\x1b[0;1m`)
+    } else if (!isFunction(expression[i]) && isComposite(expression[i])) {
+      stack.push(`\x1b[33m${expression[i]}\x1b[0;1m`)
     } else if (isFunction(expression[i]) || isComposite(expression[i])) {
       const name = expression[i].substring(0, expression[i].indexOf('('))
       const variables = expression[i].substring(expression[i].indexOf('(') + 1, expression[i].lastIndexOf(')')).split(',')
@@ -163,6 +166,10 @@ class Expression {
 
         if (variableIndex >= 0) {
           infixStack.push(variables[variableIndex])
+        } else if (!isFunction(definition[i]) && isComposite(definition[i])) {
+          const numeral = await numeralValue(definition[i])
+
+          infixStack.push(numeral)
         } else if (definition[i] !== 'i' && (isFunction(definition[i]) || isComposite(definition[i]))) {
           const functionImage = await computeNestedExpression(definition[i], expression, variables)
 

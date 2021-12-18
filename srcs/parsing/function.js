@@ -1,6 +1,8 @@
-const { isVariableRegistered, isValidBuiltin } = require('@env/utils.js')
+const { isVariableRegistered, isValidBuiltin, sanitizeName } = require('@env/utils.js')
 
-const { sanitizeName } = require('@env/utils.js')
+const { resolveVariable } = require('@handlers/variable.js')
+
+const { numeralValue } = require('@srcs/maths/compute.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
@@ -24,19 +26,29 @@ module.exports = async (prototype, definition) => {
     }
 
     const infixExpression = await parseLine(definition)
-
+  
     for (const token of infixExpression) {
+      const index = infixExpression.indexOf(token)
+  
       if ((token.length === 1 && token.match(/[a-z]/) && token[0] !== 'i') || (token.length > 1 && token.match(/^[a-z]+$/))) {
         if (argumentList.indexOf(token) === -1) {
-          throw new ComputorError({ data: { name: token }, code: 'unknownVariable' })
+          const numeral = await numeralValue(token)
+
+          infixExpression[index] = numeral.toString()          
         }
       } else if (isFunction(token)) {
-        if (!isValidBuiltin(token) && !isVariableRegistered(token)) {
-          const name = sanitizeName(token)
+        const storedVariable = isVariableRegistered(token)
+  
+        if (isValidBuiltin(token)) {
+          const numeral = await builtinHandler(token)
 
-          throw new ComputorError({ data: { name }, code: 'unknownFunction' })
+          infixExpression[index] = numeral.toString()
         } else if (sanitizeName(token) === functionName) {
           throw new ComputorError({ data: { expression: functionName }, code: 'cyclicDeclaration' })
+        } else {
+          const result = await resolveVariable(token, 'Function')
+          
+          infixExpression[index] = result.toString()
         }
       }
     }

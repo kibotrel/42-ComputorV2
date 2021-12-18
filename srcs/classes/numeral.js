@@ -224,52 +224,38 @@ class Numeral {
   }
 
   print() {
-    if (!this.r && !this.i) {
-      return '\x1b[33;1m0\x1b[0m'
-    } else {
-      // Used the parseFloat(x.toPrecision(15)) to correct small floating point
-      // errors that happen sometimes due to the lack of precision in Javascript
-      // since we don't really need that much decimal digits. more informations
-      // on https://bit.ly/2OT0qLO.
+    return `\x1b[33;1m${this.toString()}\x1b[0m`
+  }
 
-      const real = parseFloat(this.r.toPrecision(Config.number.precision))
-      const separatorSign = this.i < 0 ? '-' : '+'
-      const imaginary = this.i < -1 || (this.i < 0 && this.i > -1) ? -parseFloat(this.i.toPrecision(Config.number.precision)) : this.i > 1 || (this.i > 0 && this.i < 1) ? parseFloat(this.i.toPrecision(Config.number.precision)) : ''
+  toString() {
+    const { r, i, nr, dr, ni, di } = this
 
-      let printedString = '\x1b[33;1m'
-
-      if (!Config.number.fractionForm) {
-        if (this.r) {
-          printedString += real
-        }
-
-        if (this.r && this.i) {
-          printedString += ` ${separatorSign} `
-        } else if (this.i < 0) {
-          printedString += separatorSign
-        }
-
-        if (this.i) {
-          printedString += `${imaginary}i`
-        }
-      } else {
-        if (this.r) {
-          printedString += Number.isInteger(real) ? real : `${this.nr} / ${this.dr}`
-        }
-
-        if (this.r && this.i) {
-          printedString += ` ${separatorSign} `
-        } else if (this.i < 0) {
-          printedString += separatorSign
-        }
-
-        if (this.i) {
-          printedString += Number.isInteger(imaginary) ? `${imaginary}i` : `(${this.ni >= 0 ? this.ni : -this.ni} / ${this.di})i`
-        }
-      }
-
-      return `${printedString}\x1b[0m`
+    if (!r && !i) {
+      return '0'
     }
+
+    // Used the parseFloat(x.toPrecision(15)) to correct small floating point
+    // errors that happen sometimes due to the lack of precision in Javascript
+    // since we don't really need that much decimal digits. more informations
+    // on https://bit.ly/2OT0qLO.
+
+    const real = parseFloat(r.toPrecision(Config.number.precision))
+    const separatorSign = i < 0 ? '-' : '+'
+    const imaginary = i < -1 || (i < 0 && i > -1) ? -parseFloat(i.toPrecision(Config.number.precision)) : i > 1 || (i > 0 && i < 1) ? parseFloat(i.toPrecision(Config.number.precision)) : ''
+
+    let numStr = ''
+
+    if (!Config.number.fractionForm) {
+      numStr += (r ? real : '')
+      numStr += (r && i ? ` ${separatorSign} ` : i < 0 ? separatorSign : '')
+      numStr += (i ? `${imaginary}i` : '')
+    } else {
+      numStr += (r ? Number.isInteger(real) ? real : nr < 0 ? `-(${-nr} / ${dr})` : `${nr} / ${dr}` : '')
+      numStr += (r && i ? ` ${separatorSign} ` : i < 0 ? separatorSign : '')
+      numStr += (i ? Number.isInteger(imaginary) ? `${imaginary}i` : `(${ni >= 0 ? ni : -ni} / ${di})i` : '')
+    }
+
+    return numStr
   }
 }
 
