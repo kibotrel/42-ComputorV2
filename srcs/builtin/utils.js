@@ -1,6 +1,5 @@
 const { isValidBuiltin } = require('@env/utils.js')
 
-const { numeralValue } = require('@srcs/maths/compute.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
 
 const sanitizeArguments = async ({ arguments, name, amount }) => {

@@ -1,5 +1,3 @@
-const { numeralValue } = require('@srcs/maths/compute.js')
-
 module.exports = async (string) => {
   try {
     const trimmedString = string.slice(1, -1)

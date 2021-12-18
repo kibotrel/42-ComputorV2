@@ -1,7 +1,5 @@
 const { isVariableRegistered, isValidBuiltin, sanitizeName } = require('@env/utils.js')
 
-const { numeralValue } = require('@srcs/maths/compute.js')
-
 const addToVariableList = (id, value) => {
   const i = Variables.findIndex( variable => variable.id === id)
         

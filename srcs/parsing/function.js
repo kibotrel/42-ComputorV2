@@ -2,8 +2,6 @@ const { isVariableRegistered, isValidBuiltin, sanitizeName } = require('@env/uti
 
 const { resolveVariable } = require('@handlers/variable.js')
 
-const { numeralValue } = require('@srcs/maths/compute.js')
-
 const parseLine = require('@srcs/parsing/input.js')
 const { isFunction } = require('@srcs/parsing/utils.js')
 

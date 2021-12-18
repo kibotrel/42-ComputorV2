@@ -40,6 +40,7 @@ global.Matrix = require('@classes/matrix.js')
 // Some usefull functions that are needed quite often.
 // Making them global helps to avoid circular dependencies.
 
+global.numeralValue = require('@srcs/maths/compute.js').numeralValue
 global.builtinHandler = require('@handlers/built-in.js')
 
 const inputHandler = require('@handlers/input.js')

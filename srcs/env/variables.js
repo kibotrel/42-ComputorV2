@@ -1,7 +1,5 @@
 const { isVariableRegistered, sanitizeName, isValidBuiltin } = require('@env/utils.js')
 
-const { numeralValue } = require('@srcs/maths/compute.js')
-
 const { isFunction } = require('@srcs/parsing/utils.js')
 
 const computeVariable = async (token, type) => {

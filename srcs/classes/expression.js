@@ -1,7 +1,6 @@
 const { isVariableRegistered, isValidBuiltin, sanitizeName } = require('@env/utils.js')
 
 const computePostfix = require('@srcs/maths/infix-to-postfix.js')
-const { numeralValue } = require('@srcs/maths/compute.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')

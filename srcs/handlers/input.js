@@ -3,8 +3,6 @@ const { registerHistory } = require('@env/history.js')
 const commandHandler = require('@handlers/command.js')
 const { addToVariableList, resolveVariable } = require('@handlers/variable.js')
 
-const { numeralValue } = require('@srcs/maths/compute.js')
-
 const createFunction = require('@srcs/parsing/function.js')
 const createMatrix = require('@srcs/parsing/matrix.js')
 const { isFunction, isMatrix } = require('@srcs/parsing/utils.js')
@@ -86,7 +84,7 @@ module.exports = async (payload) => {
 
     inputLine = inputLine.replace(/ /g, '')
 
-    if (!inputLine.match(/^[0-9a-z+\-*\/%^()\[\]=!?.,;\[\]]+$/)) {
+    if (!inputLine.match(/^[0-9a-z+\-*\/%^()\[\]=!?.,;]+$/)) {
       throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
     }
 
