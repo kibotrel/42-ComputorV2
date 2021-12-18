@@ -117,7 +117,7 @@ module.exports = () => {
 
       assert.equal(typeof error, 'object')
       assert.equal(error.constructor.name, 'ComputorError')
-      assert.equal(error.code, 'badInputFormat')
+      assert.equal(error.code, 'misformattedMatrix')
     }
   })
 }

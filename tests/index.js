@@ -20,6 +20,7 @@ global.Matrix = require('@classes/matrix.js')
 // Useful functions
 
 global.processInput = require('@handlers/input.js')
+global.numeralValue = require('@srcs/maths/compute.js').numeralValue
 global.builtinHandler = require('@handlers/built-in.js')
 
 // Data
