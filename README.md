@@ -83,7 +83,7 @@ Run the interpeter with:
     > m = [[ 2, 0, -3 ]; [ 7, 0.82, -12 ]]
   ```
 
-  > Supports other Numerals and Expression images as well (described bellow) in each termm of the matrix.
+  > Supports other Numerals and Expression images as well (described bellow) in each term of the matrix.
 
   Finally, **Expression** which are simply functions that take variables.
 
