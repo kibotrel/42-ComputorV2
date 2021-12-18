@@ -52,6 +52,7 @@ module.exports = async ({ string, i}, flags, infixStack) => {
     flags.decimal = false
     flags.complex = false
     flags.variable = false
+    flags.matrix = false
   } catch (error) {
     return Promise.reject(error)
   }

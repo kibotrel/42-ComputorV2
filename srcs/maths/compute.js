@@ -2,7 +2,8 @@ const { isVariableRegistered, sanitizeName, isValidBuiltin } = require('@env/uti
 
 const infixToPosfix = require('@srcs/parsing/infix-to-postfix.js')
 const parseLine = require('@srcs/parsing/input.js')
-const { parseImaginary, isFunction, isComposite } = require('@srcs/parsing/utils.js')
+const createMatrix = require('@srcs/parsing/matrix.js')
+const { parseImaginary, isFunction, isComposite, isMatrix } = require('@srcs/parsing/utils.js')
 
 const evaluate = require('@srcs/maths/basic-operations.js')
 const { toNumeral } = require('@srcs/maths/utils.js')
@@ -112,6 +113,31 @@ const computePostfix = async (postfixNotation) => {
   }
 }
 
+const resolveMatrices = async (stack) => {
+  try {
+    const cleanStack = []
+
+    for (const token of stack) {
+      if (isMatrix(token)) {
+        const sign = token[0]
+        const matrix = await createMatrix(sign.match(/[+\-]/) ? token.substring(1) : token)
+        
+        if (sign === '-') {
+          cleanStack.push(Matrix.opposite(matrix))
+        } else {
+          cleanStack.push(matrix)
+        }
+      } else {
+        cleanStack.push(token)
+      }
+    }
+
+    return cleanStack
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
 const numeralValue = async (inputLine) => {
   try {
     const infixNotation = await parseLine(inputLine)
@@ -119,7 +145,9 @@ const numeralValue = async (inputLine) => {
     if (!infixNotation.length) {
       throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
     }
-    const postfixNotation = infixToPosfix(infixNotation)
+
+    const infixCleanNotation = await resolveMatrices(infixNotation)
+    const postfixNotation = infixToPosfix(infixCleanNotation)
 
     return await computePostfix(postfixNotation)
   } catch (error) {

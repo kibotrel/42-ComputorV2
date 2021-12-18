@@ -1,6 +1,6 @@
 const { decimalToIntegerScaling } = require('@srcs/maths/fractions.js')
 
-const updateFlags = ({ power, number, operator, decimal, sign, numberStart, complex, variable }) => {
+const updateFlags = ({ power, number, operator, decimal, sign, numberStart, complex, variable, matrix }) => {
   const newFlags = {
     power,
     number,
@@ -10,6 +10,7 @@ const updateFlags = ({ power, number, operator, decimal, sign, numberStart, comp
     numberStart: numberStart === undefined ? -1 : numberStart,
     complex,
     variable,
+    matrix
   }
 
   return newFlags
@@ -142,6 +143,21 @@ const isComposite = (token) => {
 }
 
 const isMatrix = (token) => {
-  return token.match(/^\[\[[a-z\d+\-\*\/%^()\.]+(,[a-z\d+\-\*\/%^()\.]+)*\](;\[[a-z\d+\-\*\/%^()\.]+(,[a-z\d+\-\*\/%^()\.]+)*\])*\]$/)
+  return token.match(/^[+\-]?\[\[[a-z\d+\-\*\/%^()\.]+(,[a-z\d+\-\*\/%^()\.]+)*\](;\[[a-z\d+\-\*\/%^()\.]+(,[a-z\d+\-\*\/%^()\.]+)*\])*\]$/)
 }
-module.exports = { isFunction, isNumber, isVariable, isSyntax, isComposite, isMatrix, compositeParts, updateFlags, formatCheck, variableCheck, imaginaryCheck, digitsCheck, bracketsCheck, parseImaginary }
+module.exports = {
+  isFunction,
+  isNumber,
+  isVariable,
+  isSyntax, 
+  isComposite,
+  isMatrix,
+  compositeParts,
+  updateFlags,
+  formatCheck,
+  variableCheck,
+  imaginaryCheck, 
+  digitsCheck,
+  bracketsCheck,
+  parseImaginary,
+}

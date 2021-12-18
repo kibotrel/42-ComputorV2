@@ -1,6 +1,6 @@
 const number = ({ string, i }, flags) => {
   try {
-    if (flags.complex || flags.variable) {
+    if (flags.complex || flags.variable || flags.matrix) {
       throw new ComputorError({ code: 'illegalCharacter' })
     }
 
@@ -17,7 +17,7 @@ const number = ({ string, i }, flags) => {
 
 const decimal = async ({ string, i }, flags) => {
   try {
-    if (flags.complex || flags.variable) {
+    if (flags.complex || flags.variable || flags.matrix) {
       throw new ComputorError({ data: { index: i }, code: 'illegalCharacter' })
     } else if (!flags.number || flags.decimal) {
       throw new ComputorError({ data: { string, index: i }, code: 'misformattedFloat' })
@@ -31,6 +31,10 @@ const decimal = async ({ string, i }, flags) => {
 
 const variable = async ({ string, i }, flags) => {
   try {
+    if (flags.matrix) {
+      throw new ComputorError({ data: { index: i }, code: 'illegalCharacter' })
+    }
+  
     const current = string[i]
 
     if (current === 'i' && !flags.variable) {

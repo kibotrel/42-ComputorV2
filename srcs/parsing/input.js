@@ -1,8 +1,27 @@
 const { isValidBuiltin } = require('@env/utils.js')
 
-const { leftBracket, rightBracket } = require('@srcs/parsing/brackets.js')
+const {
+  leftBracket,
+  rightBracket,
+  matrixOpen,
+  matrixClose
+} = require('@srcs/parsing/brackets.js')
 const { number, decimal, variable } = require('@srcs/parsing/operands.js')
-const { bracketsCheck, digitsCheck, imaginaryCheck, formatCheck, variableCheck, updateFlags, isFunction, isNumber, isVariable, isSyntax, isComposite, compositeParts } = require('@srcs/parsing/utils.js')
+const {
+  bracketsCheck,
+  digitsCheck,
+  imaginaryCheck,
+  formatCheck,
+  variableCheck,
+  updateFlags, 
+  isFunction,
+  isNumber,
+  isVariable,
+  isSyntax,
+  isComposite,
+  compositeParts,
+  isMatrix
+} = require('@srcs/parsing/utils.js')
 const operator = require('@srcs/parsing/operators.js')
 
 // This function is here to detect composite opperands to break
@@ -42,6 +61,8 @@ const sanitizeStack = async (infixStack) => {
         } else {
           throw new ComputorError({ code: 'illegalCharacter' })
         }
+      } else if (isMatrix(token)) {
+        finalStack.push(token)
       } else {
         throw new ComputorError({ code: 'illegalCharacter' })
       }
@@ -74,12 +95,15 @@ module.exports = async (string) => {
   try {
     if (!string) {
       throw new ComputorError({ code: 'emptyExpression' })
-    } else if (string.match(/\[|\]|;/g)) {
-      throw new ComputorError({ data: { string }, code: 'badInputFormat'})
-    }
+    } 
 
     for (let i = 0; i < string.length; i++) {
-      if (string[i] === '(') {
+      if (string[i] === '[') {
+        i = await matrixOpen(string, i, flags, infixStack)
+      } else if (string[i] === ']') {
+        await matrixClose(string, i, flags, infixStack)
+        flags = updateFlags({ numberStart: -1 })
+      } else if (string[i] === '(') {
         i = await leftBracket({ string, i }, flags, infixStack, bracketStack)
         flags = updateFlags({ numberStart: -1 })
       } else if (string[i] === ')') {

@@ -96,6 +96,10 @@
     "message": "\tIllegal character found during integer parsing at index {{ index }} in '{{ string }}'."
   },
   {
+    "code": "misformattedMatrix",
+    "message": "\tDid not find matrix closure during input evaluation."
+  },
+  {
     "code": "notEquation",
     "message": "\t'{{ equation }}' is not a valid equation.\n\tType '!help notEquation' for more details."
   },

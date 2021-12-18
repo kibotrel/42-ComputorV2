@@ -2,19 +2,58 @@ const { isVariableRegistered, isValidBuiltin } = require('@env/utils.js')
 
 const { isComposite, isFunction, compositeParts } = require('@srcs/parsing/utils.js')
 
-const lookForEnclosure = (string) => {
+const lookForEnclosure = (string, openchar, closechar) => {
   const stack = []
 
   for (let i = 0; i < string.length; i++) {
-    if (string[i] === '(') {
+    if (string[i] === openchar) {
       stack.push(i)
-    } else if (string[i] === ')') {
+    } else if (string[i] === closechar) {
       stack.pop()
 
       if (!stack.length) {
         return i
       }
     }
+  }
+}
+
+const matrixOpen = async (string, i, flags, infixStack) => {
+  try {
+    if (flags.number) {
+      throw new ComputorError({ data: { string, index: i }, code : 'misformattedInteger' })
+    } else if (flags.decimal) {
+      throw new ComputorError({ data: { string, index: i }, code : 'misformattedFloat' })
+    } else if (flags.complex) {
+      throw new ComputorError({ data: { string, index: i }, code : 'illegalImaginary' })
+    } else if (flags.variable) {
+      throw new ComputorError({ code : 'illegalCharacter' })
+    }
+
+    const remainingString = string.substring(i)
+    const closingIndex = lookForEnclosure(remainingString, '[', ']')
+
+    if (closingIndex === undefined) {
+      throw new ComputorError({ code : 'misformattedMatrix' })
+    }
+
+    const matrix = string.substring(flags.numberStart > -1 ? flags.numberStart : i, i + closingIndex + 1)
+    
+    infixStack.push(matrix)
+    flags.matrix = true
+    flags.numberStart = -1
+
+    return i + closingIndex
+  } catch (error) {
+    return Promise.reject(error)
+  }
+}
+
+const matrixClose = async (string, i, flags, infixStack) => {
+  try {
+    throw new ComputorError({ code : 'misformattedMatrix' }) 
+  } catch (error) {
+    return Promise.reject(error)
   }
 }
 
@@ -25,6 +64,10 @@ const lookForEnclosure = (string) => {
 
 const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {
+    if (flags.matrix) {
+      throw new ComputorError({ data: { index: i }, code: 'illegalCharacter' })
+    }
+
     // Check if we need to add a multiply sign between the bracket
     // and the token before it. This is happening if the last token
     // is either a number or a custom variable that isn't a function.
@@ -62,7 +105,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
           multiplySign = true
         } else if (variable.constructor.name === 'Expression' || isValidBuiltin(variableName)) {
           const remainingString = string.substring(i)
-          const closingIndex = lookForEnclosure(remainingString)
+          const closingIndex = lookForEnclosure(remainingString, '(', ')')
           const functionArguments = remainingString.substring(0, closingIndex + 1)
 
           variableName = `${variableName}${functionArguments}`
@@ -107,9 +150,9 @@ const rightBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   try {
     const lastElement = bracketStack.pop()
 
-    if (lastElement === undefined || flags.operator || (i !== 0 && flags.decimal && string[i - 1] === '.')) {
+    if (lastElement === undefined || (flags.operator && !flags.matrix) || (i !== 0 && flags.decimal && string[i - 1] === '.')) {
       throw  new ComputorError({ data: { string, index: i }, code: 'invalidRightBracket' })
-    } else if (!flags.number && !flags.complex && !flags.variable && string[i - 1] !== ')') {
+    } else if (!flags.matrix && !flags.number && !flags.complex && !flags.variable && string[i - 1] !== ')') {
       throw new ComputorError({ data: { string, index: i }, code: 'bracketsNotUsed' })
     } else if (flags.numberStart !== -1) {
       infixStack.push(string.substring(flags.numberStart, i))
@@ -120,4 +163,10 @@ const rightBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
   }
 }
 
-module.exports = { leftBracket, rightBracket, lookForEnclosure }
+module.exports = {
+  leftBracket,
+  rightBracket,
+  lookForEnclosure,
+  matrixClose,
+  matrixOpen
+}
