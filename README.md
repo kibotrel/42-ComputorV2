@@ -37,6 +37,12 @@ Run the interpeter with:
   $> node computor.js
 ```
 
+Run test suites with:
+
+```shell
+  $> npm run tests
+```
+
 ### Features
 
 - Computing:
