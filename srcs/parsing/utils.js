@@ -142,6 +142,9 @@ const isComposite = (token) => {
   return token.match(/^[+\-]?(\d+(\.\d+)?)?[a-z]+(\(.*\))?$/)
 }
 
+const isCompositeFunction = (token) => {
+  return token.match(/^[+\-]?(\d+(\.\d+)?)?[a-z]+(\(.*\))$/)
+}
 const isMatrix = (token) => {
   return token.match(/^[+\-]?\[\[[a-z\d+\-\*\/%^()\.]+(,[a-z\d+\-\*\/%^()\.]+)*\](;\[[a-z\d+\-\*\/%^()\.]+(,[a-z\d+\-\*\/%^()\.]+)*\])*\]$/)
 }
@@ -160,4 +163,5 @@ module.exports = {
   digitsCheck,
   bracketsCheck,
   parseImaginary,
+  isCompositeFunction
 }

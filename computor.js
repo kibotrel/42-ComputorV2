@@ -48,21 +48,27 @@ const errorHandler = require('@handlers/error.js')
 
 const { checkExpressions } = require('@env/variables.js')
 
+const debugFunction = async () => {}
+
+const processData = ({ value, type }) => {
+  if (type === 'computation') {
+    console.log(`\n\x1b[1mComputation result:\x1b[0m\n\n\t${value.print()}\n`)
+  } else if (type.match(/^(expression|numeral|matrix)$/)) {
+    console.log(`\n\x1b[1mNew \x1b[32m${value.constructor.name}\x1b[0;1m stored!\x1b[0m\n\n\t${value.print()}\n`)
+  }
+  
+  if (type === 'expression') {
+    checkExpressions(value)
+  }
+}
+
+debugFunction()
+
 Client.write('> ')
 
 Client.on('line', async (payload) => {
   try {
-    const { value, type } = await inputHandler(payload)
-
-    if (type === 'computation') {
-      console.log(`\n\x1b[1mComputation result:\x1b[0m\n\n\t${value.print()}\n`)
-    } else if (type.match(/^(expression|numeral|matrix)$/)) {
-      console.log(`\n\x1b[1mNew \x1b[32m${value.constructor.name}\x1b[0;1m stored!\x1b[0m\n\n\t${value.print()}\n`)
-    }
-    
-    if (type === 'expression') {
-      checkExpressions(value)
-    }
+    processData(await inputHandler(payload))
   } catch (error) {
     errorHandler(error)
   }

@@ -129,7 +129,7 @@
   },
   {
     "code": "unknownVariable",
-    "message": "\tVariable or Matrix '{{ name }}' not found within stored data."
+    "message": "\tNumeral, Matrix or Expression '{{ name }}' not found within stored data."
   },
   {
     "code": "unrecognizedCommand",

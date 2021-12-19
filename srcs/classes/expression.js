@@ -4,7 +4,7 @@ const computePostfix = require('@srcs/maths/infix-to-postfix.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const infixToPostfix = require('@srcs/parsing/infix-to-postfix.js')
-const { isFunction, isVariable, isComposite, compositeParts, isMatrix } = require('@srcs/parsing/utils.js')
+const { isFunction, isVariable, isComposite, isCompositeFunction, compositeParts, isMatrix } = require('@srcs/parsing/utils.js')
 
 const computeBuiltin = async (token, expression, variables) => {
   try {
@@ -63,7 +63,7 @@ const computeNestedExpression = async (token, expression, variables) => {
     const args = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
 
     for (let i = 0; i < args.length; i++) {
-      if (isFunction(args[i]) || (isComposite(args[i]) && !isVariable(args[i]))) {
+      if (isFunction(args[i]) || isCompositeFunction(args[i])) {
         args[i] = await computeNestedExpression(args[i], expression, variables)
       } else {
         const variableIndex = expression.variables.indexOf(args[i])
@@ -72,6 +72,21 @@ const computeNestedExpression = async (token, expression, variables) => {
           throw new ComputorError({ data: { parameter: args[i] }, code: 'illegalParameter' })
         } else if (variableIndex >= 0) {
           args[i] = variables[variableIndex]
+        } else {
+          const infixNotation = await parseLine(args[i])
+          const postfixNotation = infixToPostfix(infixNotation)
+
+          const resolvedStack = postfixNotation.map((token) => {
+            const variableIndex = expression.variables.indexOf(token)
+
+            if (variableIndex >= 0) {
+              return variables[variableIndex]
+            } else {
+              return token
+            }
+          })
+
+          args[i] = await computePostfix(resolvedStack)
         }
       }
     }

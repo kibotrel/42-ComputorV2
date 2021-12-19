@@ -4,12 +4,12 @@ const { resolveVariable } = require('@handlers/variable.js')
 
 const parseLine = require('@srcs/parsing/input.js')
 const createMatrix = require('@srcs/parsing/matrix.js')
-const { isFunction, isMatrix } = require('@srcs/parsing/utils.js')
+const { isFunction, isMatrix, isVariable } = require('@srcs/parsing/utils.js')
 
 module.exports = async (prototype, definition) => {
   try {
     const functionName =  prototype.substring(0, prototype.indexOf('('))
-    const argumentList = prototype.substring(prototype.indexOf('(') + 1, prototype.indexOf(')')).split(',')
+    const argumentList = prototype.substring(prototype.indexOf('(') + 1, prototype.lastIndexOf(')')).split(',')
     const seenArguments = []
 
     for (const argument of argumentList) {
@@ -35,9 +35,7 @@ module.exports = async (prototype, definition) => {
 
           infixExpression[index] = numeral.toString()          
         }
-      } else if (isFunction(token)) {
-        const storedVariable = isVariableRegistered(token)
-  
+      } else if (isFunction(token)) {  
         if (isValidBuiltin(token)) {
           const numeral = await builtinHandler(token)
 
@@ -45,9 +43,14 @@ module.exports = async (prototype, definition) => {
         } else if (sanitizeName(token) === functionName) {
           throw new ComputorError({ data: { expression: functionName }, code: 'cyclicDeclaration' })
         } else {
-          const result = await resolveVariable(token, 'Function')
+          const paramsList = token.substring(token.indexOf('(') + 1, token.lastIndexOf(')')).split(',')
+          const unknownParameters = paramsList.filter(variable => isVariable(variable) && argumentList.includes(variable))
+
+          if (!unknownParameters.length) {
+            const result = await resolveVariable(token, 'Function')
           
-          infixExpression[index] = result.toString()
+            infixExpression[index] = result.toString()
+          }
         }
       } else if (isMatrix(token)) {
         const matrix = await createMatrix(token)
