@@ -193,4 +193,139 @@ module.exports = () => {
       assert.equal(error.code, 'unsupportedOperation')
     }    
   })
+
+  it('Power by matrix', async () => {
+    try {
+      await processInput('4 ^ [[2]] =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'unsupportedOperation')
+    }    
+  })
+
+  it('Matrix addition with scalar', async () => {
+    try {
+      await processInput('[[2]] + 2 =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'unsupportedOperation')
+    }    
+  })
+
+  it('Matrix substraction with scalar', async () => {
+    try {
+      await processInput('[[2]] - 2 =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'unsupportedOperation')
+    }    
+  })
+
+  it('Matrix division by scalar', async () => {
+    try {
+      await processInput('[[2]] / 2 =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'unsupportedOperation')
+    }    
+  })
+
+  it('Matrix modulus by scalar', async () => {
+    try {
+      await processInput('[[2]] % 2 =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'unsupportedOperation')
+    }    
+  })
+
+  it('Matrix power by scalar', async () => {
+    try {
+      await processInput('[[2]] ^ 2 =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'unsupportedOperation')
+    }    
+  })
+
+  it('Matrix addition with different shapes', async () => {
+    try {
+      await processInput('[[2]] + [[2, 2]] =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'matrixWrongDimensions')
+    }    
+  })
+
+  it('Matrix substraction with different shapes', async () => {
+    try {
+      await processInput('[[2]] - [[2, 2]] =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'matrixWrongDimensions')
+    }    
+  })
+
+  it('Matrix multiplication with wrong shapes', async () => {
+    try {
+      await processInput('[[2, 2]] * [[2]] =?')
+      assert.fail('FalsePositiveTest')
+    } catch (error) {
+      if (error instanceof AssertionError) {
+        throw error
+      }
+
+      assert.equal(typeof error, 'object')
+      assert.equal(error.constructor.name, 'ComputorError')
+      assert.equal(error.code, 'matrixWrongDimensions')
+    }    
+  })
 }
