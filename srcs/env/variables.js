@@ -105,7 +105,7 @@ const checkExpressions = (expression) => {
   }
 
   if (deletedExpressions.length) {
-    console.log(`\x1b[1mFound \x1b[33m${deletedExpressions.length}\x1b[0;1m conflict(s) induced by this \x1b[32mExpression\x1b[0;1m:\x1b[0m\n\n${promptedExpressions.join('\n')}\n\n\x1b[1mThis list of \x1b[32mExpression\x1b[0;1m has been deleted.\x1b[0m\n`)
+    console.log(`\x1b[1mFound \x1b[33m${deletedExpressions.length}\x1b[0;1m conflict${deletedExpressions.length > 1 ? 's' : ''} induced by this \x1b[32mExpression\x1b[0;1m:\x1b[0m\n\n${promptedExpressions.join('\n')}\n\n\x1b[1mThis list of \x1b[32mExpression\x1b[0;1m has been deleted.\x1b[0m\n`)
   }
 }
 
