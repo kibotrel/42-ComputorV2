@@ -1,4 +1,4 @@
-const { trueValue } = require('../../utils/maths.js')
+const { numeralEquality, matrixEquality } = require('../../utils/parsing.js')
 
 module.exports = () => {
   afterEach(() => {
@@ -8,38 +8,43 @@ module.exports = () => {
   it('Numerals', async () => {
     await processInput('x = 53 + 5.2i')
     const { value, type } = await processInput('x =?')
+    const expectedResult = { r: 53, i: 5.2 }
 
     expect(value).to.be.an('object')
     expect(value.constructor.name).to.equal('Numeral')
     expect(type).to.be.a('string').that.equals('computation')
-    expect(value.r).to.be.equal(53)
-    expect(trueValue(value.i)).to.be.equal(5.2)
+    expect(numeralEquality(value, expectedResult)).to.equal(true)
 
   })
 
   it('Expressions', async () => {
     await processInput('f(x) = x + 5')
     const { value, type } = await processInput('f(2i) =?')
+    const expectedResult = { r: 5, i: 2 }
 
     expect(value).to.be.an('object')
     expect(value.constructor.name).to.equal('Numeral')
     expect(type).to.be.a('string').that.equals('computation')
-    expect(value.r).to.be.equal(5)
-    expect(value.i).to.be.equal(2)
+    expect(numeralEquality(value, expectedResult)).to.equal(true)
   })
 
   it('Matrices', async () => {
     await processInput('m = [[2, 2.7 + i]]')
     const { value, type } = await processInput('m =?')
+    const expectedResult = [[{ r: 2, i: 0 }, { r: 2.7, i: 1 }]]
 
     expect(value).to.be.an('object')
-    expect(value.constructor.name).to.equal('Matrix')
     expect(type).to.be.a('string').that.equals('computation')
-    expect(value.values[0][0].constructor.name).to.be.equal('Numeral')
-    expect(value.values[0][1].constructor.name).to.be.equal('Numeral')
-    expect(value.values[0][0].r).to.be.equal(2)
-    expect(value.values[0][0].i).to.be.equal(0)
-    expect(trueValue(value.values[0][1].r)).to.be.equal(2.7)
-    expect(value.values[0][1].i).to.be.equal(1)
+    expect(value.constructor.name).to.equal('Matrix')
+    expect(value.values).to.be.an.an('array')
+
+    for (const row of value.values) {
+      expect(row).to.be.an('array')
+      for (const term of row) {
+        expect(term.constructor.name).to.equal('Numeral')
+      }
+    }
+
+    expect(matrixEquality(value.values, expectedResult))
   })
 }
