@@ -17,22 +17,22 @@ module.exports = async (argumentsList) => {
     Variables.splice(0, Variables.length)
 
     if (!Config.env.silentMode) {
-      console.log('- Context configuration has been reset.')
+      console.log('\n\x1b[1mContext configuration has been reset.\x1b[0m\n')
 
       if (numNumerals) {
-        console.log(`- ${numNumerals} Numeral element(s) removed.`)
+        console.log(`\t- \x1b[33;1m${numNumerals}\x1b[0;1m \x1b[32mNumeral${numNumerals > 1 ? 's' : ''}\x1b[0;1m removed.\x1b[0m`)
       }
 
       if (numMatrices) {
-        console.log(`- ${numMatrices} Matrix element(s) removed.`)
+        console.log(`\t- \x1b[33;1m${numMatrices}\x1b[0;1m \x1b[32m${numMatrices > 1 ? 'Matrices' : 'Matrix'}\x1b[0;1m removed.\x1b[0m`)
       }
 
       if (numExpressions) {
-        console.log(`- ${numExpressions} Expression element(s) removed.`)
+        console.log(`\t- \x1b[33;1m${numExpressions}\x1b[0;1m \x1b[32mExpression${numExpressions > 1 ? 's' : ''}\x1b[0;1m removed.\x1b[0m`)
       }
 
       if (numInputs) {
-        console.log(`- ${numInputs} registered input(s) erased from history.`)
+        console.log(`\t- \x1b[33;1m${numInputs}\x1b[0;1m registered input${numInputs > 1 ? 's' : ''} erased from history.\x1b[0m\n`)
       }
     }
 
