@@ -14,4 +14,9 @@ const matrixEquality = (a, b) => {
   }
   return true
 }
-module.exports = { numeralEquality, matrixEquality }
+
+const arrayEquality = (a, b) => {
+  return JSON.stringify(a) === JSON.stringify(b)
+}
+
+module.exports = { numeralEquality, matrixEquality, arrayEquality }
