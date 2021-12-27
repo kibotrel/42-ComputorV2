@@ -5,9 +5,10 @@ const chai = require('chai')
 const chaiAsPromised = require('chai-as-promised')
 
 const assert = require('assert')
+
 // Config
 
-global.Config = require('@configs/env.json')
+global.Config = require('./utils/env.json')
 
 // Classes
 
