@@ -2,7 +2,7 @@ const plotEquation = require('@srcs/equation/plot.js')
 const solveEquation = require('@srcs/equation/solve.js')
 
 const isEquationToken = (token) => {
-  return token.match(/^([+\-]?\d+(\.\d+)?|[+\-]?x(\^\d+)?|[+\-]?\d+(\.\d+)?\*?x(\^\d+)?|[=+\-])+$/)
+  return token.match(/^([+\-]?\d+(\.\d+)?|[+\-]?x(\^\d+)?|[+\-]?\d+(\.\d+)?\*?x(\^\d+)?|[=+\-^])+$/)
 }
 
 const parseArguments = async (argumentsList) => {
