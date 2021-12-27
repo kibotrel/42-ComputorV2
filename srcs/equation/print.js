@@ -14,7 +14,7 @@ const printReducedEquation = (polynomList) => {
   for (let i = 0; i < polynomList.length; i++) {
     if (polynomList[i].factor !== 0 || i === 0) {
       if (i !== 0) {
-        reducedEquation += (polynomList[i].sign < 0 ? ' - ' : ' + ')
+        reducedEquation += `\x1b[0;1m${(polynomList[i].sign < 0 ? ' - ' : ' + ')}\x1b[33m`
       }
 
       if (polynomList[i].factor !== 1 || polynomList[i].power === 0) {
@@ -31,7 +31,7 @@ const printReducedEquation = (polynomList) => {
     }
   }
 
-  reducedEquation += ' = 0'
+  reducedEquation += ' \x1b[0;1m=\x1b[33m 0'
 
   console.log(`\n\x1b[1;4mReduced form:\x1b[0m\n\n\t\x1b[33;1m${reducedEquation}\x1b[0m\n`)
 }
@@ -44,7 +44,7 @@ const printEquationType = (degree) => {
   }
 
   if (degree <= 2) {
-    console.log(`\x1b[1;4mPolynomial degree:\x1b[0m\n\n\tThis is a \x1b[33;1m${types[degree]}\x1b[0m equation (degree ${degree}).`)
+    console.log(`\x1b[1;4mPolynomial degree:\x1b[0m\n\n\tThis is a \x1b[32;1m${types[degree]}\x1b[0m equation (degree \x1b[33;1m${degree}\x1b[0m).`)
   } else {
     console.log(`\x1b[1;4mPolynomial degree:\x1b[0m\n\n\tThis is a polynomial equation of degree \x1b[33;1m${degree}\x1b[0m.\n\n\tUnfortunately, this software cannot solve\n\tpolynomial equations of degree higher than \x1b[33;1m2\x1b[0m.\n`)
   }
@@ -59,6 +59,11 @@ const printConstant = (c) => {
     } else {
       console.log('\tThis equation does not have any solution.\n')
     }
+  }
+
+  return {
+    roots: c ? [undefined] : [Infinity],
+    discriminant: undefined
   }
 }
 
@@ -81,6 +86,11 @@ const printLinear = async (b, c) => {
 
     console.log(`\tThe solution to this equation is \x1b[1;33m${root.print()}\x1b[0m.\n`)
   }
+
+  return {
+    roots: [root],
+    discriminant: undefined
+  }
 }
 
 const printQuadratic = async (a, b, c) => {
@@ -93,7 +103,7 @@ const printQuadratic = async (a, b, c) => {
 
     const minusB = await Numeral.substract(0, b)
     const twoA = await Numeral.multiply(2, a)
-
+    const roots = []
     if (!Config.env.silentMode) {
       console.log('\n\x1b[1;4mSolution(s):\x1b[0m\n')
 
@@ -107,6 +117,7 @@ const printQuadratic = async (a, b, c) => {
       const positiveRoot = await Numeral.divide(await Numeral.add(minusB, sqrtDiscriminant), twoA)
       const negativeRoot = await Numeral.divide(await Numeral.substract(minusB, sqrtDiscriminant), twoA)
 
+      roots.push(positiveRoot, negativeRoot)
       if (!Config.env.silentMode) {
         if (Config.equation.verbose) {
           console.log('\t\x1b[2mResolution:\n\n\t\tx\'= (-b + √Δ) / 2a')
@@ -122,6 +133,7 @@ const printQuadratic = async (a, b, c) => {
     } else if (discriminant.r === 0) {
       const zeroRoot = await Numeral.divide(minusB, twoA)
 
+      roots.push(zeroRoot)
       if (!Config.env.silentMode) {
         if (Config.equation.verbose) {
           console.log('\t\x1b[2mResolution:\n\n\t\tx = -b / 2a')
@@ -139,6 +151,7 @@ const printQuadratic = async (a, b, c) => {
       const positiveComplexRoot = await Numeral.divide(positiveComplex, twoA)
       const negativeComplexRoot = await Numeral.divide(negativeComplex, twoA)
 
+      roots.push(positiveComplexRoot, negativeComplexRoot)
       if (!Config.env.silentMode) {
         if (Config.equation.verbose) {
           console.log('\t\x1b[2mResolution:\n\n\t\tz\' = (-b - √|Δ| * i) / 2a')
@@ -151,6 +164,11 @@ const printQuadratic = async (a, b, c) => {
 
         console.log(`\tThe discriminant of this equation is stricly negative (\x1b[1;33m${discriminant.print()}\x1b[0m).\n\tIt has two complex roots: \x1b[1;33m${positiveComplexRoot.print()}\x1b[0m and \x1b[1;33m${negativeComplexRoot.print()}\x1b[0m.\n`)
       }
+    }
+
+    return {
+      roots,
+      discriminant
     }
   } catch (error) {
     return Promise.reject(error)

@@ -23,6 +23,12 @@ const reduceEquation = (polynomList) => {
 
   reducedList.sort((a, b) => a.power < b.power ? 1 : -1)
 
+  for (const polynom of reducedList) {
+    if (polynom.factor > -1 && polynom.factor < 1) {
+      polynom.factor = parseFloat(polynom.factor.toFixed(Config.number.precision))
+    }
+  }
+
   return reducedList
 }
 
@@ -37,6 +43,8 @@ module.exports = async (equation) => {
       printEquationType(degree)
     }
 
+    let infos = {}
+
     if (degree <= 2) {
       const foundA = reducedList.filter((element) => {return element.power === 2})[0]
       const foundB = reducedList.filter((element) => {return element.power === 1})[0]
@@ -47,13 +55,14 @@ module.exports = async (equation) => {
       const c = (foundC ? foundC.factor * foundC.sign : 0)
 
       switch (degree) {
-        case 0: printConstant(c); break
-        case 1: await printLinear(b, c); break
-        case 2: await printQuadratic(a, b, c); break
+        case 0: infos = printConstant(c); break
+        case 1: infos = await printLinear(b, c); break
+        case 2: infos = await printQuadratic(a, b, c); break
       }
     }
 
-    return reducedList
+    Object.assign(infos, { degree })
+    return { stack: reducedList, infos }
 
   } catch (error) {
     return Promise.reject(error)
