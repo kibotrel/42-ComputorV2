@@ -233,26 +233,35 @@ class Numeral {
     if (!r && !i) {
       return '0'
     }
-
-    // Used the parseFloat(x.toPrecision(15)) to correct small floating point
+  
+    // Used the parseFloat(x.toPrecision()) to correct small floating point
     // errors that happen sometimes due to the lack of precision in Javascript
     // since we don't really need that much decimal digits. more informations
-    // on https://bit.ly/2OT0qLO.
+    // on https://bit.ly/2OT0qLO. Used toFixed() for -1 < x < 1 range.
 
-    const real = parseFloat(r.toPrecision(Config.number.precision))
-    const separatorSign = i < 0 ? '-' : '+'
-    const imaginary = i < -1 || (i < 0 && i > -1) ? -parseFloat(i.toPrecision(Config.number.precision)) : i > 1 || (i > 0 && i < 1) ? parseFloat(i.toPrecision(Config.number.precision)) : ''
+    const real = r > -1 && r < 1 ? parseFloat(r.toFixed(Config.number.precision)) : parseFloat(r.toPrecision(Config.number.precision))
+    let imaginary = i < -1 || (i < 0 && i > -1) ? -parseFloat(i.toPrecision(Config.number.precision)) : i > 1 || (i > 0 && i < 1) ? parseFloat(i.toPrecision(Config.number.precision)) : 0
+
+    if (imaginary > -1 && imaginary < 1) {
+      imaginary = parseFloat(imaginary.toFixed(Config.number.precision))
+    }
+
+    if (!real && !imaginary) {
+      return '0'
+    }
+  
+    const separatorSign = imaginary < 0 ? '-' : '+'
 
     let numStr = ''
 
     if (!Config.number.fractionForm) {
-      numStr += (r ? real : '')
-      numStr += (r && i ? ` ${separatorSign} ` : i < 0 ? separatorSign : '')
-      numStr += (i ? `${imaginary}i` : '')
+      numStr += (real ? real : '')
+      numStr += (real && imaginary ? ` ${separatorSign} ` : imaginary < 0 ? separatorSign : '')
+      numStr += (imaginary ? `${imaginary}i` : '')
     } else {
-      numStr += (r ? Number.isInteger(real) ? real : nr < 0 ? `-(${-nr} / ${dr})` : `${nr} / ${dr}` : '')
-      numStr += (r && i ? ` ${separatorSign} ` : i < 0 ? separatorSign : '')
-      numStr += (i ? Number.isInteger(imaginary) ? `${imaginary}i` : `(${ni >= 0 ? ni : -ni} / ${di})i` : '')
+      numStr += (real ? Number.isInteger(real) ? real : nr < 0 ? `-(${-nr} / ${dr})` : `${nr} / ${dr}` : '')
+      numStr += (real && imaginary ? ` ${separatorSign} ` : imaginary < 0 ? separatorSign : '')
+      numStr += (imaginary ? Number.isInteger(imaginary) ? `${imaginary}i` : `(${ni >= 0 ? ni : -ni} / ${di})i` : '')
     }
 
     return numStr
