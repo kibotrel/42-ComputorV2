@@ -113,7 +113,7 @@ const computePostfix = async (postfixNotation) => {
   }
 }
 
-const resolveMatrices = async (stack) => {
+const cleaningStack = async (stack) => {
   try {
     const cleanStack = []
 
@@ -127,6 +127,8 @@ const resolveMatrices = async (stack) => {
         } else {
           cleanStack.push(matrix)
         }
+      } else if (token === '(' && cleanStack[cleanStack.length - 1] === ')') {
+        cleanStack.push('*', token)
       } else {
         cleanStack.push(token)
       }
@@ -146,7 +148,7 @@ const numeralValue = async (inputLine) => {
       throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
     }
 
-    const infixCleanNotation = await resolveMatrices(infixNotation)
+    const infixCleanNotation = await cleaningStack(infixNotation)
     const postfixNotation = infixToPosfix(infixCleanNotation)
 
     return await computePostfix(postfixNotation)
