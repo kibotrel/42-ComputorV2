@@ -218,7 +218,6 @@ class Numeral {
         newNumeral[key] = number[key]
       }
     }
-    
 
     return new Numeral(newNumeral)
   }
@@ -241,8 +240,9 @@ class Numeral {
 
     const real = r > -1 && r < 1 ? parseFloat(r.toFixed(Config.number.precision)) : parseFloat(r.toPrecision(Config.number.precision))
     let imaginary = i < -1 || (i < 0 && i > -1) ? -parseFloat(i.toPrecision(Config.number.precision)) : i > 1 || (i > 0 && i < 1) ? parseFloat(i.toPrecision(Config.number.precision)) : 0
+    let sign = i < 0 ? -1 : 1
 
-    if (imaginary > -1 && imaginary < 1) {
+    if (i > -1 && i < 1) {
       imaginary = parseFloat(imaginary.toFixed(Config.number.precision))
     }
 
@@ -250,17 +250,17 @@ class Numeral {
       return '0'
     }
   
-    const separatorSign = imaginary < 0 ? '-' : '+'
+    const separatorSign = i < 0 ? '-' : '+'
 
     let numStr = ''
 
     if (!Config.number.fractionForm) {
       numStr += (real ? real : '')
-      numStr += (real && imaginary ? ` ${separatorSign} ` : imaginary < 0 ? separatorSign : '')
+      numStr += (real && imaginary ? ` ${separatorSign} ` : sign < 0 ? separatorSign : '')
       numStr += (imaginary ? `${imaginary}i` : '')
     } else {
       numStr += (real ? Number.isInteger(real) ? real : nr < 0 ? `-(${-nr} / ${dr})` : `${nr} / ${dr}` : '')
-      numStr += (real && imaginary ? ` ${separatorSign} ` : imaginary < 0 ? separatorSign : '')
+      numStr += (real && imaginary ? ` ${separatorSign} ` : sign < 0 ? separatorSign : '')
       numStr += (imaginary ? Number.isInteger(imaginary) ? `${imaginary}i` : `(${ni >= 0 ? ni : -ni} / ${di})i` : '')
     }
 
