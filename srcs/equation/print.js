@@ -26,7 +26,7 @@ const printReducedEquation = (polynomList) => {
       }
 
       if (polynomList[i].power > 1 && polynomList[i].factor !== 0) {
-        if (number >= Number.MIN_SAFE_INTEGER && number <= Number.MAX_SAFE_INTEGER) {
+        if (polynomList[i].power >= Number.MIN_SAFE_INTEGER && polynomList[i].power <= Number.MAX_SAFE_INTEGER) {
           reducedEquation += `${toSuperscript(polynomList[i].power)}`
         } else {
           reducedEquation += ` ^ ${polynomList[i].power}`
