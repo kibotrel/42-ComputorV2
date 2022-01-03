@@ -1,11 +1,13 @@
 const { registerHistory } = require('@env/history.js')
+const { isVariableRegistered } = require('@env/utils')
 
 const commandHandler = require('@handlers/command.js')
 const { addToVariableList, resolveVariable } = require('@handlers/variable.js')
 
 const createFunction = require('@srcs/parsing/function.js')
 const createMatrix = require('@srcs/parsing/matrix.js')
-const { isFunction, isMatrix } = require('@srcs/parsing/utils.js')
+const { isFunction, isMatrix, compositeParts } = require('@srcs/parsing/utils.js')
+
 
 const storeVariable = async (inputLine) => {
   try {
@@ -52,7 +54,14 @@ const computeInput = async (inputLine) => {
     let value
 
     if (isFunction(realInput)) {
-      value = await resolveVariable(realInput, 'Function')
+      const { variableName } = compositeParts(realInput)
+      const variable = isVariableRegistered(variableName)
+
+      if (variable && variable.constructor.name === 'Expression') {
+        value = await resolveVariable(realInput, 'Function')
+      } else {
+        value = await numeralValue(realInput)
+      }
     } else if (isMatrix(realInput)) {
       value = await createMatrix(realInput)
     } else {
