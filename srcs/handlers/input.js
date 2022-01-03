@@ -57,7 +57,7 @@ const computeInput = async (inputLine) => {
       const { variableName } = compositeParts(realInput)
       const variable = isVariableRegistered(variableName)
 
-      if (variable && variable.constructor.name === 'Expression') {
+      if (variable.constructor.name === 'Expression') {
         value = await resolveVariable(realInput, 'Function')
       } else {
         value = await numeralValue(realInput)

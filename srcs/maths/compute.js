@@ -151,7 +151,11 @@ const numeralValue = async (inputLine) => {
     const infixCleanNotation = await cleaningStack(infixNotation)
     const postfixNotation = infixToPosfix(infixCleanNotation)
 
-    return await computePostfix(postfixNotation)
+    if (postfixNotation.length % 2) {
+      return await computePostfix(postfixNotation)
+    } else {
+      throw new ComputorError({ data: { string: inputLine }, code: 'badInputFormat' })
+    }
   } catch (error) {
     return Promise.reject(error)
   }

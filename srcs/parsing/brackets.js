@@ -96,7 +96,7 @@ const leftBracket = async ({ string, i }, flags, infixStack, bracketStack) => {
 
         const variable = await isVariableRegistered(variableName)
 
-        if (variable.constructor.name === 'Numeral') {
+        if (variable.constructor.name === 'Numeral' || variable.constructor.name === 'Matrix') {
           if (factor) {
             infixStack.push('(', factor, '*', variableName, ')')
           } else {
