@@ -29,7 +29,7 @@ module.exports = () => {
 
       assert.equal(typeof error, 'object')
       assert.equal(error.constructor.name, 'ComputorError')
-      assert.equal(error.code, 'unknownFunction')
+      assert.equal(error.code, 'unknownVariable')
     }
   })
 }

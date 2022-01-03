@@ -37,3 +37,4 @@ global.assert = assert
 
 describe('Basic', require('./basic/index.js'))
 describe('Advanced', require('./advanced/index.js'))
+describe('Bonus', require('./bonus/index.js'))

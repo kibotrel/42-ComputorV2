@@ -104,7 +104,7 @@ const ln = async (arguments) => {
   try {
     const { [0]: x } = await sanitizeArguments({ arguments, name: 'ln', amount: 1 })
 
-    if (x.i || x.r < 0) {
+    if (x.i || x.r < 1) {
       throw new ComputorError({ code: 'builtinNotHandledOperator' })
     }
 
@@ -132,7 +132,7 @@ const log = async (arguments) => {
   try {
     const { [0]: x } = await sanitizeArguments({ arguments, name: 'log', amount: 1 })
 
-    if (x.i || x.r < 0) {
+    if (x.i || x.r < 1) {
       throw new ComputorError({ code: 'builtinNotHandledOperator' })
     }
 

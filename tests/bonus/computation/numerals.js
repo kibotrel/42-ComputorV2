@@ -16,6 +16,16 @@ module.exports = () => {
     expect(numeralEquality(value, expectedResult)).to.equal(true)
   })
 
+  it('Implicit multiplication on open bracket', async () => {
+    await processInput('x = 4')
+    const { value } = await processInput('x(2 + 3) =?')
+    const expectedResult = { r: 20, i: 0 }
+
+    expect(value).to.be.an('object')
+    expect(value.constructor.name).to.equal('Numeral')
+    expect(numeralEquality(value, expectedResult)).to.equal(true)
+  })
+
   it('Unary operator', async () => {
     await processInput('x = 4')
     const { value } = await processInput('3 + (-x) =?')
