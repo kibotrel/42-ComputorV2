@@ -98,7 +98,6 @@ const sqrt = async (arguments) => {
       sign = -1
     }
 
-    console.log(x)
     let y = 1
 
     // By definition sqrt(x) must be greater than the one
