@@ -48,8 +48,6 @@ const errorHandler = require('@handlers/error.js')
 
 const { checkExpressions } = require('@env/variables.js')
 
-const debugFunction = async () => {}
-
 const processData = ({ value, type }) => {
   if (type === 'computation') {
     console.log(`\n\x1b[1mComputation result:\x1b[0m\n\n\t${value.print()}\n`)
@@ -61,8 +59,6 @@ const processData = ({ value, type }) => {
     checkExpressions(value)
   }
 }
-
-debugFunction()
 
 Client.write('> ')
 
