@@ -132,5 +132,21 @@ $> npm run tests
   | `!matrices` | Shows stored **Matrix** elements. |
   | `!reset` | Wipes everything stored and set default context configuration.
   | `!set` | Allows you to tweak some options in configuration.
+  | `!solve` | Built-in quadratic equation solver.
 
 ## :hammer_and_wrench: Configuration
+
+This program allows you to modify some options to alter or augment some behaviours. Here is the list of all available options.
+
+| Option | Type | Description |
+| :-: | :-: | :-: |
+| `env.errorStackTrace` | Boolean | Toggles tracing error display. |
+| `env.historySize` | Number | Sets the size of the list displayed using `!history` command. |
+| `env.silentMode` | Boolean | Toggles display for a lot of things. Mainly for testing purposes. |
+| `equation.graph` | Boolean | Toggles ploting equation on a graph when using `!solve` command. |
+| `equation.verbose` | Boolean | Toggles intermediate computation display when using `!solve` command. |
+| `function.expensionCount` | Number | Sets the number of iterations for Taylor series. |
+| `number.fractionForm` | Boolean | Toggles fractionnal display. Useful when 𝑥 ∈ ℚ. |
+| `number.precision` | Number | Sets the number of computed decimals. |
+
+Every single option listed above can be configured using the `!set` command.
