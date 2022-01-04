@@ -29,7 +29,7 @@ module.exports = async (argumentsList) => {
     const equation = await solveEquation(params)
 
     if (Config.equation.graph) {
-      await plotEquation(equation)
+      await plotEquation(equation.stack)
     }
     return equation
   } catch (error) {

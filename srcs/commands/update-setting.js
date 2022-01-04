@@ -35,7 +35,7 @@ module.exports = (argumentsList) => {
                 Config[configSection][configProperty] = parseInt(value)
                 
                 if (!Config.env.silentMode) {
-                  console.log(`\x1b[1mUpdated \x1b[32mSettings\x1b[0;1m property!\n\n\t\x1b[32m${configSection}\x1b[0;1m.\x1b[32m${configProperty}\x1b[0;1m = \x1b[33m${Config[configSection][configProperty]}\x1b[0m\n`)
+                  console.log(`\x1b[1m\nUpdated \x1b[32mSettings\x1b[0;1m property!\n\n\t\x1b[32m${configSection}\x1b[0;1m.\x1b[32m${configProperty}\x1b[0;1m = \x1b[33m${Config[configSection][configProperty]}\x1b[0m\n`)
                 }
 
                 return { section: configSection, property: configProperty, value }
@@ -47,7 +47,7 @@ module.exports = (argumentsList) => {
                 Config[configSection][configProperty] = JSON.parse(value)
                 
                 if (!Config.env.silentMode) {
-                  console.log(`\x1b[1mUpdated \x1b[32mSettings\x1b[0;1m property!\n\n\t\x1b[32m${configSection}\x1b[0;1m.\x1b[32m${configProperty}\x1b[0;1m = \x1b[36m${Config[configSection][configProperty]}\x1b[0m\n`)
+                  console.log(`\x1b[1m\nUpdated \x1b[32mSettings\x1b[0;1m property!\n\n\t\x1b[32m${configSection}\x1b[0;1m.\x1b[32m${configProperty}\x1b[0;1m = \x1b[36m${Config[configSection][configProperty]}\x1b[0m\n`)
                 }
 
                 return { section: configSection, property: configProperty, value: JSON.parse(value) }
