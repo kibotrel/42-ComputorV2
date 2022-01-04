@@ -6,7 +6,7 @@ module.exports = async (input) => {
     const sign = input[0] === '-' ? -1 : 1
     const func = input.replace(/^[+\-]/, '')
     const name = func.substring(0, func.indexOf('('))
-    const arguments = func.substring(func.indexOf('(') + 1, func.lastIndexOf(')')).split(',')
+    const arguments = func.substring(func.indexOf('(') + 1, func.lastIndexOf(')')).split(',').filter((e) => e.length) || []
 
     let value = 0
   
