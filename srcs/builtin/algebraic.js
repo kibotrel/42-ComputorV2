@@ -90,6 +90,15 @@ const sqrt = async (arguments) => {
       throw new ComputorError({ code: 'builtinNotHandledOperator' })
     }
 
+    let sign = 1
+
+    if (x.r < 0) {
+      x.r = -x.r
+      x.nr = -x.nr
+      sign = -1
+    }
+
+    console.log(x)
     let y = 1
 
     // By definition sqrt(x) must be greater than the one
@@ -109,7 +118,11 @@ const sqrt = async (arguments) => {
       y = await Numeral.multiply(0.5, await Numeral.add(y, await Numeral.divide(x, y)))
     }
 
-    return new Numeral(await toNumeral(y))
+    if (sign < 0) {
+      return new Numeral({ r: 0, i: y.r, nr: 0, dr: 1, ni: y.nr, di: y.dr })
+    } else {
+      return new Numeral(await toNumeral(y))
+    }
   } catch (error) {
     return Promise.reject(error)
   }
